@@ -1,0 +1,182 @@
+.pageHeader {
+  background: var(--teal);
+  padding: 1.5rem 2rem;
+  color: #fff;
+}
+
+.backLink {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.backLink:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.pageHeader h1 {
+  font-family: var(--ff-display);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.pageHeader p {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.formPage {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f9fafb;
+  min-height: calc(100vh - 180px);
+}
+
+.formCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.req {
+  color: var(--teal);
+}
+
+.formInput {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  background: #f9fafb;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.formInput:focus {
+  border-color: var(--teal);
+}
+
+.formSelect {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  background: #f9fafb;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+}
+
+.formSelect:focus {
+  border-color: var(--teal);
+}
+
+.formSelect:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.consultOptions {
+  display: flex;
+  gap: 10px;
+}
+
+.consultOpt {
+  flex: 1;
+  border: 1.5px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f9fafb;
+}
+
+.consultOpt:hover {
+  border-color: var(--teal);
+}
+
+.consultOpt.active {
+  border-color: var(--teal);
+  background: var(--teal-light);
+}
+
+.coIcon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.coLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 14px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-family: var(--ff-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.submitBtn:hover {
+  background: var(--teal-dark);
+  transform: translateY(-1px);
+}
+
+.error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+@media (max-width: 500px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+  .consultOptions {
+    flex-direction: column;
+  }
+}

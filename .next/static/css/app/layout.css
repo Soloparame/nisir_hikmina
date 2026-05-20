@@ -1,0 +1,45 @@
+/*!*************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #004D4D; /* Deep teal/green like Plushcare */
+  --primary-light: #E6F5F4;
+  --secondary: #007A7A;
+  --btn-green: #009966; /* Vibrant green for primary CTA */
+  --btn-green-hover: #007A52;
+  --bg-main: #FFFFFF;
+  --bg-offwhite: #F8FAFC;
+  --text-main: #0F172A;
+  --text-light: #475569;
+  --border-color: #E2E8F0;
+  --ff-display: 'Plus Jakarta Sans', sans-serif;
+  --ff-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  font-family: var(--ff-body);
+  color: var(--text-main);
+  line-height: 1.6;
+  background: var(--bg-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ff-display);
+  font-weight: 700;
+  color: var(--primary);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
