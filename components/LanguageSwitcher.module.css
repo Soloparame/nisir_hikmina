@@ -1,0 +1,43 @@
+.switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  background: #fff;
+  color: var(--primary);
+  font-family: var(--ff-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.switcher:hover {
+  border-color: var(--btn-green);
+  color: var(--btn-green);
+  box-shadow: 0 2px 8px rgba(0, 153, 102, 0.12);
+}
+
+.light {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.light:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  box-shadow: none;
+}
+
+.globe {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.label {
+  white-space: nowrap;
+}

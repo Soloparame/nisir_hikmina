@@ -1,14 +1,23 @@
 .nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid var(--border-color);
-  background: #fff;
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  z-index: 200;
+  padding: 0.85rem 1.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 77, 77, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 77, 77, 0.06);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.navHero {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 77, 77, 0.88) 0%,
+    rgba(0, 77, 77, 0.72) 100%
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .container {
@@ -18,45 +27,139 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--ff-display);
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--primary);
+  gap: 12px;
   text-decoration: none;
-  letter-spacing: -0.5px;
+  min-width: 0;
 }
 
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--btn-green);
-  display: inline-block;
+.logoMark {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #009966 0%, #004d4d 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(0, 153, 102, 0.35);
+}
+
+.logoMark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.logoText strong {
+  font-family: var(--ff-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.3px;
+}
+
+.logoText small {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.navHero .logoText strong,
+.navHero .logoText small,
+.navHero .navLink {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.navHero .logoText small {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.navLink {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: var(--btn-green);
+}
+
+.navHero .navLink:hover {
+  color: #6ee7b7;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .bookBtn {
-  background: var(--btn-green);
+  background: linear-gradient(135deg, #009966 0%, #007a52 100%);
   color: #fff;
   border: none;
-  padding: 10px 24px;
+  padding: 10px 22px;
   border-radius: 50px;
   font-family: var(--ff-body);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 153, 102, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 153, 102, 0.35);
+  white-space: nowrap;
 }
 
 .bookBtn:hover {
-  background: var(--btn-green-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 153, 102, 0.3);
+  box-shadow: 0 10px 28px rgba(0, 153, 102, 0.45);
+}
+
+.navHero .bookBtn {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navHero .bookBtn:hover {
+  background: #f0fdf9;
+}
+
+@media (max-width: 768px) {
+  .links {
+    display: none;
+  }
+
+  .logoText small {
+    display: none;
+  }
+
+  .bookBtn {
+    padding: 9px 16px;
+    font-size: 0.82rem;
+  }
 }

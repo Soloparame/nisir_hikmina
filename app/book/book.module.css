@@ -1,7 +1,113 @@
 .pageHeader {
-  background: var(--teal);
-  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #004d4d 0%, #007a7a 50%, #009966 100%);
+  padding: 2rem 2rem 1.75rem;
   color: #fff;
+}
+
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.step {
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stepActive {
+  background: #fff;
+  color: #004d4d;
+}
+
+.stepDone {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.stepLine {
+  flex: 1;
+  max-width: 60px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.changeDoctor {
+  background: none;
+  border: none;
+  color: #009966;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+
+.changeDoctor:hover {
+  text-decoration: underline;
+}
+
+.selectedDoctor {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 77, 77, 0.06);
+}
+
+.selectedDoctor strong {
+  display: block;
+  color: #004d4d;
+  font-size: 1rem;
+}
+
+.selectedDoctor span {
+  color: #009966;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.doctorThumb {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.doctorThumbFallback {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e6f5f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.formPage {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(180deg, #f0fdf9 0%, #f8fafc 100%);
+  min-height: calc(100vh - 220px);
+}
+
+.formCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 77, 77, 0.06);
 }
 
 .backLink {
@@ -32,21 +138,6 @@
   font-size: 13px;
   opacity: 0.8;
   margin-top: 4px;
-}
-
-.formPage {
-  max-width: 580px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: #f9fafb;
-  min-height: calc(100vh - 180px);
-}
-
-.formCard {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  padding: 2rem;
 }
 
 .formRow {
@@ -105,8 +196,9 @@
   border-color: var(--teal);
 }
 
-.formSelect:disabled {
-  opacity: 0.7;
+.formSelect:disabled,
+.formInput:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 

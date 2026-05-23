@@ -56,12 +56,30 @@
 
 /* HERO SECTION */
 .hero {
-  background-color: var(--primary-light);
+  position: relative;
   overflow: hidden;
-  padding: 4rem 0 2rem;
+  padding: 5rem 0 3rem;
+  background-image: url("https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1920&q=80");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(0, 77, 77, 0.92) 0%,
+    rgba(0, 77, 77, 0.78) 45%,
+    rgba(0, 153, 102, 0.55) 100%
+  );
+  z-index: 0;
 }
 
 .heroContainer {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
@@ -80,14 +98,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
   color: var(--primary);
   font-size: 14px;
   font-weight: 600;
   padding: 6px 16px;
-  border-radius: 6px;
+  border-radius: 50px;
   margin-bottom: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .pulseDot {
@@ -107,20 +126,22 @@
 .heroTitle {
   font-size: clamp(40px, 5vw, 64px);
   line-height: 1.1;
-  color: var(--primary);
+  color: #fff;
   margin-bottom: 1.5rem;
   letter-spacing: -1px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
 
 .heroAccent {
-  color: var(--btn-green);
+  color: #6ee7b7;
 }
 
 .heroSub {
   font-size: 18px;
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 2.5rem;
   line-height: 1.6;
+  max-width: 520px;
 }
 
 .heroActions {
@@ -135,7 +156,7 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
 }
 
@@ -157,8 +178,10 @@
   bottom: 0;
   width: 90%;
   height: 80%;
-  background: var(--primary-light);
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
   z-index: 0;
 }
 
@@ -175,13 +198,13 @@
   position: absolute;
   bottom: 40px;
   left: -20px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.97);
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
   z-index: 2;
-  width: 250px;
-  border: 1px solid var(--border-color);
+  width: 260px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .cardHeader {
@@ -498,10 +521,19 @@
 
 /* RESPONSIVE */
 @media (max-width: 992px) {
+  .hero {
+    background-attachment: scroll;
+  }
+
   .heroContainer {
     flex-direction: column;
     text-align: center;
     padding-top: 2rem;
+  }
+
+  .heroSub {
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .heroActions {
