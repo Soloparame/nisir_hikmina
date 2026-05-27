@@ -1,1 +1,11 @@
-{}
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/doctors/page": "app/admin/doctors/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/book/page": "app/book/page.js",
+  "/page": "app/page.js",
+  "/success/page": "app/success/page.js",
+  "/about/page": "app/about/page.js",
+  "/api/health/supabase/route": "app/api/health/supabase/route.js"
+}

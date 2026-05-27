@@ -313,6 +313,13 @@
   color: #64748b;
 }
 
+.errorText {
+  color: #dc2626;
+  max-width: 32rem;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
 .stateBoxInline {
   padding: 2rem;
   background: #fff;

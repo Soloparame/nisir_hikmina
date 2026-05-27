@@ -1,6 +1,8 @@
+import "./node-dns";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { getSupabaseKey, getSupabaseUrl } from "./config";
+import { supabaseFetch } from "./fetch";
 
 export async function createClient() {
   const url = getSupabaseUrl();
@@ -13,6 +15,7 @@ export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient(url, key, {
+    global: { fetch: supabaseFetch },
     cookies: {
       getAll() {
         return cookieStore.getAll();

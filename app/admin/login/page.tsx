@@ -30,10 +30,11 @@ export default function AdminLoginPage() {
     } catch (err) {
       // If Next.js can't reach the server action endpoint, you'll see generic
       // "failed to fetch" — this makes the UI show something actionable.
+      const msg = err instanceof Error ? err.message : "";
       setError(
-        err instanceof Error
-          ? err.message
-          : "Login request failed. Check production env vars (Supabase URL + anon key)."
+        msg === "fetch failed" || msg.includes("Failed to fetch")
+          ? "Cannot reach the server. On Netlify: add Supabase env vars and redeploy. See NETLIFY-DEPLOY.md."
+          : msg || "Login request failed. Check production env vars (Supabase URL + key)."
       );
       setLoading(false);
     }

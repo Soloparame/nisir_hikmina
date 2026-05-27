@@ -18,13 +18,15 @@ import type { Doctor } from "../lib/types/doctor";
 import styles from "./DoctorPicker.module.css";
 
 type Props = {
+  initialDoctors: Doctor[];
   onSelect: (doctor: Doctor) => void;
 };
 
-export default function DoctorPicker({ onSelect }: Props) {
+export default function DoctorPicker({ initialDoctors, onSelect }: Props) {
   const { t, locale } = useLanguage();
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors);
+  const [loading, setLoading] = useState(initialDoctors.length === 0);
+  const [loadError, setLoadError] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
@@ -34,9 +36,17 @@ export default function DoctorPicker({ onSelect }: Props) {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
+    if (initialDoctors.length > 0) {
+      setLoading(false);
+      return;
+    }
+
     async function load() {
       const supabase = createClient();
       if (!supabase) {
+        setLoadError(
+          "Supabase is not configured on this deploy. Add env vars on Netlify and redeploy."
+        );
         setLoading(false);
         return;
       }
@@ -48,14 +58,16 @@ export default function DoctorPicker({ onSelect }: Props) {
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: false });
 
-      if (!error && data) {
+      if (error) {
+        setLoadError(error.message);
+      } else if (data) {
         setDoctors(data as Doctor[]);
       }
       setLoading(false);
     }
 
     load();
-  }, []);
+  }, [initialDoctors.length]);
 
   const selected = doctors.find((d) => d.id === selectedId);
 
@@ -93,6 +105,14 @@ export default function DoctorPicker({ onSelect }: Props) {
       <div className={styles.stateBox}>
         <div className={styles.spinner} />
         <p>{t.book.loadingDoctors}</p>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className={styles.stateBox}>
+        <p className={styles.errorText}>{loadError}</p>
       </div>
     );
   }

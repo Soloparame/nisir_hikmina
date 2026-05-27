@@ -10,7 +10,11 @@ import { useLanguage } from "../lib/i18n/LanguageContext";
 import type { Doctor } from "../lib/types/doctor";
 import styles from "../app/book/book.module.css";
 
-export default function BookFlow() {
+type Props = {
+  initialDoctors: Doctor[];
+};
+
+export default function BookFlow({ initialDoctors }: Props) {
   const { t } = useLanguage();
   const [step, setStep] = useState<"doctor" | "form">("doctor");
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -52,7 +56,10 @@ export default function BookFlow() {
 
       <div className={styles.pageBody}>
         {step === "doctor" ? (
-          <DoctorPicker onSelect={handleDoctorSelect} />
+          <DoctorPicker
+            initialDoctors={initialDoctors}
+            onSelect={handleDoctorSelect}
+          />
         ) : (
           doctor && (
             <BookForm

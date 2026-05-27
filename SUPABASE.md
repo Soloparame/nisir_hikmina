@@ -43,3 +43,7 @@ Patients book at `/book` — they pick a doctor first, then fill the form.
 ## 7. Admin email / Telegram / WhatsApp when someone books
 
 See **`NOTIFICATIONS.md`**. You need at least **`RESEND_API_KEY`** for email alerts; Telegram and WhatsApp are optional (see that file for setup).
+
+## 8. Netlify production
+
+If admin login shows **`fetch failed`** or `/book` has no doctors, see **`NETLIFY-DEPLOY.md`** and open `/api/health/supabase` on your live site after redeploying.
