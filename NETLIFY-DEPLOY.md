@@ -62,3 +62,11 @@ Doctors in the **database** are not the same as an **admin login**:
 ## 6. Netlify Next.js plugin
 
 This repo includes `netlify.toml` with `@netlify/plugin-nextjs`. Netlify usually installs it automatically; if builds fail, enable **Next.js** in the Netlify UI or install the plugin on the site.
+
+## 7. Build errors (secrets scan / OpenTelemetry)
+
+**Secrets scanner blocks deploy** — Netlify may flag `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the JS bundle. That is expected for public keys. This repo sets `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml`. Do **not** commit `.env.local`; only set keys in Netlify → Environment variables.
+
+**`Cannot resolve "@opentelemetry/api"`** — fixed by declaring `@opentelemetry/api` in `package.json` (required for Edge/middleware bundling on Netlify). After pulling, run `npm install` and redeploy.
+
+If a deploy still fails after env changes: **Deploys** → **Trigger deploy** → enable **Clear cache and deploy site**.

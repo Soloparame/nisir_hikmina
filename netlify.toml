@@ -1,5 +1,10 @@
 [build]
   command = "npm run build"
 
+[build.environment]
+  # NEXT_PUBLIC_* Supabase keys are intentionally embedded in the client bundle.
+  # Omit from secrets scanning so deploys are not blocked (set values only in Netlify UI).
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
