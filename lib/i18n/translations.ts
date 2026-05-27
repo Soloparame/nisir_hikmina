@@ -11,6 +11,7 @@ export const translations = {
     },
     nav: {
       home: "መነሻ",
+      about: "ስለ እኛ",
       doctors: "ዶክተሮች",
       bookAppointment: "ቀጠሮ",
       bookNow: "ቀጠሮ ይያዙ",
@@ -91,9 +92,63 @@ export const translations = {
       terms: "የአገልግሎት ውሎች",
       rights: "ሁሉም መብቶች የተጠበቁ ናቸው።",
     },
+    about: {
+      badge: "ስለ ንስር ሕክምና",
+      title: "ጤናን ለሁሉም ተደራሽ እናደርጋለን",
+      lead:
+        "ንስር ሕክምና ታካሚዎችን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ የቴሌሕክምና መድረክ ነው። በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር ያስይዙ።",
+      missionTitle: "ተልዕኮአችን",
+      missionP1:
+        "በኢትዮጵያ እና በውጭ የሚኖሩ ታካሚዎች ከፍተኛ ጥራት ያለው የሕክምና ምክክር እንዲያገኙ እንሠራለን። ዶክተር መምረጥ፣ ቀጠሮ መያዝ እና መረጃ መሙላት በአንድ ቦታ ቀላል ነው።",
+      missionP2:
+        "ቡድናችን ታካሚዎችን በእያንዳንዱ ደረጃ ይሰማል — ከቀጠሮ ጥያቄ እስከ ምክክር ድረስ ግልጽ እና ግብረ መልስ ያለው አገልግሎት እንሰጣለን።",
+      visionTitle: "ራዕያችን",
+      visionText:
+        "በአገር አቀፍ ደረጃ የታመነ የጤና መድረክ መሆን — ለቤተሰቦች ቀላል፣ ግልጽ እና አስተማማኝ የጤና ጉዞ።",
+      pillarsTitle: "ዋና እሴቶቻችን",
+      pillarsSub: "እነዚህ መርሆች በእያንዳንዱ ቀጠሮ እና ምክክር ውስጥ ይገለጻሉ",
+      pillar1Title: "ጥራት እና ግብረ መልስ",
+      pillar1Desc:
+        "በጥብቅ የሚመረጡ ዶክተሮች እና ግልጽ የቀጠሮ ሂደት።",
+      pillar2Title: "ተደራሽነት",
+      pillar2Desc:
+        "ከማንኛውም ቦታ ቀጠሮ — በቴሌግራም፣ ስልክ ወይም ቪዲዮ።",
+      pillar3Title: "ታካሚ በመረጃ",
+      pillar3Desc:
+        "የታካሚ መረጃ ደህንነት እና ከቀጠሮ እስከ ምክክር ግልጽ ግንኙነት።",
+      whyTitle: "ለምን ንስር ሕክምና?",
+      whyItems: [
+        "በብቁ ዶክተሮች በስፔሻሊቲ ይፈልጉ እና ይምረጡ",
+        "ቀላል የቀጠሮ ቅጽ — አማርኛ እና እንግሊዝኛ",
+        "በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር",
+        "ፈጣን ምላሽ ከሕክምና ቡድናችን",
+      ],
+      ctaTitle: "ዶክተርዎን ይምረጡ እና ቀጠሮ ይያዙ",
+      ctaSub: "ዛሬ ጀምሩ — በጥቂት ደቂቃዎች ውስጥ ጥያቄዎን ያስገቡ።",
+      storyKicker: "ስለ እኛ",
+      storyTitle: "ስለ",
+      storyTitleAccent: "እኛ",
+      storyHeading: "የእኛ",
+      storyHeadingAccent: "ታሪክ",
+      storyIntro:
+        "ንስር ሕክምና ታካሊያን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ መድረክ ነው።",
+      storyTimeline1:
+        "በኢትዮጵያ እና በውጭ የሚኖሩ ታካሚዎች ለእነሱ የሚስማማውን ስፔሻሊቲ ይመርጣሉ፣ ቀጠሮ ያስይዛሉ፣ ከዚያም በቀላሉ ቅጽ ዝርዝር መረጃ ይሙላሉ።",
+      storyTimeline2:
+        "ቡድናችን ከቀጠሮ ጥያቄ እስከ ምክክር ድረስ ግልጽ ግንኙነት ይይዛል — ግብረ መልስ ያለው እና ታካሚ-መጀመሪያ አገልግሎት።",
+      storyStep2Title: "እንዴት እንሠራለን",
+      visionCardTitle: "ራዕያችን",
+    },
     book: {
-      backHome: "← ወደ መነሻ ተመለስ",
       chooseDoctorTitle: "ዶክተርዎን ይምረጡ",
+      filterTitle: "ማጣሪያ",
+      searchPlaceholder: "ስፔሻሊቲ ይፈልጉ...",
+      allCategories: "ሁሉ",
+      clearFilters: "ማጣሪያ አጽዳ",
+      noMatch: "በዚህ ማጣሪያ ምንም ዶክተር አልተገኘም።",
+      showFilters: "ማጣሪያ አሳይ",
+      hideFilters: "ማጣሪያ ደብቅ",
+      backHome: "← ወደ መነሻ ተመለስ",
       chooseDoctorSub: "ለእርስዎ የሚስማማውን ባለሙያ ዶክተር ይምረጡ፣ ከዚያ ዝርዝር መረጃዎን ይሙሉ",
       yearsExp: "ዓመት ልምድ",
       continueBtn: "ወደ ቀጠሮ ቅጽ →",
@@ -169,6 +224,7 @@ export const translations = {
     },
     nav: {
       home: "Home",
+      about: "About",
       doctors: "Doctors",
       bookAppointment: "Book",
       bookNow: "Book Now",
@@ -255,9 +311,63 @@ export const translations = {
       terms: "Terms of Service",
       rights: "All rights reserved.",
     },
+    about: {
+      badge: "About Nisir Health",
+      title: "Making quality healthcare accessible",
+      lead:
+        "Nisir Health is a modern telehealth platform that connects patients with qualified specialists. Book in-person, audio, or video consultations in a few simple steps.",
+      missionTitle: "Our mission",
+      missionP1:
+        "We help patients in Ethiopia and abroad access trusted medical consultations without unnecessary complexity. Choosing a doctor, booking, and sharing your details happens in one clear flow.",
+      missionP2:
+        "Our team focuses on responsive, human care — from appointment requests through to your consultation.",
+      visionTitle: "Our vision",
+      visionText:
+        "To become a nationally trusted health platform — simple, transparent, and dependable for every family.",
+      pillarsTitle: "What we stand for",
+      pillarsSub: "These principles guide every appointment and consultation",
+      pillar1Title: "Quality & trust",
+      pillar1Desc:
+        "Carefully selected doctors and a transparent booking process.",
+      pillar2Title: "Accessibility",
+      pillar2Desc:
+        "Care from anywhere — via Telegram, phone, or video.",
+      pillar3Title: "Patient-first",
+      pillar3Desc:
+        "Clear communication and respect for your information at every step.",
+      whyTitle: "Why Nisir Health?",
+      whyItems: [
+        "Browse and choose doctors by specialty",
+        "Simple booking form in Amharic and English",
+        "In-person, audio, or video consultations",
+        "Fast follow-up from our medical team",
+      ],
+      ctaTitle: "Choose your doctor and book today",
+      ctaSub: "Get started in just a few minutes.",
+      storyKicker: "About us",
+      storyTitle: "ABOUT",
+      storyTitleAccent: "US",
+      storyHeading: "Our",
+      storyHeadingAccent: "Story",
+      storyIntro:
+        "Nisir Health is a modern platform that connects patients with qualified specialists across many medical fields.",
+      storyTimeline1:
+        "Patients in Ethiopia and abroad choose the right specialty, book an appointment, and share details through one simple form.",
+      storyTimeline2:
+        "Our team stays in touch from request to consultation — responsive, clear, and patient-first at every step.",
+      storyStep2Title: "How we work",
+      visionCardTitle: "Our vision",
+    },
     book: {
       backHome: "← Back to Home",
       chooseDoctorTitle: "Choose Your Doctor",
+      filterTitle: "Filters",
+      searchPlaceholder: "Search specialties...",
+      allCategories: "All",
+      clearFilters: "Clear filters",
+      noMatch: "No doctors match this filter.",
+      showFilters: "Show filters",
+      hideFilters: "Hide filters",
       chooseDoctorSub: "Select a specialist, then fill in your booking details",
       yearsExp: "years experience",
       continueBtn: "Continue to Form →",

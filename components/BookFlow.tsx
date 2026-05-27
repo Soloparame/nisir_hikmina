@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Navbar from "./Navbar";
+import SiteFooter from "./SiteFooter";
 import DoctorPicker from "./DoctorPicker";
 import BookForm from "./BookForm";
 import { useLanguage } from "../lib/i18n/LanguageContext";
@@ -20,7 +21,7 @@ export default function BookFlow() {
   }
 
   return (
-    <>
+    <div className={styles.pageShell}>
       <Navbar />
 
       <div className={styles.pageHeader}>
@@ -49,19 +50,23 @@ export default function BookFlow() {
         </div>
       </div>
 
-      {step === "doctor" ? (
-        <DoctorPicker onSelect={handleDoctorSelect} />
-      ) : (
-        doctor && (
-          <BookForm
-            doctor={doctor}
-            onChangeDoctor={() => {
-              setStep("doctor");
-              setDoctor(null);
-            }}
-          />
-        )
-      )}
-    </>
+      <div className={styles.pageBody}>
+        {step === "doctor" ? (
+          <DoctorPicker onSelect={handleDoctorSelect} />
+        ) : (
+          doctor && (
+            <BookForm
+              doctor={doctor}
+              onChangeDoctor={() => {
+                setStep("doctor");
+                setDoctor(null);
+              }}
+            />
+          )
+        )}
+      </div>
+
+      <SiteFooter />
+    </div>
   );
 }

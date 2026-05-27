@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Stethoscope } from "lucide-react";
+import { Search, Stethoscope } from "lucide-react";
 import { createClient } from "../lib/supabase/client";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import {
@@ -31,6 +31,7 @@ export default function DoctorPicker({ onSelect }: Props) {
     null
   );
   const [subcategorySearch, setSubcategorySearch] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -58,18 +59,22 @@ export default function DoctorPicker({ onSelect }: Props) {
 
   const selected = doctors.find((d) => d.id === selectedId);
 
-  const allSubcategoryItems = DOCTOR_CATEGORIES.flatMap((cat) =>
-    cat.subcategories.map((sub) => ({ category: cat.label, subcategory: sub }))
-  );
-
-  const visibleSubcategoryItems = allSubcategoryItems.filter((item) => {
-    if (selectedCategory !== "All" && item.category !== selectedCategory)
-      return false;
-    if (!subcategorySearch.trim()) return true;
-    return item.subcategory
-      .toLowerCase()
-      .includes(subcategorySearch.trim().toLowerCase());
-  });
+  const subcategoryItems = useMemo(() => {
+    const items = DOCTOR_CATEGORIES.flatMap((cat) =>
+      cat.subcategories.map((sub) => ({
+        category: cat.label,
+        subcategory: sub,
+      }))
+    );
+    return items.filter((item) => {
+      if (selectedCategory !== "All" && item.category !== selectedCategory)
+        return false;
+      if (!subcategorySearch.trim()) return true;
+      return item.subcategory
+        .toLowerCase()
+        .includes(subcategorySearch.trim().toLowerCase());
+    });
+  }, [selectedCategory, subcategorySearch]);
 
   const filteredDoctors = doctors.filter((d) => {
     const sub = d.specialization_en ?? d.specialization;
@@ -79,6 +84,9 @@ export default function DoctorPicker({ onSelect }: Props) {
     if (selectedSubcategory && sub !== selectedSubcategory) return false;
     return true;
   });
+
+  const hasActiveFilter =
+    selectedCategory !== "All" || selectedSubcategory !== null;
 
   if (loading) {
     return (
@@ -98,162 +106,195 @@ export default function DoctorPicker({ onSelect }: Props) {
     );
   }
 
-  return (
-    <div className={styles.wrapper}>
-      <div className={styles.filterPanel}>
-        <div className={styles.categoryChips} role="tablist" aria-label="Categories">
+  const sidebar = (
+    <aside className={styles.sidebar}>
+      <h2 className={styles.sidebarTitle}>{t.book.filterTitle}</h2>
+
+      <div className={styles.searchWrap}>
+        <Search size={18} className={styles.searchIcon} aria-hidden />
+        <input
+          className={styles.searchInput}
+          type="search"
+          value={subcategorySearch}
+          placeholder={t.book.searchPlaceholder}
+          onChange={(e) => setSubcategorySearch(e.target.value)}
+        />
+      </div>
+
+      <nav className={styles.categoryNav} aria-label="Categories">
+        <button
+          type="button"
+          className={`${styles.categoryItem} ${
+            selectedCategory === "All" ? styles.categoryItemActive : ""
+          }`}
+          onClick={() => {
+            setSelectedCategory("All");
+            setSelectedSubcategory(null);
+          }}
+        >
+          {t.book.allCategories}
+        </button>
+        {DOCTOR_CATEGORIES.map((cat) => (
           <button
+            key={cat.key}
             type="button"
-            className={`${styles.chip} ${selectedCategory === "All" ? styles.chipActive : ""}`}
+            className={`${styles.categoryItem} ${
+              selectedCategory === cat.label ? styles.categoryItemActive : ""
+            }`}
             onClick={() => {
-              setSelectedCategory("All");
+              setSelectedCategory(cat.label);
               setSelectedSubcategory(null);
-              setSubcategorySearch("");
             }}
           >
-            All
+            {cat.label}
           </button>
-          {DOCTOR_CATEGORIES.map((cat) => (
-            <button
-              key={cat.key}
-              type="button"
-              className={`${styles.chip} ${
-                selectedCategory === cat.label ? styles.chipActive : ""
-              }`}
-              onClick={() => {
-                setSelectedCategory(cat.label);
-                setSelectedSubcategory(null);
-                setSubcategorySearch("");
-              }}
-            >
-              {cat.label}
-            </button>
-          ))}
+        ))}
+      </nav>
+
+      {subcategoryItems.length > 0 && (
+        <div className={styles.subcategorySection}>
+          <p className={styles.subcategoryLabel}>
+            {selectedCategory === "All"
+              ? t.book.searchPlaceholder
+              : selectedCategory}
+          </p>
+          <div className={styles.subcategoryList}>
+            {subcategoryItems.map((item) => {
+              const active = item.subcategory === selectedSubcategory;
+              return (
+                <button
+                  key={`${item.category}::${item.subcategory}`}
+                  type="button"
+                  className={`${styles.subChip} ${
+                    active ? styles.subChipActive : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedCategory(item.category);
+                    setSelectedSubcategory(item.subcategory);
+                  }}
+                >
+                  {item.subcategory}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {hasActiveFilter && (
+        <button
+          type="button"
+          className={styles.clearBtn}
+          onClick={() => {
+            setSelectedCategory("All");
+            setSelectedSubcategory(null);
+            setSubcategorySearch("");
+          }}
+        >
+          {t.book.clearFilters}
+        </button>
+      )}
+    </aside>
+  );
+
+  return (
+    <div className={styles.wrapper}>
+      <button
+        type="button"
+        className={styles.mobileFilterToggle}
+        onClick={() => setFiltersOpen((o) => !o)}
+      >
+        {filtersOpen ? t.book.hideFilters : t.book.showFilters}
+        {hasActiveFilter && <span className={styles.filterDot} />}
+      </button>
+
+      <div className={styles.layout}>
+        <div
+          className={`${styles.sidebarWrap} ${
+            filtersOpen ? styles.sidebarWrapOpen : ""
+          }`}
+        >
+          {sidebar}
         </div>
 
-        <div className={styles.subcategoryBox}>
-          <input
-            className={styles.searchInput}
-            type="text"
-            value={subcategorySearch}
-            placeholder={
-              selectedCategory === "All"
-                ? "Search subcategories..."
-                : `Search in: ${selectedCategory}...`
-            }
-            onChange={(e) => setSubcategorySearch(e.target.value)}
-          />
+        <div className={styles.main}>
+          <p className={styles.resultsCount}>
+            {filteredDoctors.length} {t.nav.doctors.toLowerCase()}
+          </p>
 
-          <div className={styles.subcategoryList}>
-            {visibleSubcategoryItems.length === 0 ? (
-              <div className={styles.subcategoryEmpty}>
-                No matching subcategories.
-              </div>
-            ) : (
-              visibleSubcategoryItems.map((item) => {
-                const active = item.subcategory === selectedSubcategory;
+          {filteredDoctors.length === 0 ? (
+            <div className={styles.stateBoxInline}>
+              <p>{t.book.noMatch}</p>
+            </div>
+          ) : (
+            <div className={styles.grid}>
+              {filteredDoctors.map((doctor) => {
+                const active = selectedId === doctor.id;
                 return (
                   <button
-                    key={`${item.category}::${item.subcategory}`}
+                    key={doctor.id}
                     type="button"
-                    className={`${styles.subChip} ${
-                      active ? styles.subChipActive : ""
+                    className={`${styles.card} ${
+                      active ? styles.cardActive : ""
                     }`}
-                    onClick={() => {
-                      setSelectedCategory(item.category);
-                      setSelectedSubcategory(item.subcategory);
-                    }}
+                    onClick={() => setSelectedId(doctor.id)}
                   >
-                    {item.category} / {item.subcategory}
+                    <div className={styles.avatarWrap}>
+                      {doctor.image_url ? (
+                        <Image
+                          src={doctor.image_url}
+                          alt={getDoctorName(doctor, locale)}
+                          width={120}
+                          height={120}
+                          className={styles.avatar}
+                        />
+                      ) : (
+                        <div className={styles.avatarFallback}>
+                          <Stethoscope size={36} />
+                        </div>
+                      )}
+                    </div>
+                    <h3>{getDoctorName(doctor, locale)}</h3>
+                    <p className={styles.spec}>
+                      {doctor.category ? `${doctor.category} — ` : ""}
+                      {getDoctorSpecialization(doctor, locale)}
+                    </p>
+                    <p className={styles.exp}>
+                      {doctor.experience_years}+ {t.book.yearsExp}
+                    </p>
+                    {getDoctorBio(doctor, locale) && (
+                      <p className={styles.bio}>
+                        {getDoctorBio(doctor, locale)}
+                      </p>
+                    )}
+                    {doctor.languages?.length > 0 && (
+                      <div className={styles.langs}>
+                        {doctor.languages.map((lang) => (
+                          <span key={lang} className={styles.langTag}>
+                            {lang}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </button>
                 );
-              })
-            )}
-          </div>
+              })}
+            </div>
+          )}
 
-          {(selectedCategory !== "All" || selectedSubcategory) && (
-            <button
-              type="button"
-              className={styles.clearBtn}
-              onClick={() => {
-                setSelectedCategory("All");
-                setSelectedSubcategory(null);
-                setSubcategorySearch("");
-              }}
-            >
-              Clear filters
-            </button>
+          {selected && (
+            <div className={styles.footer}>
+              <button
+                type="button"
+                className={styles.continueBtn}
+                onClick={() => onSelect(selected)}
+              >
+                {t.book.continueBtn}
+              </button>
+            </div>
           )}
         </div>
       </div>
-
-      {filteredDoctors.length === 0 ? (
-        <div className={styles.stateBox}>
-          <p className={styles.emptyStateText}>No doctors match this filter.</p>
-        </div>
-      ) : (
-      <div className={styles.grid}>
-        {filteredDoctors.map((doctor) => {
-          const active = selectedId === doctor.id;
-          return (
-            <button
-              key={doctor.id}
-              type="button"
-              className={`${styles.card} ${active ? styles.cardActive : ""}`}
-              onClick={() => setSelectedId(doctor.id)}
-            >
-              <div className={styles.avatarWrap}>
-                {doctor.image_url ? (
-                  <Image
-                    src={doctor.image_url}
-                    alt={getDoctorName(doctor, locale)}
-                    width={120}
-                    height={120}
-                    className={styles.avatar}
-                  />
-                ) : (
-                  <div className={styles.avatarFallback}>
-                    <Stethoscope size={36} />
-                  </div>
-                )}
-              </div>
-              <h3>{getDoctorName(doctor, locale)}</h3>
-              <p className={styles.spec}>
-                {doctor.category ? `${doctor.category} — ` : ""}
-                {getDoctorSpecialization(doctor, locale)}
-              </p>
-              <p className={styles.exp}>
-                {doctor.experience_years}+ {t.book.yearsExp}
-              </p>
-              {getDoctorBio(doctor, locale) && (
-                <p className={styles.bio}>{getDoctorBio(doctor, locale)}</p>
-              )}
-              {doctor.languages?.length > 0 && (
-                <div className={styles.langs}>
-                  {doctor.languages.map((lang) => (
-                    <span key={lang} className={styles.langTag}>
-                      {lang}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
-      )}
-
-      {selected && (
-        <div className={styles.footer}>
-          <button
-            type="button"
-            className={styles.continueBtn}
-            onClick={() => onSelect(selected)}
-          >
-            {t.book.continueBtn}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,6 +1,18 @@
+.pageShell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-offwhite);
+}
+
+.pageBody {
+  flex: 1;
+  padding-bottom: 1rem;
+}
+
 .pageHeader {
   background: linear-gradient(135deg, #004d4d 0%, #007a7a 50%, #009966 100%);
-  padding: 2rem 2rem 1.75rem;
+  padding: 1.35rem 2rem 1.75rem;
   color: #fff;
 }
 
