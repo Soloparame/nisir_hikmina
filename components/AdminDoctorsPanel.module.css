@@ -67,7 +67,8 @@
 }
 
 .formCard input,
-.formCard textarea {
+.formCard textarea,
+.formCard select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #e2e8f0;

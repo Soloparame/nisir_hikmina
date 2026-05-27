@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { notifyAdminNewAppointment } from "../notify-admin-appointment";
 import { createClient } from "../supabase/server";
 import type { AppointmentInsert, DoctorFormData } from "../types/doctor";
 
@@ -63,6 +64,7 @@ export async function saveDoctor(
     const payload = {
       name: form.name.trim(),
       name_en: form.name_en?.trim() || null,
+      category: form.category.trim() || null,
       specialization: form.specialization.trim(),
       specialization_en: form.specialization_en?.trim() || null,
       bio: form.bio?.trim() || null,
@@ -127,18 +129,59 @@ export async function createAppointment(
     return { ok: false, error: error.message };
   }
 
+  let doctorName = "Unknown doctor";
+  const { data: doctorRow } = await supabase
+    .from("doctors")
+    .select("name, name_en")
+    .eq("id", data.doctor_id)
+    .maybeSingle();
+  if (doctorRow) {
+    doctorName =
+      (doctorRow as { name?: string; name_en?: string | null }).name_en?.trim() ||
+      (doctorRow as { name?: string }).name ||
+      doctorName;
+  }
+
+  try {
+    await notifyAdminNewAppointment({
+      patient_name: data.patient_name,
+      phone: data.phone,
+      disease: data.disease,
+      telegram: data.telegram,
+      country: data.country,
+      city: data.city,
+      consult_type: data.consult_type,
+      doctor_name: doctorName,
+    });
+  } catch (e) {
+    console.error("createAppointment notify:", e);
+  }
+
   return { ok: true };
 }
 
 export async function signInAdmin(email: string, password: string) {
-  const supabase = await createClient();
-  if (!supabase) {
-    return { ok: false, error: "Supabase is not configured" };
-  }
+  try {
+    const supabase = await createClient();
+    if (!supabase) {
+      return { ok: false, error: "Supabase is not configured (missing env vars)" };
+    }
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { ok: false, error: error.message };
-  return { ok: true };
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (e) {
+    return {
+      ok: false,
+      error:
+        e instanceof Error
+          ? e.message
+          : "Failed to contact Supabase. Check production env vars and network.",
+    };
+  }
 }
 
 export async function signOutAdmin() {

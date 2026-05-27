@@ -4,6 +4,7 @@ create table if not exists doctors (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   name_en text,
+  category text,
   specialization text not null,
   specialization_en text,
   bio text,
@@ -15,6 +16,9 @@ create table if not exists doctors (
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );
+
+-- Existing installations: ensure the new column exists
+alter table doctors add column if not exists category text;
 
 create table if not exists appointments (
   id uuid primary key default gen_random_uuid(),
@@ -32,6 +36,12 @@ create table if not exists appointments (
 
 alter table doctors enable row level security;
 alter table appointments enable row level security;
+
+-- Policies: drop first so this script is safe to re-run
+drop policy if exists "Anyone can read active doctors" on doctors;
+drop policy if exists "Admins manage doctors" on doctors;
+drop policy if exists "Anyone can create appointments" on appointments;
+drop policy if exists "Admins read appointments" on appointments;
 
 create policy "Anyone can read active doctors"
   on doctors for select
@@ -52,6 +62,10 @@ create policy "Admins read appointments"
   to authenticated
   using (true);
 
--- Storage bucket for doctor photos (create in Supabase Dashboard > Storage)
--- Bucket name: doctor-images, public: true
--- Policy: authenticated users can upload, public can read
+-- ========== Storage: doctor-images ==========
+-- Bucket only (SQL). Policies must be added in Dashboard — see supabase/STORAGE-SETUP.md
+-- (SQL policies on storage.objects fail with "must be owner of table objects" on hosted Supabase.)
+
+insert into storage.buckets (id, name, public)
+values ('doctor-images', 'doctor-images', true)
+on conflict (id) do update set public = true;

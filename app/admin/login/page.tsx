@@ -17,15 +17,26 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signInAdmin(email, password);
-    if (!result.ok) {
-      setError(result.error ?? "Login failed");
-      setLoading(false);
-      return;
-    }
+    try {
+      const result = await signInAdmin(email, password);
+      if (!result.ok) {
+        setError(result.error ?? "Login failed");
+        setLoading(false);
+        return;
+      }
 
-    router.push("/admin/doctors");
-    router.refresh();
+      router.push("/admin/doctors");
+      router.refresh();
+    } catch (err) {
+      // If Next.js can't reach the server action endpoint, you'll see generic
+      // "failed to fetch" — this makes the UI show something actionable.
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Login request failed. Check production env vars (Supabase URL + anon key)."
+      );
+      setLoading(false);
+    }
   }
 
   return (

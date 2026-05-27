@@ -9,6 +9,10 @@ import {
   signOutAdmin,
 } from "../lib/actions/doctors";
 import { createClient } from "../lib/supabase/client";
+import {
+  DOCTOR_CATEGORIES,
+  getSubcategoriesForCategoryLabel,
+} from "../lib/doctor-categories";
 import type { Doctor, DoctorFormData } from "../lib/types/doctor";
 import styles from "./AdminDoctorsPanel.module.css";
 
@@ -19,8 +23,10 @@ type Props = {
 const emptyForm: DoctorFormData = {
   name: "",
   name_en: "",
-  specialization: "",
-  specialization_en: "",
+  category: DOCTOR_CATEGORIES[0]?.label ?? "Primary Care & General Medicine",
+  specialization: DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Pediatrics",
+  specialization_en:
+    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Pediatrics",
   bio: "",
   bio_en: "",
   image_url: "",
@@ -42,11 +48,13 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
 
   function loadDoctor(d: Doctor) {
     setEditingId(d.id);
+    const detectedSubcategory = d.specialization_en ?? d.specialization;
     setForm({
       name: d.name,
       name_en: d.name_en ?? "",
-      specialization: d.specialization,
-      specialization_en: d.specialization_en ?? "",
+      category: d.category ?? emptyForm.category,
+      specialization: detectedSubcategory,
+      specialization_en: d.specialization_en ?? detectedSubcategory,
       bio: d.bio ?? "",
       bio_en: d.bio_en ?? "",
       image_url: d.image_url ?? "",
@@ -162,22 +170,54 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
             onChange={(e) => setForm({ ...form, name_en: e.target.value })}
           />
 
-          <label>ስፔሻሊቲ (አማርኛ) *</label>
-          <input
-            value={form.specialization}
-            onChange={(e) =>
-              setForm({ ...form, specialization: e.target.value })
-            }
-            required
-          />
+          <label>Category</label>
+          <select
+            value={form.category}
+            onChange={(e) => {
+              const nextCategory = e.target.value;
+              const subcategories = getSubcategoriesForCategoryLabel(
+                nextCategory
+              );
+              const nextSubcategory = subcategories[0] ?? "";
+              setForm({
+                ...form,
+                category: nextCategory,
+                specialization: nextSubcategory,
+                specialization_en: nextSubcategory,
+              });
+            }}
+          >
+            {DOCTOR_CATEGORIES.map((cat) => (
+              <option key={cat.key} value={cat.label}>
+                {cat.label}
+              </option>
+            ))}
+          </select>
 
-          <label>Specialization (English)</label>
-          <input
-            value={form.specialization_en}
-            onChange={(e) =>
-              setForm({ ...form, specialization_en: e.target.value })
-            }
-          />
+          <label>Subcategory (Specialization)</label>
+          <select
+            value={form.specialization}
+            onChange={(e) => {
+              const nextSub = e.target.value;
+              setForm({
+                ...form,
+                specialization: nextSub,
+                specialization_en: nextSub,
+              });
+            }}
+          >
+            {(() => {
+              const subs = getSubcategoriesForCategoryLabel(form.category);
+              const options = subs.includes(form.specialization)
+                ? subs
+                : [...subs, form.specialization].filter(Boolean);
+              return options.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ));
+            })()}
+          </select>
 
           <label>ስለ ዶክተሩ (አማርኛ)</label>
           <textarea
@@ -274,7 +314,10 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
                   )}
                   <div className={styles.listInfo}>
                     <strong>{d.name}</strong>
-                    <span>{d.specialization}</span>
+                    <span>
+                      {d.category ? `${d.category} — ` : ""}
+                      {d.specialization}
+                    </span>
                     {!d.is_active && (
                       <span className={styles.inactive}>Inactive</span>
                     )}

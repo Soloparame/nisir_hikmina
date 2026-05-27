@@ -24,6 +24,7 @@ interface FormErrors {
   state?: string;
   city?: string;
   consult?: string;
+  general?: string;
 }
 
 type Props = {
@@ -102,7 +103,7 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
 
     const doctorLabel = getDoctorName(doctor, locale);
 
-    await createAppointment({
+    const result = await createAppointment({
       doctor_id: doctor.id,
       patient_name: name.trim(),
       phone: phone.trim(),
@@ -112,6 +113,14 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
       city: city.trim(),
       consult_type: consultLabel,
     });
+
+    if (!result.ok) {
+      setErrors({
+        general: result.error ?? t.book.errors.generic,
+      });
+      setSubmitting(false);
+      return;
+    }
 
     const params = new URLSearchParams({
       name: name.trim(),
@@ -159,6 +168,11 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
       </div>
 
       <div className={styles.formCard}>
+        {errors.general && (
+          <p className={styles.error} style={{ marginBottom: "1rem" }}>
+            {errors.general}
+          </p>
+        )}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>

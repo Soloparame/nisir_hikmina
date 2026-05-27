@@ -21,10 +21,11 @@ Open **SQL Editor** and run the script in `supabase/schema.sql`.
 
 ## 4. Storage (doctor photos)
 
-1. Go to **Storage** → **New bucket**
-2. Name: `doctor-images`
-3. Enable **Public bucket**
-4. Add policy: authenticated users can **INSERT**; public can **SELECT**
+If uploads fail with **“new row violates row-level security policy”**, follow **`supabase/STORAGE-SETUP.md`**.
+
+- Run **`supabase/storage-doctor-images.sql`** only to create the bucket (SQL).
+- Add **policies in the Supabase Dashboard** (Storage → `doctor-images` → Policies).  
+  Policy SQL in the editor often fails with **`must be owner of table objects`** — that is expected on hosted Supabase.
 
 ## 5. Admin user
 
@@ -38,3 +39,7 @@ Open **SQL Editor** and run the script in `supabase/schema.sql`.
 - Manage doctors: http://localhost:3000/admin/doctors
 
 Patients book at `/book` — they pick a doctor first, then fill the form.
+
+## 7. Admin email / Telegram / WhatsApp when someone books
+
+See **`NOTIFICATIONS.md`**. You need at least **`RESEND_API_KEY`** for email alerts; Telegram and WhatsApp are optional (see that file for setup).

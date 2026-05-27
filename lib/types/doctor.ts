@@ -2,6 +2,9 @@ export type Doctor = {
   id: string;
   name: string;
   name_en: string | null;
+  // Top-level category selected by admin.
+  // Example: "Primary Care & General Medicine"
+  category: string | null;
   specialization: string;
   specialization_en: string | null;
   bio: string | null;
@@ -17,6 +20,8 @@ export type Doctor = {
 export type DoctorFormData = {
   name: string;
   name_en?: string;
+  // Top-level category selected by admin.
+  category: string;
   specialization: string;
   specialization_en?: string;
   bio?: string;

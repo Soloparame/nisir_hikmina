@@ -134,6 +134,7 @@ export const translations = {
         state: "ክልል / ግዛት ይምረጡ",
         city: "ከተማዎን ይምረጡ ወይም ይፃፉ",
         consult: "የምክክር አይነት ይምረጡ",
+        generic: "ጥያቄው አልተሳካም። እባክዎ ትንሽ ቆይተው እንደገና ይሞክሩ።",
       },
     },
     success: {
@@ -297,6 +298,7 @@ export const translations = {
         state: "Please select your state or region",
         city: "Please select or enter your city",
         consult: "Please choose a consultation type",
+        generic: "Something went wrong. Please try again in a moment.",
       },
     },
     success: {
