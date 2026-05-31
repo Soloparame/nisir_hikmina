@@ -21,7 +21,7 @@ export const SERVICE_IMAGES = {
     alt: "Primary care medical equipment",
   },
   dermatology: {
-    src: "https://i.pinimg.com/control1/1200x/c9/45/80/c94580837354b77a265ae8e009dfeae9.jpg",
+    src: "https://images.unsplash.com/photo-1570172619644-d3b965d9f1e0?auto=format&fit=crop&w=900&q=80",
     alt: "Dermatology and skin care",
   },
 } as const;
