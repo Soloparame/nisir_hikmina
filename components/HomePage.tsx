@@ -74,16 +74,33 @@ export default function HomePage() {
               </div>
             </div>
             
-            <div className={styles.heroImageBlock}>
-              <Image
-                src="/doctor_hero.png"
-                alt={t.hero.doctorAlt}
-                width={400}
-                height={480}
-                className={styles.heroImage}
-                priority
-                sizes="(max-width: 768px) 88vw, (max-width: 992px) 300px, 340px"
-              />
+            <div className={styles.heroImageWrap}>
+              <div className={styles.heroImageBlock}>
+                <Image
+                  src="/doctor_hero.jpg"
+                  alt={t.hero.doctorAlt}
+                  width={400}
+                  height={480}
+                  className={styles.heroImage}
+                  priority
+                  sizes="(max-width: 768px) 88vw, (max-width: 992px) 300px, 340px"
+                />
+              </div>
+              <aside
+                className={styles.heroFloatingBox}
+                aria-label={`${t.hero.tributeName} biography`}
+              >
+                <h4 className={styles.tributeName}>{t.hero.tributeName}</h4>
+                <p className={styles.tributeNameLatin}>
+                  {t.hero.tributeNameLatin}
+                </p>
+                <p className={styles.tributeDates}>{t.hero.tributeDates}</p>
+                <p className={styles.tributeBio}>{t.hero.tributeBio}</p>
+                <blockquote className={styles.tributeQuote}>
+                  <p>&ldquo;{t.hero.tributeQuote}&rdquo;</p>
+                  <cite>{t.hero.tributeQuoteSource}</cite>
+                </blockquote>
+              </aside>
             </div>
           </div>
         </section>

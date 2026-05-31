@@ -2,6 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
 }
 
 .main {
@@ -70,7 +71,8 @@
 /* HERO — sits high under floating nav; same horizontal rhythm as .container */
 .hero {
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   background: linear-gradient(
     165deg,
     #f8fafc 0%,
@@ -244,92 +246,172 @@
   gap: 1rem;
 }
 
-/* Right-side image block — depth + inner grid */
+.heroImageWrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(0.65rem, 1.5vw, 1rem);
+}
+
+/* Right-side image block — curved frame + depth */
 .heroImageBlock {
   position: relative;
   z-index: 2;
+  flex: 0 0 auto;
+  width: min(260px, 44%);
+  max-width: 260px;
+  height: 400px;
+  margin: 0;
+  padding: 10px 12px 0;
+  overflow: hidden;
   background:
     linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      transparent 45%
+      155deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 42%
     ),
-    linear-gradient(135deg, #009966, #004d4d);
-  border-radius: 32px 100px 32px 100px;
-  height: 420px;
-  width: 100%;
-  max-width: 340px;
-  margin: 0 auto;
+    linear-gradient(145deg, #00b377 0%, #009966 45%, #004d4d 100%);
+  border-radius: 40px 72px 36px 56px;
   box-shadow:
-    0 24px 56px rgba(0, 77, 77, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
-    0 -20px 40px rgba(0, 153, 102, 0.15) inset;
+    0 28px 64px rgba(0, 77, 77, 0.22),
+    0 12px 28px rgba(0, 153, 102, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
 }
 
 .heroImageBlock::before {
   content: "";
   position: absolute;
-  inset: 12%;
-  border-radius: inherit;
+  inset: 10px 10px 6px;
+  border-radius: 32px 58px 28px 44px;
   background-image:
     linear-gradient(
-      rgba(255, 255, 255, 0.06) 1px,
+      rgba(255, 255, 255, 0.07) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.06) 1px,
+      rgba(255, 255, 255, 0.07) 1px,
       transparent 1px
     );
-  background-size: 24px 24px;
-  opacity: 0.45;
+  background-size: 20px 20px;
+  opacity: 0.5;
   pointer-events: none;
-  mask-image: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    black 30%,
-    transparent 75%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    black 30%,
-    transparent 75%
-  );
+  z-index: 1;
+}
+
+.heroImageBlock::after {
+  content: "";
+  position: absolute;
+  inset: 8px 8px 4px;
+  border-radius: 30px 56px 26px 42px;
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  box-shadow:
+    inset 0 0 24px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(0, 77, 77, 0.08);
+  pointer-events: none;
+  z-index: 4;
 }
 
 .heroImage {
   position: absolute;
-  bottom: 0;
+  bottom: 6px;
   left: 50%;
+  z-index: 2;
   transform: translateX(-50%);
-  width: auto;
-  max-width: 105%;
-  height: 98%;
+  width: calc(100% - 24px);
+  max-width: calc(100% - 24px);
+  height: calc(100% - 14px);
   object-fit: contain;
   object-position: bottom center;
+  border-radius: 28px 48px 22px 38px;
+  filter: drop-shadow(0 10px 20px rgba(0, 51, 51, 0.2));
 }
 
+/* Sits beside image inside the column — no horizontal page scroll */
 .heroFloatingBox {
-  position: absolute;
-  bottom: -30px;
-  right: -30px;
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  z-index: 2;
-  text-align: center;
-  width: 220px;
+  position: relative;
+  flex: 1 1 160px;
+  min-width: 0;
+  max-width: min(240px, 54%);
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(10px);
+  padding: 0.9rem 1rem;
+  border-radius: 18px 22px 18px 22px;
+  box-shadow:
+    0 16px 40px rgba(0, 77, 77, 0.18),
+    0 0 0 1px rgba(0, 153, 102, 0.12);
+  z-index: 3;
+  text-align: left;
+  max-height: min(360px, 52vh);
+  overflow-y: auto;
+  animation: heroFloat 5s ease-in-out infinite;
+  pointer-events: auto;
 }
 
-.heroFloatingBox h4 {
-  font-size: 24px;
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.tributeName {
+  font-size: 1.15rem;
+  font-weight: 800;
   color: var(--primary);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.2rem;
+  line-height: 1.25;
 }
 
-.heroFloatingBox p {
+.tributeNameLatin {
+  font-size: 0.82rem;
   color: var(--text-light);
-  font-size: 14px;
+  margin: 0 0 0.45rem;
+  font-weight: 600;
+}
+
+.tributeDates {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0 0 0.65rem;
+  font-weight: 600;
+}
+
+.tributeBio {
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  margin: 0 0 0.75rem;
+}
+
+.tributeQuote {
+  margin: 0;
+  padding: 0.65rem 0 0;
+  border-top: 1px solid rgba(0, 77, 77, 0.1);
+}
+
+.tributeQuote p {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--primary);
+}
+
+.tributeQuote cite {
+  font-size: 0.72rem;
+  font-style: normal;
+  color: var(--text-light);
+  font-weight: 600;
 }
 
 /* TRUST BANNER */
@@ -496,20 +578,57 @@
   width: 100%;
   height: 200px;
   margin-bottom: 1.25rem;
-  border-radius: 12px;
+  border-radius: 20px 28px 20px 28px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.25s ease;
+}
+
+.serviceImageWrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    transparent 55%,
+    rgba(0, 77, 77, 0.35) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
 }
 
 .serviceImage {
   object-fit: cover;
   object-position: center;
-  transition: transform 0.35s ease;
+  border-radius: inherit;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.serviceItem:hover .serviceImageWrapper {
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.serviceItem:hover .serviceImageWrapper::after {
+  opacity: 0.65;
 }
 
 .serviceItem:hover .serviceImage {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .serviceInfo h4 {
@@ -732,8 +851,25 @@
     order: 1;
   }
 
-  .heroImageBlock {
+  .heroImageWrap {
     order: 2;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .heroImageBlock {
+    width: 100%;
+    max-width: min(300px, 85vw);
+    margin: 0 auto;
+  }
+
+  .heroFloatingBox {
+    flex: none;
+    width: 100%;
+    max-width: min(420px, 100%);
+    max-height: none;
+    align-self: center;
   }
 
   .heroTitle {
@@ -755,7 +891,22 @@
   .heroImageBlock {
     max-width: min(300px, 85vw);
     height: 340px;
-    border-radius: 28px 72px 28px 72px;
+    border-radius: 36px 64px 32px 48px;
+    padding: 8px 10px 0;
+  }
+
+  .heroImageBlock::before {
+    inset: 8px 8px 4px;
+    border-radius: 28px 52px 24px 40px;
+  }
+
+  .heroImageBlock::after {
+    inset: 6px 6px 3px;
+    border-radius: 26px 50px 22px 38px;
+  }
+
+  .heroImage {
+    border-radius: 24px 42px 18px 34px;
   }
 
   .heroImage {
@@ -800,7 +951,16 @@
   .heroImageBlock {
     max-width: min(280px, 88vw);
     height: 300px;
-    border-radius: 24px 56px 24px 56px;
+    border-radius: 32px 56px 28px 44px;
+  }
+
+  .heroImage {
+    border-radius: 22px 38px 16px 30px;
+  }
+
+  .heroFloatingBox {
+    padding: 1rem 1.1rem;
+    max-width: 100%;
   }
 
   .heroActions .btnPrimary {
@@ -859,6 +1019,7 @@
   .heroImageBlock {
     max-width: min(260px, 92vw);
     height: 260px;
+    border-radius: 28px 48px 24px 40px;
   }
 
   .heroContainer::before,

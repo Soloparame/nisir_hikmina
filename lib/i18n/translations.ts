@@ -38,7 +38,15 @@ const translationsSource = {
       review:
         "« እስካሁን ያለኝ ምርጥ የሕክምና ተሞክሮ። ንስር ሕክምናን በጣም እመክራለሁ! »",
       reviewAuthor: "— ሳራ መ.",
-      doctorAlt: "የሙያ ዶክተር",
+      doctorAlt: "ዶክተር አስራት ወልደየስ",
+      tributeName: "አስራት ወልደየስ",
+      tributeNameLatin: "Asrat Woldeyes",
+      tributeDates: "ግንቦት ፲፪ ፣ ፲፱፻፳ — ግንቦት ፮ ፣ ፲፱፻፺፱",
+      tributeBio:
+        "የኢትዮጵያ ቀዶ ሕክምና ባለሙያ፣ በአዲስ አበባ ዩኒቨርሲቲ የሕክምና መምህር፣ እና የሁሉም አማራ ሕዝብ ድርጅት (AAPO) መስራችና መሪ ነበሩ። በደርግ እና በኢሕአዴግ ተደጋጋሚ ጊዜያት በእስር ተደረጉ።",
+      tributeQuote:
+        "በተራ ተራ የኢትዮጵያ በጣም የተከበረ ቀዶ ሕክምና ባለሙያ፣ ሐኪም እና የዩኒቨርሲቲ ዲን ነበሩ።",
+      tributeQuoteSource: "— The Guardian",
     },
     trust: {
       label: "የታመኑበት፦",
@@ -301,7 +309,15 @@ const translationsSource = {
       review:
         '"The best medical experience I\'ve ever had. Highly recommend Nisir Hikimina!"',
       reviewAuthor: "— Sarah M.",
-      doctorAlt: "Professional doctor",
+      doctorAlt: "Dr. Asrat Woldeyes",
+      tributeName: "Asrat Woldeyes",
+      tributeNameLatin: "አስራት ወልደየስ",
+      tributeDates: "June 20, 1928 – May 14, 1999",
+      tributeBio:
+        "Ethiopian surgeon, professor of medicine at Addis Ababa University, and founder and leader of the All-Amhara People's Organization (AAPO). He was jailed by the Derg and later by the Ethiopian People's Revolutionary Democratic Front (EPRDF).",
+      tributeQuote:
+        "successively Ethiopia's most distinguished surgeon, physician and university dean.",
+      tributeQuoteSource: "— The Guardian",
     },
     trust: {
       label: "Trusted By:",
