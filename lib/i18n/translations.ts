@@ -1,8 +1,15 @@
 export type Locale = "am" | "en";
 
-export type TranslationKeys = typeof translations.am;
+/** Widen literal strings so en/am share one context type (fixes Netlify build). */
+type WidenStrings<T> = T extends string
+  ? string
+  : T extends readonly (infer U)[]
+    ? readonly WidenStrings<U>[]
+    : T extends object
+      ? { readonly [K in keyof T]: WidenStrings<T[K]> }
+      : T;
 
-export const translations = {
+const translationsSource = {
   am: {
     meta: {
       title: "ንስር ሕክምና — የታመነ የጤና መድረክ",
@@ -543,3 +550,12 @@ export const translations = {
     },
   },
 } as const;
+
+export type TranslationKeys = WidenStrings<
+  (typeof translationsSource)["am"]
+>;
+
+export const translations: Record<Locale, TranslationKeys> = {
+  am: translationsSource.am,
+  en: translationsSource.en,
+};
