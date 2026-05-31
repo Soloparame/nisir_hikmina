@@ -1,6 +1,6 @@
 export type Locale = "am" | "en";
 
-export type TranslationKeys = (typeof translations)[Locale];
+export type TranslationKeys = typeof translations.am;
 
 export const translations = {
   am: {
@@ -68,6 +68,9 @@ export const translations = {
     value: {
       boxTitle: "ጥራት ያለው እንክብካቤ። የተረጋገጠ።",
       boxDesc: "ጥብቅ ምርመራ ሂደታችን ጥሩ ዶክተሮችን ብቻ እንዲያዩዎ ያረጋግጣል።",
+      yearsCount: "7+",
+      yearsLabel: "የአገልግሎት ዓመታት\nትምህርት",
+      readMoreAbout: "ስለ እኛ ይበልጡ",
       title: "እርስዎን በመጀመሪያ የሚያስብ ጤና አገልግሎት",
       doctors: "ከ 5% ላይ ዶክተሮች",
       doctorsDesc: "ዶክተሮቻችን በጣም ብቁ እና በሙያ የተረጋገጡ ናቸው።",
@@ -84,12 +87,58 @@ export const translations = {
       careers: "ስራዎች",
       contact: "ያግኙን",
       services: "አገልግሎቶች",
-      urgentCare: "አስቸኳይ እንክብካቤ",
-      primaryCare: "ዋና እንክብካቤ",
-      mentalHealth: "የአእምሮ ጤና",
+      serviceCategories: [
+        {
+          title: "1. ዋና እንክብካቤ እና አጠቃላይ ሕክምና",
+          items: [
+            "አጠቃላይ ሕክምና / የቤተሰብ ሕክምና",
+            "የውስጥ ሕክምና (የአዋቂ እንክብካቤ)",
+            "የአረጅት ሕክምና",
+            "መከላከያ ጤና እና ደህንነት",
+          ],
+        },
+        {
+          title: "2. የራስ ማረት ጤና",
+          items: [
+            "ጋይነኮሎጂ እና ኦብስትትሪክስ",
+            "የጾታ እና የራስ ማረት ጤና",
+            "ዩሮሎጂ (የሽንት እና የወንድ ጤና)",
+          ],
+        },
+        { title: "3. ፔዲያትሪክስ (የልጆች ጤና)", items: [] },
+        { title: "4. ኒውሮሎጂ (የአንጎል እና የነርቭ እንክብካቤ)", items: [] },
+        { title: "5. ልብ", items: [] },
+        { title: "6. ሄማቶሎጂ", items: [] },
+        { title: "7. ፑልሞኖሎጂ", items: [] },
+        {
+          title: "8. ማቆየት እና ሜታቦሊክ ጤና",
+          items: ["ጋስትሮኢንተሮሎጂ እና ሄፓቶሎጂ"],
+        },
+        { title: "9. ኔፍሮሎጂ (የኩላይት እንክብካቤ)", items: [] },
+        { title: "10. ኢንዶክሪኖሎጂ (የስኳር እና ሆርሞን)", items: [] },
+        { title: "11. ምግብ እና ዲያቴቲክስ", items: [] },
+        { title: "12. ሩሜቶሎጂ", items: [] },
+        { title: "13. ኦንኮሎጂ", items: [] },
+        { title: "14. ኦፍታልሞሎጂ", items: [] },
+        { title: "15. ENT (ጆሮ፣ አፍንጫ እና ጉሮሮ)", items: [] },
+        { title: "16. የጥርስ እና የአፍ ጤና", items: [] },
+        { title: "17. የቆዳ ሕክምና", items: [] },
+        {
+          title: "18. ቀዶ ሕክምና እና የላቀ ቀዶ ሕክምና ምክክር",
+          items: [],
+        },
+        {
+          title: "19. ምርመራ እና ምስል (ራዲዮሎጂ)",
+          items: [],
+        },
+        { title: "20. ፓሊያቲቭ እንክብካቤ", items: [] },
+        { title: "21. ፊዚዮቴራፒ እና ማሻሻያ", items: [] },
+      ],
       legal: "ሕጋዊ",
-      privacy: "የግላዊነት ፖሊሲ",
-      terms: "የአገልግሎት ውሎች",
+      privacy:
+        "የግላዊነት ፖሊሲ — ከመጀመሪያ እስከ መጨረሻ ምስጠራ፣ ግላዊነትዎ የተጠበቀ እና ሚስጥራዊ፣ የጤና መረጃ ለሶስተኛ ወገን አይጋራም።",
+      terms:
+        "የአገልግሎት ውሎች — ግላዊነትዎ የተጠበቀ፣ ሚስጥራዊ እና ለሶስተኛ ወገን አይጋራም።",
       rights: "ሁሉም መብቶች የተጠበቁ ናቸው።",
     },
     about: {
@@ -122,6 +171,7 @@ export const translations = {
         "ቀላል የቀጠሮ ቅጽ — አማርኛ እና እንግሊዝኛ",
         "በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር",
         "ፈጣን ምላሽ ከሕክምና ቡድናችን",
+        "ሚስጥራዊነት — በአለም አቀፍ የተቀበሉ የግላዊነት እና የሚስጥር ጥበቃ ደረጃዎች",
       ],
       ctaTitle: "ዶክተርዎን ይምረጡ እና ቀጠሮ ይያዙ",
       ctaSub: "ዛሬ ጀምሩ — በጥቂት ደቂቃዎች ውስጥ ጥያቄዎን ያስገቡ።",
@@ -283,6 +333,9 @@ export const translations = {
       boxTitle: "Quality Care. Guaranteed.",
       boxDesc:
         "Our rigorous vetting process ensures you only see the best doctors.",
+      yearsCount: "7+",
+      yearsLabel: "Years of Service\nExcellence",
+      readMoreAbout: "Read more about us",
       title: "Healthcare that puts you first",
       doctors: "Top 5% of doctors",
       doctorsDesc:
@@ -303,19 +356,72 @@ export const translations = {
       careers: "Careers",
       contact: "Contact",
       services: "Services",
-      urgentCare: "Urgent Care",
-      primaryCare: "Primary Care",
-      mentalHealth: "Mental Health",
+      serviceCategories: [
+        {
+          title: "1. Primary Care & General Medicine",
+          items: [
+            "General Medicine / Family Medicine",
+            "Internal Medicine (Adult Care)",
+            "Geriatric Medicine (Elderly Care)",
+            "Preventative Health & Wellness",
+          ],
+        },
+        {
+          title: "2. Reproductive Health",
+          items: [
+            "Gynecology & Obstetrics",
+            "Sexual & Reproductive Health",
+            "Urology (Urinary & Men's Health)",
+          ],
+        },
+        { title: "3. Pediatrics (Children's Health)", items: [] },
+        { title: "4. Neurology (Brain & Nerve Care)", items: [] },
+        { title: "5. Heart", items: [] },
+        { title: "6. Hematology", items: [] },
+        { title: "7. Pulmonology", items: [] },
+        {
+          title: "8. Digestion & Metabolic Health",
+          items: [
+            "Gastroenterology & Hepatology (Digestive & Liver Care)",
+          ],
+        },
+        { title: "9. Nephrology (Kidney Care)", items: [] },
+        { title: "10. Endocrinology (Diabetes & Hormones)", items: [] },
+        { title: "11. Nutrition & Dietetics", items: [] },
+        { title: "12. Rheumatology (Joint & Autoimmune)", items: [] },
+        { title: "13. Oncology (Cancer Care)", items: [] },
+        { title: "14. Ophthalmology (Eye Care)", items: [] },
+        { title: "15. ENT (Ear, Nose & Throat)", items: [] },
+        { title: "16. Dentistry & Oral Health", items: [] },
+        { title: "17. Dermatology (Skin, Hair & Nails)", items: [] },
+        {
+          title:
+            "18. Surgery & Advanced surgical sub specialists Consultations",
+          items: [],
+        },
+        {
+          title: "19. Diagnostics, Imaging (Radiology — Imaging Review & Second Opinions)",
+          items: [],
+        },
+        { title: "20. Palliative Care & Symptom Management", items: [] },
+        {
+          title:
+            "21. Physical Medicine & Rehabilitation (physiotherapy)",
+          items: [],
+        },
+      ],
       legal: "Legal",
-      privacy: "Privacy Policy",
-      terms: "Terms of Service",
+      privacy:
+        "Privacy Policy — End-to-end encryption. Your privacy is kept confidential and health data is never shared with third parties.",
+      terms:
+        "Terms of Service — Your privacy is kept confidential. No health data is shared with third parties.",
       rights: "All rights reserved.",
     },
     about: {
-      badge: "About Nisir Health",
+      badge: "About Nisir Hikimina",
       title: "Making quality healthcare accessible",
       lead:
-        "Nisir Health is a modern telehealth platform that connects patients with qualified specialists. Book in-person, audio, or video consultations in a few simple steps.",
+        "Nisir Hikimina is a modern telehealth platform that connects patients with qualified specialists. Book in-person, audio, or video consultations in a few simple steps.",
       missionTitle: "Our mission",
       missionP1:
         "We help patients in Ethiopia and abroad access trusted medical consultations without unnecessary complexity. Choosing a doctor, booking, and sharing your details happens in one clear flow.",
@@ -335,12 +441,13 @@ export const translations = {
       pillar3Title: "Patient-first",
       pillar3Desc:
         "Clear communication and respect for your information at every step.",
-      whyTitle: "Why Nisir Health?",
+      whyTitle: "Why Nisir Hikimina?",
       whyItems: [
         "Browse and choose doctors by specialty",
         "Simple booking form in Amharic and English",
         "In-person, audio, or video consultations",
         "Fast follow-up from our medical team",
+        "Confidentiality — care delivered under internationally accepted privacy and confidentiality standards",
       ],
       ctaTitle: "Choose your doctor and book today",
       ctaSub: "Get started in just a few minutes.",
@@ -350,7 +457,7 @@ export const translations = {
       storyHeading: "Our",
       storyHeadingAccent: "Story",
       storyIntro:
-        "Nisir Health is a modern platform that connects patients with qualified specialists across many medical fields.",
+        "Nisir Hikimina is a modern platform that connects patients with qualified specialists across many medical fields.",
       storyTimeline1:
         "Patients in Ethiopia and abroad choose the right specialty, book an appointment, and share details through one simple form.",
       storyTimeline2:
@@ -416,7 +523,7 @@ export const translations = {
       icon: "✅",
       title: "We've Received Your Request!",
       message:
-        "Thank you for trusting Nisir Health. Our medical team will contact you shortly via Telegram or phone number to confirm your appointment details.",
+        "Thank you for trusting Nisir Hikimina. Our medical team will contact you shortly via Telegram or phone number to confirm your appointment details.",
       summary: "Booking Summary",
       name: "Name",
       condition: "Condition",
@@ -427,7 +534,7 @@ export const translations = {
       consultType: "Consult Type",
       joinTelegram: "✈️ Join Our Telegram Channel",
       backHome: "← Back to Home",
-      footer: "Nisir Health · Serving worldwide",
+      footer: "Nisir Hikimina · Serving worldwide",
       loading: "Loading...",
     },
     lang: {

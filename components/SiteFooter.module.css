@@ -13,7 +13,7 @@
 
 .footerTop {
   display: grid;
-  grid-template-columns: 1.2fr 2fr;
+  grid-template-columns: 1fr 2.2fr;
   gap: 3rem;
   margin-bottom: 3rem;
 }
@@ -54,8 +54,8 @@
 
 .links {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  grid-template-columns: 0.9fr 1.4fr 1fr;
+  gap: 1.5rem;
 }
 
 .linkGroup h4 {
@@ -78,6 +78,55 @@
   color: #fff;
 }
 
+.servicesGroup {
+  min-width: 0;
+}
+
+.serviceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.serviceCategory {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-bottom: 0.55rem;
+}
+
+.serviceCategoryTitle {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.serviceSubList {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0 0 0 0.6rem;
+}
+
+.serviceSubList li {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.76rem;
+  margin-bottom: 0.15rem;
+}
+
+.serviceSubList li::before {
+  content: "– ";
+  opacity: 0.7;
+}
+
+.legalText {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
 .footerBottom {
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding-top: 1.5rem;
@@ -86,12 +135,16 @@
   opacity: 0.75;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .footerTop {
     grid-template-columns: 1fr;
   }
 
   .links {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+  }
+
+  .serviceList {
+    max-height: none;
   }
 }

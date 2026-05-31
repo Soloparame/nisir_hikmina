@@ -33,20 +33,29 @@ export default function SiteFooter() {
               <Link href="/book">{t.nav.doctors}</Link>
               <Link href="/">{t.nav.home}</Link>
             </div>
-            <div className={styles.linkGroup}>
+            <div className={`${styles.linkGroup} ${styles.servicesGroup}`}>
               <h4>{t.footer.services}</h4>
-              <Link href="/book">{t.footer.primaryCare}</Link>
-              <Link href="/book">{t.footer.mentalHealth}</Link>
-              <Link href="/book">{t.footer.urgentCare}</Link>
+              <ul className={styles.serviceList}>
+                {t.footer.serviceCategories.map((category) => (
+                  <li key={category.title} className={styles.serviceCategory}>
+                    <span className={styles.serviceCategoryTitle}>
+                      {category.title}
+                    </span>
+                    {category.items.length > 0 && (
+                      <ul className={styles.serviceSubList}>
+                        {category.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className={styles.linkGroup}>
               <h4>{t.footer.legal}</h4>
-              <span style={{ opacity: 0.6, fontSize: "0.92rem" }}>
-                {t.footer.privacy}
-              </span>
-              <span style={{ opacity: 0.6, fontSize: "0.92rem" }}>
-                {t.footer.terms}
-              </span>
+              <p className={styles.legalText}>{t.footer.privacy}</p>
+              <p className={styles.legalText}>{t.footer.terms}</p>
             </div>
           </div>
         </div>

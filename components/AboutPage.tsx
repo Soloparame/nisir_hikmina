@@ -36,7 +36,6 @@ export default function AboutPage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <span className={styles.badge}>{t.about.badge}</span>
             <h1>{t.about.title}</h1>
             <p className={styles.lead}>{t.about.lead}</p>
           </div>

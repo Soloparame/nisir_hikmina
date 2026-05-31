@@ -120,17 +120,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className={styles.trustBanner}>
-          <div className={styles.trustLogos}>
-            <span>{t.trust.label}</span>
-            <div className={styles.logos}>
-              <span className={styles.fakeLogo}>Healthline</span>
-              <span className={styles.fakeLogo}>Medical News Today</span>
-              <span className={styles.fakeLogo}>WebMD</span>
-            </div>
-          </div>
-        </section>
-
         <section className={styles.servicesSection}>
           <div className={styles.servicesContainer}>
             <div className={styles.servicesSidebar}>
@@ -166,17 +155,19 @@ export default function HomePage() {
             <div className={styles.valueGrid}>
               <div className={styles.valueStats}>
                 <div className={styles.statLarge}>
-                  7+
-                  <span className={styles.statLabel}>Years of Service<br/>Excellence</span>
+                  {t.value.yearsCount}
+                  <span className={styles.statLabel} style={{ whiteSpace: "pre-line" }}>
+                    {t.value.yearsLabel}
+                  </span>
                 </div>
               </div>
               <div className={styles.valueText}>
                 <p style={{ color: 'var(--text-light)', lineHeight: 1.8, fontSize: '18px', marginBottom: '2rem' }}>
-                  {t.value.boxDesc || "Welcome to Nisir Health, the premier healthcare destination committed to offering the highest standards of care. With state-of-the-art facilities and a team of dedicated medical professionals, we put you first in every step of your care journey."}
+                  {t.value.boxDesc}
                 </p>
                 <div className={styles.introButtons}>
                   <Link href="/about">
-                    <button className={styles.btnOutline}>Read more about us</button>
+                    <button className={styles.btnOutline}>{t.value.readMoreAbout}</button>
                   </Link>
                   <Link href="/book">
                     <button className={styles.btnPrimary}>{t.value.cta}</button>

@@ -1,13 +1,18 @@
 "use client";
 
 import DocumentMeta from "./DocumentMeta";
-import { LanguageProvider } from "../lib/i18n/LanguageContext";
+import { LanguageProvider, useLanguage } from "../lib/i18n/LanguageContext";
+
+function LocaleKeyedContent({ children }: { children: React.ReactNode }) {
+  const { locale } = useLanguage();
+  return <div key={locale}>{children}</div>;
+}
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <LanguageProvider>
       <DocumentMeta />
-      {children}
+      <LocaleKeyedContent>{children}</LocaleKeyedContent>
     </LanguageProvider>
   );
 }
