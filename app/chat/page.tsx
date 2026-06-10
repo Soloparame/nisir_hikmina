@@ -26,7 +26,11 @@ export default async function ChatPage({ searchParams }: Props) {
   return (
     <div className={styles.shell}>
       <Navbar />
-      <PatientChatView conversations={conversations} activeId={activeId} />
+      <PatientChatView
+        conversations={conversations}
+        activeId={activeId}
+        viewerUserId={user.id}
+      />
       <SiteFooter />
     </div>
   );

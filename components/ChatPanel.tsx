@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { ImagePlus, Phone, Send, Video } from "lucide-react";
 import { getMessagesClient, sendMessageClient } from "../lib/chat/messaging";
 import { createClient } from "../lib/supabase/client";
@@ -12,6 +18,7 @@ import styles from "./ChatPanel.module.css";
 type Props = {
   conversationId: string;
   senderRole: "patient" | "doctor";
+  viewerUserId?: string;
   title?: string;
   subtitle?: string;
 };
@@ -19,6 +26,7 @@ type Props = {
 export default function ChatPanel({
   conversationId,
   senderRole,
+  viewerUserId: viewerUserIdProp,
   title,
   subtitle,
 }: Props) {
@@ -30,8 +38,38 @@ export default function ChatPanel({
   const [uploading, setUploading] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [callMode, setCallMode] = useState<"audio" | "video" | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [viewerUserId, setViewerUserId] = useState<string | undefined>(
+    viewerUserIdProp
+  );
+  const messagesRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setViewerUserId(viewerUserIdProp);
+  }, [viewerUserIdProp]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.id) setViewerUserId(data.user.id);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user?.id) setViewerUserId(session.user.id);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    const el = messagesRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
+  }, []);
 
   const loadMessages = useCallback(async () => {
     const data = await getMessagesClient(conversationId);
@@ -47,8 +85,22 @@ export default function ChatPanel({
   }, [loadMessages]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (messages.length === 0 && loading) return;
+    scrollToBottom(loading ? "auto" : "smooth");
+  }, [messages, loading, scrollToBottom]);
+
+  function isOutgoing(msg: Message): boolean {
+    if (viewerUserId && msg.sender_id) {
+      return String(msg.sender_id) === String(viewerUserId);
+    }
+    return msg.sender_role === senderRole;
+  }
+
+  function senderLabel(msg: Message): string {
+    return msg.sender_role === "doctor"
+      ? t.chat.doctorLabel
+      : t.chat.patientLabel;
+  }
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -61,6 +113,7 @@ export default function ChatPanel({
     if (result.ok) {
       setText("");
       await loadMessages();
+      scrollToBottom("smooth");
     } else {
       setSendError(result.error ?? t.chat.sendFailed);
     }
@@ -111,6 +164,7 @@ export default function ChatPanel({
       setSendError(sent.error ?? t.chat.uploadFailed);
     } else {
       await loadMessages();
+      scrollToBottom("smooth");
     }
 
     setUploading(false);
@@ -137,7 +191,9 @@ export default function ChatPanel({
   }
 
   function renderMessage(msg: Message) {
-    const mine = msg.sender_role === senderRole;
+    const outgoing = isOutgoing(msg);
+    const side = outgoing ? "out" : "in";
+
     const time = new Date(msg.created_at).toLocaleString(undefined, {
       month: "short",
       day: "numeric",
@@ -145,12 +201,11 @@ export default function ChatPanel({
       minute: "2-digit",
     });
 
+    let inner: ReactNode;
+
     if (msg.message_type === "image" && msg.attachment_url) {
-      return (
-        <div
-          key={msg.id}
-          className={`${styles.bubble} ${mine ? styles.bubbleMine : styles.bubbleTheirs}`}
-        >
+      inner = (
+        <>
           <a href={msg.attachment_url} target="_blank" rel="noopener noreferrer">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -161,22 +216,15 @@ export default function ChatPanel({
             />
           </a>
           <time>{time}</time>
-        </div>
+        </>
       );
-    }
-
-    if (
+    } else if (
       msg.message_type === "call_video" ||
       msg.message_type === "call_audio"
     ) {
       const mode = msg.message_type === "call_video" ? "video" : "audio";
-      return (
-        <div
-          key={msg.id}
-          className={`${styles.bubble} ${styles.callBubble} ${
-            mine ? styles.bubbleMine : styles.bubbleTheirs
-          }`}
-        >
+      inner = (
+        <>
           <p>{msg.content}</p>
           <button
             type="button"
@@ -187,24 +235,53 @@ export default function ChatPanel({
             {t.chat.joinCall}
           </button>
           <time>{time}</time>
-        </div>
+        </>
+      );
+    } else {
+      inner = (
+        <>
+          <p>{msg.content}</p>
+          <time>{time}</time>
+        </>
       );
     }
 
     return (
       <div
         key={msg.id}
-        className={`${styles.bubble} ${mine ? styles.bubbleMine : styles.bubbleTheirs}`}
+        className={`${styles.messageRow} ${
+          outgoing ? styles.rowOut : styles.rowIn
+        }`}
       >
-        <p>{msg.content}</p>
-        <time>{time}</time>
+        <div
+          className={`${styles.messageCol} ${
+            outgoing ? styles.colOut : styles.colIn
+          }`}
+        >
+          {!outgoing && (
+            <span className={styles.senderLabel}>{senderLabel(msg)}</span>
+          )}
+          <div
+            className={`${styles.bubble} ${
+              msg.message_type === "call_video" || msg.message_type === "call_audio"
+                ? styles.callBubble
+                : ""
+            }`}
+            data-side={side}
+          >
+            {inner}
+          </div>
+          {outgoing && (
+            <span className={styles.youTag}>{t.chat.youLabel}</span>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
     <>
-      <div className={styles.panel}>
+      <div className={styles.panel} dir="ltr">
         <header className={styles.chatHeader}>
           <div className={styles.chatHeaderInfo}>
             <div className={styles.chatAvatar}>
@@ -235,7 +312,7 @@ export default function ChatPanel({
           </div>
         </header>
 
-        <div className={styles.messages}>
+        <div className={styles.messages} ref={messagesRef}>
           {loading && messages.length === 0 ? (
             <p className={styles.empty}>{t.chat.loading}</p>
           ) : messages.length === 0 ? (
@@ -243,7 +320,6 @@ export default function ChatPanel({
           ) : (
             messages.map(renderMessage)
           )}
-          <div ref={bottomRef} />
         </div>
 
         {sendError && (

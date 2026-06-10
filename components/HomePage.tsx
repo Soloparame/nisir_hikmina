@@ -5,11 +5,23 @@ import Link from "next/link";
 import { Calendar, CheckCircle2, Pill, User } from "lucide-react";
 import Navbar from "./Navbar";
 import SiteFooter from "./SiteFooter";
+import ExperiencedDoctorsSection from "./ExperiencedDoctorsSection";
+import HomeUpdatesSection from "./HomeUpdatesSection";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import { SERVICE_IMAGES } from "../lib/service-images";
+import type { Doctor } from "../lib/types/doctor";
+import type { UpdateWithMeta } from "../lib/types/update";
 import styles from "../app/page.module.css";
 
-export default function HomePage() {
+type Props = {
+  experiencedDoctors?: Doctor[];
+  latestUpdates?: UpdateWithMeta[];
+};
+
+export default function HomePage({
+  experiencedDoctors = [],
+  latestUpdates = [],
+}: Props) {
   const { t } = useLanguage();
 
   const services = [
@@ -136,6 +148,10 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <ExperiencedDoctorsSection doctors={experiencedDoctors} />
+
+        <HomeUpdatesSection updates={latestUpdates} />
 
         <section className={styles.servicesSection}>
           <div className={styles.servicesContainer}>

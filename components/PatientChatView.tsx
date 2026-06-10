@@ -10,6 +10,7 @@ import styles from "./PatientChatView.module.css";
 type Props = {
   conversations: ConversationWithMeta[];
   activeId?: string;
+  viewerUserId?: string;
 };
 
 function doctorInitials(name: string) {
@@ -21,7 +22,11 @@ function doctorInitials(name: string) {
     .toUpperCase();
 }
 
-export default function PatientChatView({ conversations, activeId }: Props) {
+export default function PatientChatView({
+  conversations,
+  activeId,
+  viewerUserId,
+}: Props) {
   const { t } = useLanguage();
   const activeConvo = conversations.find((c) => c.id === activeId);
 
@@ -87,6 +92,7 @@ export default function PatientChatView({ conversations, activeId }: Props) {
             <ChatPanel
               conversationId={activeId}
               senderRole="patient"
+              viewerUserId={viewerUserId}
               title={`Dr. ${activeConvo.doctor_name}`}
               subtitle={
                 activeConvo.doctor_specialization || t.chat.secureChat

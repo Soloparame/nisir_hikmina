@@ -155,6 +155,7 @@ export async function loginDoctorClient(data: {
   email: string;
   password: string;
   doctorName?: string;
+  isFirstLogin?: boolean;
 }): Promise<AuthResult> {
   const supabase = createClient();
   if (!supabase) {
@@ -181,6 +182,15 @@ export async function loginDoctorClient(data: {
     signInMsg.includes("invalid login") ||
     signInMsg.includes("invalid credentials") ||
     signInMsg.includes("email not confirmed");
+
+  if (!data.isFirstLogin) {
+    return {
+      ok: false,
+      error: friendlyAuthError(
+        signIn.error?.message ?? "Invalid email or password."
+      ),
+    };
+  }
 
   if (!canActivate && signIn.error) {
     return { ok: false, error: friendlyAuthError(signIn.error.message) };

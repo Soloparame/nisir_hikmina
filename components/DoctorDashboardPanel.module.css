@@ -429,6 +429,8 @@
   min-height: 580px;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 0;
 }
 
 .chatPlaceholder {
@@ -458,6 +460,147 @@
   padding: 2rem;
   text-align: center;
   font-size: 0.9rem;
+}
+
+.profileCard {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 77, 77, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 77, 77, 0.06);
+  padding: 1.5rem;
+}
+
+.profileHero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.profileAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #009966, #004d4d);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profileHero h3 {
+  margin: 0 0 0.2rem;
+  color: #004d4d;
+  font-size: 1.25rem;
+}
+
+.profileAltName {
+  margin: 0 0 0.35rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.profileStatus {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.profileActive {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.profileInactive {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.profileItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.85rem 1rem;
+  background: #f8fafc;
+  border-radius: 14px;
+  border: 1px solid #f1f5f9;
+  color: #009966;
+}
+
+.profileItem span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.profileItem strong {
+  display: block;
+  color: #004d4d;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.profileBio {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.profileBio h4 {
+  margin: 0 0 0.5rem;
+  color: #004d4d;
+  font-size: 0.95rem;
+}
+
+.profileBio p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+  font-size: 0.92rem;
+}
+
+.profileLoginUrl {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(135deg, #ecfdf5, #f0fdf9);
+  border-radius: 14px;
+  border: 1px solid #d1fae5;
+}
+
+.profileLoginUrl span {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.profileLoginUrl code {
+  font-size: 0.9rem;
+  color: #004d4d;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {

@@ -71,6 +71,27 @@ export async function getDoctorByLoginCode(loginCode: string) {
   return data;
 }
 
+export async function getDoctorProfileForSession(loginCode: string) {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("doctors")
+    .select(
+      "id, name, name_en, email, login_code, auth_user_id, category, specialization, specialization_en, bio, bio_en, experience_years, languages, is_active, morning_start, morning_end, afternoon_start, afternoon_end, evening_start, evening_end"
+    )
+    .eq("login_code", loginCode.toUpperCase())
+    .eq("auth_user_id", user.id)
+    .maybeSingle();
+
+  return data;
+}
+
 /** Verify doctor ID + email match the admin-registered doctors row. */
 export async function validateDoctorLogin(
   loginCode: string,

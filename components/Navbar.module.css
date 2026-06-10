@@ -173,6 +173,34 @@
   box-shadow: 0 8px 22px rgba(0, 153, 102, 0.4);
 }
 
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 77, 77, 0.12);
+  background: rgba(248, 250, 252, 0.95);
+  color: var(--primary);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.iconBtn:hover {
+  background: #ecfdf5;
+  border-color: rgba(0, 153, 102, 0.3);
+  color: #009966;
+  transform: translateY(-1px);
+}
+
+.iconBtnActive {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border-color: #6ee7b7;
+  color: #047857;
+}
+
 .menuBtn {
   display: none;
   align-items: center;
@@ -248,6 +276,22 @@
     color: #fff;
     font-weight: 700;
     cursor: pointer;
+  }
+
+  .mobileProfileBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 12px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 77, 77, 0.12);
+    background: #f8fafc;
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
   }
 
   .logoText small {

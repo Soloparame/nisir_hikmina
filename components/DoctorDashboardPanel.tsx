@@ -5,26 +5,32 @@ import { useRouter } from "next/navigation";
 import {
   Calendar,
   CheckCircle2,
+  Hash,
   LogOut,
+  Mail,
   MessageCircle,
   Phone,
+  User,
   Users,
 } from "lucide-react";
 import { signOutUser } from "../lib/actions/auth";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 import type { ConversationWithMeta } from "../lib/types/chat";
-import type { Appointment } from "../lib/types/doctor";
+import type { Appointment, Doctor } from "../lib/types/doctor";
 import ChatPanel from "./ChatPanel";
 import styles from "./DoctorDashboardPanel.module.css";
 
 type Props = {
   loginCode: string;
   doctorName: string;
+  doctorProfile?: Doctor;
   appointments: Appointment[];
   conversations: ConversationWithMeta[];
   initialChatId?: string | null;
+  viewerUserId?: string;
 };
 
-type Tab = "bookings" | "messages";
+type Tab = "bookings" | "messages" | "profile";
 
 function patientInitials(name: string) {
   return name
@@ -45,10 +51,13 @@ function statusClass(status: string) {
 export default function DoctorDashboardPanel({
   loginCode,
   doctorName,
+  doctorProfile,
   appointments,
   conversations,
   initialChatId,
+  viewerUserId,
 }: Props) {
+  const { t } = useLanguage();
   const router = useRouter();
   const [activeChat, setActiveChat] = useState<string | null>(
     initialChatId ?? conversations[0]?.id ?? null
@@ -161,9 +170,122 @@ export default function DoctorDashboardPanel({
             <span className={styles.tabBadge}>{unreadTotal}</span>
           )}
         </button>
+        <button
+          type="button"
+          className={tab === "profile" ? styles.mainTabActive : styles.mainTab}
+          onClick={() => setTab("profile")}
+        >
+          <User size={18} />
+          {t.doctorAuth.profileTitle}
+        </button>
       </nav>
 
-      {tab === "bookings" ? (
+      {tab === "profile" ? (
+        <section className={styles.section}>
+          <div className={styles.sectionHead}>
+            <h2>{t.doctorAuth.profileTitle}</h2>
+            <p>{t.doctorAuth.profileSub}</p>
+          </div>
+          {doctorProfile ? (
+            <div className={styles.profileCard}>
+              <div className={styles.profileHero}>
+                <div className={styles.profileAvatar}>
+                  {doctorName.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <h3>
+                    {doctorProfile.name_en?.trim() || doctorProfile.name}
+                  </h3>
+                  {doctorProfile.name_en && (
+                    <p className={styles.profileAltName}>{doctorProfile.name}</p>
+                  )}
+                  <span
+                    className={`${styles.profileStatus} ${
+                      doctorProfile.is_active
+                        ? styles.profileActive
+                        : styles.profileInactive
+                    }`}
+                  >
+                    {doctorProfile.is_active
+                      ? t.doctorAuth.profileActive
+                      : t.doctorAuth.profileInactive}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.profileGrid}>
+                <div className={styles.profileItem}>
+                  <Hash size={16} />
+                  <div>
+                    <span>{t.doctorAuth.profileId}</span>
+                    <strong>{loginCode.toUpperCase()}</strong>
+                  </div>
+                </div>
+                <div className={styles.profileItem}>
+                  <Mail size={16} />
+                  <div>
+                    <span>{t.doctorAuth.profileEmail}</span>
+                    <strong>{doctorProfile.email ?? "—"}</strong>
+                  </div>
+                </div>
+                <div className={styles.profileItem}>
+                  <User size={16} />
+                  <div>
+                    <span>{t.doctorAuth.profileCategory}</span>
+                    <strong>{doctorProfile.category ?? "—"}</strong>
+                  </div>
+                </div>
+                <div className={styles.profileItem}>
+                  <User size={16} />
+                  <div>
+                    <span>{t.doctorAuth.profileSpecialty}</span>
+                    <strong>
+                      {doctorProfile.specialization_en?.trim() ||
+                        doctorProfile.specialization}
+                    </strong>
+                  </div>
+                </div>
+                <div className={styles.profileItem}>
+                  <CheckCircle2 size={16} />
+                  <div>
+                    <span>{t.doctorAuth.profileExperience}</span>
+                    <strong>
+                      {doctorProfile.experience_years} {t.doctorAuth.profileYears}
+                    </strong>
+                  </div>
+                </div>
+                <div className={styles.profileItem}>
+                  <Users size={16} />
+                  <div>
+                    <span>{t.doctorAuth.profileLanguages}</span>
+                    <strong>
+                      {doctorProfile.languages?.length
+                        ? doctorProfile.languages.join(", ")
+                        : "—"}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              {(doctorProfile.bio || doctorProfile.bio_en) && (
+                <div className={styles.profileBio}>
+                  <h4>{t.doctorAuth.profileBio}</h4>
+                  <p>
+                    {doctorProfile.bio_en?.trim() || doctorProfile.bio}
+                  </p>
+                </div>
+              )}
+
+              <div className={styles.profileLoginUrl}>
+                <span>{t.doctorAuth.profileLoginUrl}</span>
+                <code>/doctor/{loginCode.toUpperCase()}/login</code>
+              </div>
+            </div>
+          ) : (
+            <p className={styles.empty}>{t.doctorAuth.loginFailed}</p>
+          )}
+        </section>
+      ) : tab === "bookings" ? (
         <section className={styles.section}>
           <div className={styles.sectionHead}>
             <h2>Patient bookings</h2>
@@ -265,6 +387,7 @@ export default function DoctorDashboardPanel({
                 <ChatPanel
                   conversationId={activeChat}
                   senderRole="doctor"
+                  viewerUserId={viewerUserId}
                   title={activeConvo.patient_name}
                   subtitle="Your patient"
                 />

@@ -49,6 +49,27 @@ export async function getActiveDoctors() {
   return data ?? [];
 }
 
+export async function getExperiencedDoctors(minYears = 4) {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("doctors")
+    .select(PUBLIC_DOCTOR_COLUMNS)
+    .eq("is_active", true)
+    .gte("experience_years", minYears)
+    .order("experience_years", { ascending: false })
+    .order("sort_order", { ascending: true })
+    .limit(8);
+
+  if (error) {
+    console.error("getExperiencedDoctors:", error.message);
+    return [];
+  }
+
+  return data ?? [];
+}
+
 export async function getAllDoctorsAdmin() {
   const supabase = await getAuthedClient();
 

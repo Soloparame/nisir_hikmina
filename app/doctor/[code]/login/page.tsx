@@ -88,6 +88,7 @@ export default function DoctorLoginPage() {
       email,
       password,
       doctorName: validation.doctorName ?? doctorName,
+      isFirstLogin: validation.isFirstLogin ?? isFirstLogin,
     });
 
     if (!result.ok) {
@@ -176,6 +177,12 @@ export default function DoctorLoginPage() {
             </div>
           )}
 
+          {!isFirstLogin ? (
+            <div className={`${styles.alert} ${styles.alertHint}`}>
+              {t.doctorAuth.returnLoginHint}
+            </div>
+          ) : null}
+
           <div className={styles.field}>
             <label className={styles.label} htmlFor="doctor-id">
               {t.doctorAuth.doctorId}
@@ -192,6 +199,7 @@ export default function DoctorLoginPage() {
                 onChange={(e) => setDoctorId(e.target.value.toUpperCase())}
                 placeholder="ABC12345"
                 autoComplete="off"
+                readOnly={!isFirstLogin}
                 required
               />
             </div>

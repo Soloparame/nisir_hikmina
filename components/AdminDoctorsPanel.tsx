@@ -3,11 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  deleteDoctor,
-  saveDoctor,
-  signOutAdmin,
-} from "../lib/actions/doctors";
+import { deleteDoctor, saveDoctor } from "../lib/actions/doctors";
 import { createClient } from "../lib/supabase/client";
 import {
   DOCTOR_CATEGORIES,
@@ -159,22 +155,13 @@ export default function AdminDoctorsPanel({
     router.refresh();
   }
 
-  async function handleSignOut() {
-    await signOutAdmin();
-    router.push("/admin/login");
-    router.refresh();
-  }
-
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
+    <div className={styles.panelRoot}>
+      <header className={styles.panelHead}>
         <div>
-          <h1>ንስር ሕክምና — አስተዳዳሪ</h1>
-          <p>ዶክተሮችን ይመዘግቡ እና ያስተዳድሩ</p>
+          <h1>Doctors</h1>
+          <p>Register and manage doctor profiles</p>
         </div>
-        <button type="button" className={styles.signOut} onClick={handleSignOut}>
-          ውጣ
-        </button>
       </header>
 
       <div className={styles.grid}>

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import type { Doctor } from "../../../lib/types/doctor";
+import AdminShell from "../../../components/AdminShell";
 import AdminDoctorsPanel from "../../../components/AdminDoctorsPanel";
 import { getAllDoctorsAdmin } from "../../../lib/actions/doctors";
 import { createClient } from "../../../lib/supabase/server";
@@ -28,6 +29,8 @@ export default async function AdminDoctorsPage() {
   }
 
   return (
-    <AdminDoctorsPanel initialDoctors={doctors} loadError={loadError} />
+    <AdminShell>
+      <AdminDoctorsPanel initialDoctors={doctors} loadError={loadError} />
+    </AdminShell>
   );
 }

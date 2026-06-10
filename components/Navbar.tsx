@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { isPatientUser } from "../lib/auth/session";
 import { createClient } from "../lib/supabase/client";
 import { useLanguage } from "../lib/i18n/LanguageContext";
@@ -47,7 +47,8 @@ export default function Navbar() {
   const navItems = [
     { href: "/", label: t.nav.home },
     { href: "/about", label: t.nav.about },
-    { href: "/book", label: t.nav.doctors },
+    { href: "/doctors", label: t.nav.doctors },
+    { href: "/whats-new", label: t.nav.whatsNew },
   ];
 
   function linkClass(href: string) {
@@ -94,25 +95,35 @@ export default function Navbar() {
             </Link>
           ))}
           {showPatientLinks && (
-            <>
-              <Link href="/chat" className={linkClass("/chat")}>
-                {t.nav.chat}
-              </Link>
-              <Link href="/profile" className={linkClass("/profile")}>
-                {t.nav.profile}
-              </Link>
-            </>
+            <Link href="/chat" className={linkClass("/chat")}>
+              {t.nav.chat}
+            </Link>
           )}
         </div>
 
         <div className={styles.actions}>
           <LanguageSwitcher variant="default" />
           {authState === "loading" ? null : showPatientLinks ? (
-            <Link href="/book" onClick={() => setMenuOpen(false)}>
-              <button type="button" className={styles.bookBtn}>
-                {t.nav.bookNow}
-              </button>
-            </Link>
+            <>
+              <Link href="/book" onClick={() => setMenuOpen(false)}>
+                <button type="button" className={styles.bookBtn}>
+                  {t.nav.bookNow}
+                </button>
+              </Link>
+              <Link
+                href="/profile"
+                className={`${styles.iconBtn} ${
+                  pathname === "/profile" || pathname.startsWith("/profile/")
+                    ? styles.iconBtnActive
+                    : ""
+                }`}
+                aria-label={t.nav.profile}
+                title={t.nav.profile}
+                onClick={() => setMenuOpen(false)}
+              >
+                <User size={20} />
+              </Link>
+            </>
           ) : (
             <>
               <Link href="/login" className={styles.authLink}>
@@ -150,22 +161,13 @@ export default function Navbar() {
               </Link>
             ))}
             {showPatientLinks ? (
-              <>
-                <Link
-                  href="/chat"
-                  className={linkClass("/chat")}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {t.nav.chat}
-                </Link>
-                <Link
-                  href="/profile"
-                  className={linkClass("/profile")}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {t.nav.profile}
-                </Link>
-              </>
+              <Link
+                href="/chat"
+                className={linkClass("/chat")}
+                onClick={() => setMenuOpen(false)}
+              >
+                {t.nav.chat}
+              </Link>
             ) : authState !== "loading" ? (
               <Link
                 href="/login"
@@ -180,6 +182,22 @@ export default function Navbar() {
                 {t.nav.bookNow}
               </button>
             </Link>
+            {showPatientLinks && (
+              <Link
+                href="/profile"
+                className={`${styles.mobileProfileBtn} ${
+                  pathname === "/profile" || pathname.startsWith("/profile/")
+                    ? styles.iconBtnActive
+                    : ""
+                }`}
+                onClick={() => setMenuOpen(false)}
+                aria-label={t.nav.profile}
+                title={t.nav.profile}
+              >
+                <User size={20} />
+                <span>{t.nav.profile}</span>
+              </Link>
+            )}
           </div>
         )}
       </nav>
