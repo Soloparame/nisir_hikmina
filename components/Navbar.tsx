@@ -1,18 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { isPatientUser } from "../lib/auth/session";
+import { createClient } from "../lib/supabase/client";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import styles from "./Navbar.module.css";
+
+type AuthState = "loading" | "patient" | "guest";
 
 export default function Navbar() {
   const { t } = useLanguage();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [authState, setAuthState] = useState<AuthState>("loading");
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) {
+      setAuthState("guest");
+      return;
+    }
+
+    async function syncAuth() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setAuthState(isPatientUser(user) ? "patient" : "guest");
+    }
+
+    syncAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      syncAuth();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const navItems = [
     { href: "/", label: t.nav.home },
@@ -27,6 +57,8 @@ export default function Navbar() {
         : pathname === href || pathname.startsWith(`${href}/`);
     return `${styles.navLink} ${active ? styles.navLinkActive : ""}`;
   }
+
+  const showPatientLinks = authState === "patient";
 
   return (
     <header className={styles.navShell}>
@@ -61,15 +93,38 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          {showPatientLinks && (
+            <>
+              <Link href="/chat" className={linkClass("/chat")}>
+                {t.nav.chat}
+              </Link>
+              <Link href="/profile" className={linkClass("/profile")}>
+                {t.nav.profile}
+              </Link>
+            </>
+          )}
         </div>
 
         <div className={styles.actions}>
           <LanguageSwitcher variant="default" />
-          <Link href="/book" onClick={() => setMenuOpen(false)}>
-            <button type="button" className={styles.bookBtn}>
-              {t.nav.bookNow}
-            </button>
-          </Link>
+          {authState === "loading" ? null : showPatientLinks ? (
+            <Link href="/book" onClick={() => setMenuOpen(false)}>
+              <button type="button" className={styles.bookBtn}>
+                {t.nav.bookNow}
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className={styles.authLink}>
+                {t.nav.login}
+              </Link>
+              <Link href="/book" onClick={() => setMenuOpen(false)}>
+                <button type="button" className={styles.bookBtn}>
+                  {t.nav.bookNow}
+                </button>
+              </Link>
+            </>
+          )}
           <button
             type="button"
             className={styles.menuBtn}
@@ -94,6 +149,32 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            {showPatientLinks ? (
+              <>
+                <Link
+                  href="/chat"
+                  className={linkClass("/chat")}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {t.nav.chat}
+                </Link>
+                <Link
+                  href="/profile"
+                  className={linkClass("/profile")}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {t.nav.profile}
+                </Link>
+              </>
+            ) : authState !== "loading" ? (
+              <Link
+                href="/login"
+                className={linkClass("/login")}
+                onClick={() => setMenuOpen(false)}
+              >
+                {t.nav.login}
+              </Link>
+            ) : null}
             <Link href="/book" onClick={() => setMenuOpen(false)}>
               <button type="button" className={styles.mobileBookBtn}>
                 {t.nav.bookNow}

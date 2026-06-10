@@ -14,15 +14,25 @@ import {
   DOCTOR_CATEGORIES,
   findCategoryLabelBySubcategory,
 } from "../lib/doctor-categories";
+import {
+  formatAvailabilitySlot,
+  getDoctorAvailabilitySlots,
+} from "../lib/doctor-availability";
 import type { Doctor } from "../lib/types/doctor";
+import { PUBLIC_DOCTOR_COLUMNS } from "../lib/types/doctor";
 import styles from "./DoctorPicker.module.css";
 
 type Props = {
   initialDoctors: Doctor[];
   onSelect: (doctor: Doctor) => void;
+  checkingAuth?: boolean;
 };
 
-export default function DoctorPicker({ initialDoctors, onSelect }: Props) {
+export default function DoctorPicker({
+  initialDoctors,
+  onSelect,
+  checkingAuth,
+}: Props) {
   const { t, locale } = useLanguage();
   const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors);
   const [loading, setLoading] = useState(initialDoctors.length === 0);
@@ -53,7 +63,7 @@ export default function DoctorPicker({ initialDoctors, onSelect }: Props) {
 
       const { data, error } = await supabase
         .from("doctors")
-        .select("*")
+        .select(PUBLIC_DOCTOR_COLUMNS)
         .eq("is_active", true)
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: false });
@@ -296,6 +306,16 @@ export default function DoctorPicker({ initialDoctors, onSelect }: Props) {
                         ))}
                       </div>
                     )}
+                    {getDoctorAvailabilitySlots(doctor).length > 0 && (
+                      <div className={styles.availability}>
+                        {getDoctorAvailabilitySlots(doctor).map((slot) => (
+                          <span key={slot.period} className={styles.slotTag}>
+                            {t.availability[slot.labelKey]}:{" "}
+                            {formatAvailabilitySlot(slot)}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </button>
                 );
               })}
@@ -308,8 +328,9 @@ export default function DoctorPicker({ initialDoctors, onSelect }: Props) {
                 type="button"
                 className={styles.continueBtn}
                 onClick={() => onSelect(selected)}
+                disabled={checkingAuth}
               >
-                {t.book.continueBtn}
+                {checkingAuth ? t.auth.loggingIn : t.book.continueBtn}
               </button>
             </div>
           )}

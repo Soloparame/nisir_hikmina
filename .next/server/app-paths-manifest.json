@@ -1,3 +1,10 @@
 {
-  "/page": "app/page.js"
+  "/book/page": "app/book/page.js",
+  "/admin/doctors/page": "app/admin/doctors/page.js",
+  "/doctor/[code]/login/page": "app/doctor/[code]/login/page.js",
+  "/doctor/[code]/dashboard/page": "app/doctor/[code]/dashboard/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
+  "/chat/page": "app/chat/page.js"
 }

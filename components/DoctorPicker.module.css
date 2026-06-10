@@ -280,6 +280,24 @@
   border-radius: 50px;
 }
 
+.availability {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.slotTag {
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 8px;
+  text-align: left;
+}
+
 .footer {
   margin-top: 2rem;
   display: flex;

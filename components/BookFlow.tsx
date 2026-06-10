@@ -1,27 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
 import SiteFooter from "./SiteFooter";
 import DoctorPicker from "./DoctorPicker";
 import BookForm from "./BookForm";
+import { createClient } from "../lib/supabase/client";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import type { Doctor } from "../lib/types/doctor";
 import styles from "../app/book/book.module.css";
 
 type Props = {
   initialDoctors: Doctor[];
+  initialDoctorId?: string;
 };
 
-export default function BookFlow({ initialDoctors }: Props) {
+export default function BookFlow({ initialDoctors, initialDoctorId }: Props) {
   const { t } = useLanguage();
+  const router = useRouter();
   const [step, setStep] = useState<"doctor" | "form">("doctor");
   const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(false);
 
-  function handleDoctorSelect(selected: Doctor) {
+  useEffect(() => {
+    if (!initialDoctorId || initialDoctors.length === 0) return;
+    const found = initialDoctors.find((d) => d.id === initialDoctorId);
+    if (found) {
+      setDoctor(found);
+      setStep("form");
+    }
+  }, [initialDoctorId, initialDoctors]);
+
+  async function handleDoctorSelect(selected: Doctor) {
+    setCheckingAuth(true);
+
+    const supabase = createClient();
+    if (!supabase) {
+      setDoctor(selected);
+      setStep("form");
+      setCheckingAuth(false);
+      return;
+    }
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      router.push(
+        `/login?redirect=${encodeURIComponent("/book")}&doctor=${selected.id}`
+      );
+      setCheckingAuth(false);
+      return;
+    }
+
     setDoctor(selected);
     setStep("form");
+    setCheckingAuth(false);
   }
 
   return (
@@ -59,6 +96,7 @@ export default function BookFlow({ initialDoctors }: Props) {
           <DoctorPicker
             initialDoctors={initialDoctors}
             onSelect={handleDoctorSelect}
+            checkingAuth={checkingAuth}
           />
         ) : (
           doctor && (

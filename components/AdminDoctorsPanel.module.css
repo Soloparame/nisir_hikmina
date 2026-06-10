@@ -209,6 +209,43 @@
   font-size: 0.9rem;
 }
 
+.availabilityFieldset {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 1rem;
+}
+
+.availabilityFieldset legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  padding: 0 6px;
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.timeRow input {
+  flex: 1;
+}
+
+.timeRow span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.doctorId {
+  display: block;
+  color: #009966 !important;
+  font-size: 0.75rem !important;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;

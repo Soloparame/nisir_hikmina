@@ -141,6 +141,18 @@
   flex-shrink: 0;
 }
 
+.authLink {
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.authLink:hover {
+  color: #009966;
+}
+
 .bookBtn {
   background: linear-gradient(135deg, #009966 0%, #007a52 100%);
   color: #fff;

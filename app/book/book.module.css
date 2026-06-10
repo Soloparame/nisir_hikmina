@@ -250,6 +250,12 @@
   color: #111827;
 }
 
+.coSub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
 .submitBtn {
   width: 100%;
   padding: 14px;

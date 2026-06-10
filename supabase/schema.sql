@@ -1,4 +1,5 @@
 -- Run this in Supabase SQL Editor
+-- After this file, also run: migration-v2-auth-chat-availability.sql
 
 create table if not exists doctors (
   id uuid primary key default gen_random_uuid(),

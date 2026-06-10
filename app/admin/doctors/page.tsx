@@ -19,11 +19,15 @@ export default async function AdminDoctorsPage() {
   }
 
   let doctors: Doctor[] = [];
+  let loadError: string | null = null;
   try {
     doctors = await getAllDoctorsAdmin();
-  } catch {
-    doctors = [];
+  } catch (e) {
+    loadError =
+      e instanceof Error ? e.message : "Could not load doctors from database.";
   }
 
-  return <AdminDoctorsPanel initialDoctors={doctors} />;
+  return (
+    <AdminDoctorsPanel initialDoctors={doctors} loadError={loadError} />
+  );
 }

@@ -15,6 +15,7 @@ export type AppointmentNotifyPayload = {
   city: string;
   consult_type: string;
   doctor_name: string;
+  availability_time?: string;
 };
 
 const DEFAULT_ADMIN_EMAIL = "fisihaguade2127@gmail.com";
@@ -48,6 +49,7 @@ export function formatAppointmentMessage(p: AppointmentNotifyPayload) {
     `Country / City: ${p.country} / ${p.city}`,
     `Reason / concern: ${p.disease}`,
     `Consult type: ${p.consult_type}`,
+    ...(p.availability_time ? [`Availability: ${p.availability_time}`] : []),
     "",
     `Admin Telegram: ${getAdminTelegramDisplay()}`,
     `Admin WhatsApp: +${getAdminWhatsappPhone()}`,

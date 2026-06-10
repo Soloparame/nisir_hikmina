@@ -1,0 +1,224 @@
+.wrap {
+  flex: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  width: 100%;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #004d4d, #009966);
+  border-radius: 20px;
+  color: #fff;
+  box-shadow: 0 12px 40px rgba(0, 77, 77, 0.2);
+}
+
+.heroIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.hero p {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1rem;
+  min-height: 540px;
+}
+
+.sidebar {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 77, 77, 0.08);
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 77, 77, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-weight: 700;
+  color: #004d4d;
+  font-size: 0.9rem;
+}
+
+.count {
+  background: #ecfdf5;
+  color: #047857;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+
+.convoLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 1.15rem;
+  border-bottom: 1px solid #f8fafc;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.convoLink:hover {
+  background: #f8fafc;
+}
+
+.convoActive {
+  background: #ecfdf5 !important;
+}
+
+.convoAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #009966, #004d4d);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.convoInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.convoInfo strong {
+  display: block;
+  color: #004d4d;
+  font-size: 0.95rem;
+}
+
+.specialty {
+  display: block;
+  color: #009966;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.preview {
+  display: block;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unread {
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.chatArea {
+  min-height: 540px;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 77, 77, 0.08);
+  color: #94a3b8;
+  padding: 2rem;
+  text-align: center;
+}
+
+.placeholder p {
+  margin: 0.75rem 0 0;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.placeholder span {
+  font-size: 0.88rem;
+}
+
+.emptySide {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: #94a3b8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.emptySide p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bookLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #009966, #004d4d);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    padding: 1rem;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    max-height: 220px;
+    overflow-y: auto;
+  }
+}

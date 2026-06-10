@@ -18,6 +18,7 @@ import styles from "./AdminDoctorsPanel.module.css";
 
 type Props = {
   initialDoctors: Doctor[];
+  loadError?: string | null;
 };
 
 const emptyForm: DoctorFormData = {
@@ -34,9 +35,19 @@ const emptyForm: DoctorFormData = {
   languages: ["አማርኛ"],
   is_active: true,
   sort_order: 0,
+  email: "",
+  morning_start: "",
+  morning_end: "",
+  afternoon_start: "",
+  afternoon_end: "",
+  evening_start: "",
+  evening_end: "",
 };
 
-export default function AdminDoctorsPanel({ initialDoctors }: Props) {
+export default function AdminDoctorsPanel({
+  initialDoctors,
+  loadError,
+}: Props) {
   const router = useRouter();
   const [doctors, setDoctors] = useState(initialDoctors);
   const [form, setForm] = useState<DoctorFormData>(emptyForm);
@@ -62,6 +73,13 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
       languages: d.languages ?? ["አማርኛ"],
       is_active: d.is_active,
       sort_order: d.sort_order,
+      email: d.email ?? "",
+      morning_start: d.morning_start?.slice(0, 5) ?? "",
+      morning_end: d.morning_end?.slice(0, 5) ?? "",
+      afternoon_start: d.afternoon_start?.slice(0, 5) ?? "",
+      afternoon_end: d.afternoon_end?.slice(0, 5) ?? "",
+      evening_start: d.evening_start?.slice(0, 5) ?? "",
+      evening_end: d.evening_end?.slice(0, 5) ?? "",
     });
   }
 
@@ -115,7 +133,13 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
       return;
     }
 
-    setMessage(editingId ? "Doctor updated" : "Doctor added");
+    if (result.login_code) {
+      setMessage(
+        `Doctor added. ID: ${result.login_code} — they sign in at /doctor/${result.login_code}/login using their registered email + this ID (first visit: they set a password).`
+      );
+    } else {
+      setMessage(editingId ? "Doctor updated" : "Doctor added");
+    }
     resetForm();
     router.refresh();
     setSaving(false);
@@ -233,6 +257,78 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
             rows={3}
           />
 
+          <label>Doctor Email (not shown to patients) *</label>
+          <input
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            placeholder="doctor@example.com"
+            required={!editingId}
+          />
+
+          <fieldset className={styles.availabilityFieldset}>
+            <legend>Availability — Morning</legend>
+            <div className={styles.timeRow}>
+              <input
+                type="time"
+                value={form.morning_start}
+                onChange={(e) =>
+                  setForm({ ...form, morning_start: e.target.value })
+                }
+              />
+              <span>to</span>
+              <input
+                type="time"
+                value={form.morning_end}
+                onChange={(e) =>
+                  setForm({ ...form, morning_end: e.target.value })
+                }
+              />
+            </div>
+          </fieldset>
+
+          <fieldset className={styles.availabilityFieldset}>
+            <legend>Availability — After Lunch</legend>
+            <div className={styles.timeRow}>
+              <input
+                type="time"
+                value={form.afternoon_start}
+                onChange={(e) =>
+                  setForm({ ...form, afternoon_start: e.target.value })
+                }
+              />
+              <span>to</span>
+              <input
+                type="time"
+                value={form.afternoon_end}
+                onChange={(e) =>
+                  setForm({ ...form, afternoon_end: e.target.value })
+                }
+              />
+            </div>
+          </fieldset>
+
+          <fieldset className={styles.availabilityFieldset}>
+            <legend>Availability — Evening</legend>
+            <div className={styles.timeRow}>
+              <input
+                type="time"
+                value={form.evening_start}
+                onChange={(e) =>
+                  setForm({ ...form, evening_start: e.target.value })
+                }
+              />
+              <span>to</span>
+              <input
+                type="time"
+                value={form.evening_end}
+                onChange={(e) =>
+                  setForm({ ...form, evening_end: e.target.value })
+                }
+              />
+            </div>
+          </fieldset>
+
           <label>የስራ ዓመታት</label>
           <input
             type="number"
@@ -295,9 +391,19 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
 
         <div className={styles.listCard}>
           <h2>Registered Doctors ({doctors.length})</h2>
-          {doctors.length === 0 ? (
+          {loadError && (
+            <p className={styles.error} role="alert">
+              {loadError}
+              <br />
+              <small>
+                Run <code>migration-v9-fix-doctors-rls-recursion.sql</code> in
+                Supabase SQL Editor if you see infinite recursion.
+              </small>
+            </p>
+          )}
+          {doctors.length === 0 && !loadError ? (
             <p className={styles.empty}>No doctors yet. Add your first doctor.</p>
-          ) : (
+          ) : doctors.length === 0 ? null : (
             <ul className={styles.list}>
               {doctors.map((d) => (
                 <li key={d.id} className={styles.listItem}>
@@ -320,6 +426,11 @@ export default function AdminDoctorsPanel({ initialDoctors }: Props) {
                     </span>
                     {!d.is_active && (
                       <span className={styles.inactive}>Inactive</span>
+                    )}
+                    {d.login_code && (
+                      <span className={styles.doctorId}>
+                        ID: {d.login_code} · /doctor/{d.login_code}/login
+                      </span>
                     )}
                   </div>
                   <div className={styles.listActions}>
