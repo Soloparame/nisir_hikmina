@@ -91,11 +91,11 @@ export default function HomePage({
                 <Image
                   src="/doctor_hero.jpg"
                   alt={t.hero.doctorAlt}
-                  width={400}
-                  height={480}
+                  width={720}
+                  height={900}
                   className={styles.heroImage}
                   priority
-                  sizes="(max-width: 768px) 88vw, (max-width: 992px) 300px, 340px"
+                  sizes="(max-width: 768px) 94vw, (max-width: 992px) 480px, 640px"
                 />
               </div>
               <aside
