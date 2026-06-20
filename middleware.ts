@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import type { User } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdminRole } from "./lib/auth-roles";
 import { isPatientUser } from "./lib/auth/session";
@@ -21,10 +22,7 @@ export async function middleware(request: NextRequest) {
   const needsAuth =
     isAdminRoute || isDoctorDashboard || isProtectedPatientRoute;
 
-  let user: {
-    id: string;
-    user_metadata?: Record<string, unknown>;
-  } | null = null;
+  let user: User | null = null;
 
   let supabase: ReturnType<typeof createServerClient> | null = null;
 

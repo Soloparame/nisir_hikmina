@@ -10,15 +10,50 @@
       "page": "/",
       "matchers": [
         {
-          "regexp": "^/.*$",
-          "originalSource": "/:path*"
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/admin/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/dashboard(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/dashboard"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/dashboard(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/dashboard/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/chat(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/chat"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/chat(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/chat/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/chat(.json)?[\\/#\\?]?$",
+          "originalSource": "/chat"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/chat(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/chat/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/profile(.json)?[\\/#\\?]?$",
+          "originalSource": "/profile"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/profile(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/profile/:path*"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "development",
-        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "uS5Y2OTLT/bV6r/zWuxNn2LDVB5B2VONGESwgdIa7Rs="
+        "__NEXT_BUILD_ID": "fQnTE3xdQ2uDRfZfjbB-o",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "8gEAEm26xHgiMpuzeuZ3YhVvV2Sw2cb2D8MGfo9HpJk=",
+        "__NEXT_PREVIEW_MODE_ID": "46f21da62f9817543d25e9eca7ae3865",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "ffae7c9f16c9fb3d54f34be45edd543275c417f991de4d6fe64823470f9f52b3",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "72304c5fece84c50ae5431ba00decdcac8adc37ab462f8ddd62a8598dceecd96"
       }
     }
   },

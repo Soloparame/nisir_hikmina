@@ -26,10 +26,12 @@ export default function Navbar() {
       return;
     }
 
+    const authClient = supabase;
+
     async function syncAuth() {
       const {
         data: { user },
-      } = await supabase.auth.getUser();
+      } = await authClient.auth.getUser();
       setAuthState(isPatientUser(user) ? "patient" : "guest");
     }
 
@@ -37,7 +39,7 @@ export default function Navbar() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
+    } = authClient.auth.onAuthStateChange(() => {
       syncAuth();
     });
 
