@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  CalendarCheck,
   LayoutDashboard,
   LogOut,
   Megaphone,
@@ -17,6 +18,7 @@ type Props = {
 
 const NAV = [
   { href: "/admin/doctors", label: "Doctors", icon: Stethoscope },
+  { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
   { href: "/admin/updates", label: "Daily Updates", icon: Megaphone },
 ];
 

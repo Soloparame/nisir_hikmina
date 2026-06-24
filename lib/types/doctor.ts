@@ -1,5 +1,7 @@
 export type DoctorAvailabilityPeriod = "morning" | "afternoon" | "evening";
 
+export type DoctorPricingTier = "gp" | "resident" | "specialist" | "senior";
+
 export type Doctor = {
   id: string;
   name: string;
@@ -18,18 +20,28 @@ export type Doctor = {
   email?: string | null;
   login_code?: string | null;
   auth_user_id?: string | null;
+  pricing_tier?: DoctorPricingTier | null;
   morning_start?: string | null;
   morning_end?: string | null;
   afternoon_start?: string | null;
   afternoon_end?: string | null;
   evening_start?: string | null;
   evening_end?: string | null;
+  morning_days?: string[] | null;
+  afternoon_days?: string[] | null;
+  evening_days?: string[] | null;
 };
 
 export type DoctorPublic = Omit<Doctor, "email" | "auth_user_id">;
 
 export const PUBLIC_DOCTOR_COLUMNS =
-  "id,name,name_en,category,specialization,specialization_en,bio,bio_en,image_url,experience_years,languages,is_active,sort_order,created_at,morning_start,morning_end,afternoon_start,afternoon_end,evening_start,evening_end";
+  "id,name,name_en,category,specialization,specialization_en,bio,bio_en,image_url,experience_years,languages,is_active,sort_order,created_at,morning_start,morning_end,afternoon_start,afternoon_end,evening_start,evening_end,morning_days,afternoon_days,evening_days";
+
+export const PUBLIC_DOCTOR_COLUMNS_WITH_TIER = `${PUBLIC_DOCTOR_COLUMNS},pricing_tier`;
+
+/** Before migration-v17 (no weekday columns) */
+export const PUBLIC_DOCTOR_COLUMNS_NO_DAYS =
+  "id,name,name_en,category,specialization,specialization_en,bio,bio_en,image_url,experience_years,languages,is_active,sort_order,created_at,morning_start,morning_end,afternoon_start,afternoon_end,evening_start,evening_end,pricing_tier";
 
 export type DoctorFormData = {
   name: string;
@@ -45,12 +57,16 @@ export type DoctorFormData = {
   is_active: boolean;
   sort_order: number;
   email?: string;
+  pricing_tier?: DoctorPricingTier;
   morning_start?: string;
   morning_end?: string;
   afternoon_start?: string;
   afternoon_end?: string;
   evening_start?: string;
   evening_end?: string;
+  morning_days?: string[];
+  afternoon_days?: string[];
+  evening_days?: string[];
 };
 
 export type AppointmentInsert = {
@@ -82,4 +98,10 @@ export type Appointment = {
   user_id?: string | null;
   availability_period?: string | null;
   availability_time?: string | null;
+  consult_type_key?: string | null;
+  scheduled_date?: string | null;
+  scheduled_time?: string | null;
+  amount_etb?: number | null;
+  payment_screenshot_url?: string | null;
+  payment_method?: string | null;
 };

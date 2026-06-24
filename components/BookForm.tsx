@@ -4,7 +4,23 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getCurrentProfile } from "../lib/actions/auth";
-import { createAppointment } from "../lib/actions/doctors";
+import {
+  createBookingWithPayment,
+  getBookedTimesForDoctor,
+} from "../lib/actions/bookings";
+import {
+  formatScheduledDateTime,
+  generateTimeSlotsForPeriod,
+  type TimeSlotOption,
+} from "../lib/booking-slots";
+import {
+  formatEtb,
+  getConsultationPrice,
+  getDoctorPricingTier,
+  getTierLabel,
+  getTierPricingList,
+  type ConsultTypeKey,
+} from "../lib/consultation-pricing";
 import {
   formatAvailabilitySlot,
   getDoctorAvailabilitySlots,
@@ -16,22 +32,28 @@ import {
 } from "../lib/doctor-display";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import { getCities, getCountries, getStates } from "../lib/location";
+import {
+  getPaymentAccount,
+  getPaymentAccountHolder,
+  type PaymentMethod,
+} from "../lib/payment-config";
 import { createClient } from "../lib/supabase/client";
 import type { Doctor } from "../lib/types/doctor";
 import styles from "../app/book/book.module.css";
-
-type ConsultType = "in_person" | "audio" | "video";
 
 interface FormErrors {
   name?: string;
   phone?: string;
   disease?: string;
-  telegram?: string;
   country?: string;
   state?: string;
   city?: string;
   consult?: string;
   availability?: string;
+  date?: string;
+  time?: string;
+  payment?: string;
+  screenshot?: string;
   general?: string;
 }
 
@@ -40,31 +62,70 @@ type Props = {
   onChangeDoctor: () => void;
 };
 
+function todayIsoDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export default function BookForm({ doctor, onChangeDoctor }: Props) {
   const router = useRouter();
   const { t, locale } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   const countries = useMemo(() => getCountries(), []);
-  const availabilitySlots = useMemo(
-    () => getDoctorAvailabilitySlots(doctor),
-    [doctor]
+  const pricingTier = useMemo(() => getDoctorPricingTier(doctor), [doctor]);
+  const tierPricing = useMemo(
+    () => getTierPricingList(pricingTier),
+    [pricingTier]
   );
+  const lang = locale === "am" ? "am" : "en";
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [disease, setDisease] = useState("");
-  const [telegram, setTelegram] = useState("");
   const [countryCode, setCountryCode] = useState("ET");
   const [countryName, setCountryName] = useState("Ethiopia");
   const [stateCode, setStateCode] = useState("");
   const [city, setCity] = useState("");
-  const [consult, setConsult] = useState<ConsultType | "">("");
+  const [consult, setConsult] = useState<ConsultTypeKey | "">("");
+  const [appointmentDate, setAppointmentDate] = useState(todayIsoDate());
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(
     null
   );
+  const [selectedTime, setSelectedTime] = useState<TimeSlotOption | null>(
+    null
+  );
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
+  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const availabilitySlots = useMemo(
+    () => getDoctorAvailabilitySlots(doctor, appointmentDate),
+    [doctor, appointmentDate]
+  );
+  const doctorHasAnyAvailability = useMemo(
+    () =>
+      Boolean(
+        doctor.morning_start ||
+          doctor.afternoon_start ||
+          doctor.evening_start
+      ),
+    [doctor]
+  );
+
+  const timeSlotOptions = useMemo(() => {
+    if (!selectedSlot) return [];
+    return generateTimeSlotsForPeriod(selectedSlot, 20).filter(
+      (slot) => !bookedTimes.includes(slot.time)
+    );
+  }, [selectedSlot, bookedTimes]);
+
+  const selectedPrice = useMemo(() => {
+    if (!consult) return null;
+    return getConsultationPrice(pricingTier, consult);
+  }, [consult, pricingTier]);
 
   useEffect(() => {
     async function loadUser() {
@@ -81,11 +142,42 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
       if (profile) {
         if (profile.full_name) setName(profile.full_name);
         if (profile.phone) setPhone(profile.phone);
-        if (profile.telegram) setTelegram(profile.telegram);
       }
     }
     loadUser();
   }, []);
+
+  useEffect(() => {
+    if (!appointmentDate) return;
+    let cancelled = false;
+
+    async function loadBooked() {
+      setLoadingSlots(true);
+      const times = await getBookedTimesForDoctor(doctor.id, appointmentDate);
+      if (!cancelled) {
+        setBookedTimes(times);
+        setLoadingSlots(false);
+      }
+    }
+
+    loadBooked();
+    return () => {
+      cancelled = true;
+    };
+  }, [appointmentDate, doctor.id]);
+
+  useEffect(() => {
+    setSelectedTime(null);
+  }, [selectedSlot, appointmentDate, bookedTimes]);
+
+  useEffect(() => {
+    if (
+      selectedSlot &&
+      !availabilitySlots.some((s) => s.period === selectedSlot.period)
+    ) {
+      setSelectedSlot(null);
+    }
+  }, [availabilitySlots, selectedSlot]);
 
   const states = useMemo(
     () => (countryCode ? getStates(countryCode) : []),
@@ -111,53 +203,126 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
     setCity("");
   }
 
+  function consultLabel(type: ConsultTypeKey): string {
+    if (type === "text") return t.book.textConsult;
+    if (type === "audio") return t.book.voiceCall;
+    return t.book.videoCall;
+  }
+
   function validate(): boolean {
     const newErrors: FormErrors = {};
     if (!name.trim()) newErrors.name = t.book.errors.name;
     if (!phone.trim()) newErrors.phone = t.book.errors.phone;
     if (!disease.trim()) newErrors.disease = t.book.errors.disease;
-    if (!telegram.trim()) newErrors.telegram = t.book.errors.telegram;
     if (!countryCode) newErrors.country = t.book.errors.country;
     if (showStateSelect && !stateCode) newErrors.state = t.book.errors.state;
     if (!city.trim()) newErrors.city = t.book.errors.city;
     if (!consult) newErrors.consult = t.book.errors.consult;
+    if (!appointmentDate) newErrors.date = t.book.errors.date;
     if (availabilitySlots.length > 0 && !selectedSlot) {
       newErrors.availability = t.book.errors.availability;
     }
+    if (availabilitySlots.length > 0 && selectedSlot && !selectedTime) {
+      newErrors.time = t.book.errors.time;
+    }
+    if (!paymentMethod) newErrors.payment = t.book.errors.payment;
+    if (!screenshotFile) newErrors.screenshot = t.book.errors.screenshot;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
 
+  async function uploadPaymentScreenshot(
+    file: File,
+    appointmentKey: string
+  ): Promise<{ ok: boolean; url?: string; error?: string }> {
+    const supabase = createClient();
+    if (!supabase) {
+      return { ok: false, error: t.book.errors.uploadNotConfigured };
+    }
+
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${userId ?? "guest"}/${appointmentKey}.${ext}`;
+
+    const { error } = await supabase.storage
+      .from("payment-screenshots")
+      .upload(path, file, { upsert: true, contentType: file.type });
+
+    if (error) {
+      return { ok: false, error: error.message };
+    }
+
+    const { data } = supabase.storage
+      .from("payment-screenshots")
+      .getPublicUrl(path);
+
+    return { ok: true, url: data.publicUrl };
+  }
+
   async function handleSubmit() {
-    if (!validate()) return;
+    if (!validate() || !consult || !paymentMethod || !screenshotFile) return;
+    if (selectedPrice == null) return;
 
     setSubmitting(true);
 
-    const tg = telegram.startsWith("@") ? telegram : "@" + telegram;
-    const consultLabel =
-      consult === "in_person"
-        ? t.book.inPerson
-        : consult === "audio"
-          ? t.book.audioCall
-          : t.book.videoCall;
-
+    const label = consultLabel(consult);
     const doctorLabel = getDoctorName(doctor, locale);
-    const availabilityTime = selectedSlot
-      ? `${t.availability[selectedSlot.labelKey]}: ${formatAvailabilitySlot(selectedSlot)}`
+    const periodLabel = selectedSlot
+      ? t.availability[selectedSlot.labelKey]
       : undefined;
+    const scheduledTime = selectedTime?.time ?? "09:00";
 
-    const result = await createAppointment({
+    const latestBooked = await getBookedTimesForDoctor(
+      doctor.id,
+      appointmentDate
+    );
+    if (latestBooked.includes(scheduledTime)) {
+      setBookedTimes(latestBooked);
+      setErrors({ general: t.book.errors.slotTaken });
+      setSubmitting(false);
+      return;
+    }
+
+    const availabilityTime = selectedSlot
+      ? formatScheduledDateTime(
+          appointmentDate,
+          scheduledTime,
+          `${periodLabel}: ${formatAvailabilitySlot(selectedSlot)}`
+        )
+      : formatScheduledDateTime(appointmentDate, scheduledTime);
+
+    const uploadKey = `${doctor.id}-${Date.now()}`;
+    const upload = await uploadPaymentScreenshot(screenshotFile, uploadKey);
+    if (!upload.ok || !upload.url) {
+      setErrors({
+        general: upload.error ?? t.book.errors.uploadFailed,
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    const supabase = createClient();
+    const {
+      data: { user: authUser },
+    } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+    const resolvedUserId = authUser?.id ?? userId ?? undefined;
+
+    const result = await createBookingWithPayment({
       doctor_id: doctor.id,
       patient_name: name.trim(),
       phone: phone.trim(),
       disease: disease.trim(),
-      telegram: tg,
       country: countryName,
       city: city.trim(),
-      consult_type: consultLabel,
-      user_id: userId ?? undefined,
+      consult_type: label,
+      consult_type_key: consult,
+      user_id: resolvedUserId,
       availability_period: selectedSlot?.period,
       availability_time: availabilityTime,
+      scheduled_date: appointmentDate,
+      scheduled_time: scheduledTime,
+      amount_etb: selectedPrice,
+      payment_method: paymentMethod,
+      screenshot_url: upload.url,
     });
 
     if (!result.ok) {
@@ -169,24 +334,45 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
     }
 
     const params = new URLSearchParams({
+      pending: "1",
       name: name.trim(),
       phone: phone.trim(),
       disease: disease.trim(),
-      telegram: tg,
       country: countryName,
       city: city.trim(),
-      consult: consultLabel,
+      consult: label,
       doctor: doctorLabel,
-      ...(availabilityTime ? { availability: availabilityTime } : {}),
+      amount: String(selectedPrice),
+      schedule: availabilityTime,
     });
 
     router.push(`/success?${params.toString()}`);
   }
 
-  const consultOptions: { type: ConsultType; icon: string; label: string }[] = [
-    { type: "in_person", icon: "🏥", label: t.book.inPerson },
-    { type: "audio", icon: "📞", label: t.book.audioCall },
-    { type: "video", icon: "📹", label: t.book.videoCall },
+  const consultOptions: {
+    type: ConsultTypeKey;
+    icon: string;
+    label: string;
+    price: number;
+  }[] = [
+    {
+      type: "text",
+      icon: "💬",
+      label: t.book.textConsult,
+      price: getConsultationPrice(pricingTier, "text"),
+    },
+    {
+      type: "audio",
+      icon: "📞",
+      label: t.book.voiceCall,
+      price: getConsultationPrice(pricingTier, "audio"),
+    },
+    {
+      type: "video",
+      icon: "📹",
+      label: t.book.videoCall,
+      price: getConsultationPrice(pricingTier, "video"),
+    },
   ];
 
   return (
@@ -210,6 +396,9 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
         <div>
           <strong>{getDoctorName(doctor, locale)}</strong>
           <span>{getDoctorSpecialization(doctor, locale)}</span>
+          <span className={styles.tierHint}>
+            {getTierLabel(pricingTier, locale === "am" ? "am" : "en")}
+          </span>
         </div>
       </div>
 
@@ -220,43 +409,160 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
           </p>
         )}
 
-        {availabilitySlots.length > 0 && (
+        <section className={styles.formSection}>
+          <h2 className={styles.sectionTitle}>{t.book.sectionConsult}</h2>
+          <p className={styles.hint}>
+            {getTierLabel(pricingTier, lang)} · {t.book.pricingForDoctor}
+          </p>
+
+          <table className={styles.pricingTable}>
+            <thead>
+              <tr>
+                <th>{t.book.consultType}</th>
+                <th>{t.book.minutes}</th>
+                <th>{t.book.totalDue}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tierPricing.map((row) => (
+                <tr
+                  key={row.type}
+                  className={consult === row.type ? styles.activeRow : undefined}
+                >
+                  <td>{consultLabel(row.type)}</td>
+                  <td>{row.duration}</td>
+                  <td>{formatEtb(row.price)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className={styles.extraRates}>{t.book.additionalTimeHint}</p>
+
+          <label className={styles.formLabel}>
+            {t.book.consultType} <span className={styles.req}>*</span>
+          </label>
+          <div className={styles.consultOptions}>
+            {consultOptions.map((opt) => (
+              <div
+                key={opt.type}
+                className={`${styles.consultOpt} ${consult === opt.type ? styles.active : ""}`}
+                onClick={() => setConsult(opt.type)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") setConsult(opt.type);
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <div className={styles.coIcon}>{opt.icon}</div>
+                <div className={styles.coLabel}>{opt.label}</div>
+                <div className={styles.coSub}>{formatEtb(opt.price)}</div>
+              </div>
+            ))}
+          </div>
+          {errors.consult && <p className={styles.error}>{errors.consult}</p>}
+
+          {selectedPrice != null && (
+            <div className={styles.priceSummary}>
+              <span>{t.book.totalDue}</span>
+              <strong>{formatEtb(selectedPrice)}</strong>
+            </div>
+          )}
+        </section>
+
+        <section className={styles.formSection}>
+          <h2 className={styles.sectionTitle}>{t.book.sectionSchedule}</h2>
+
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>
-              {t.book.availability} <span className={styles.req}>*</span>
+              {t.book.appointmentDate} <span className={styles.req}>*</span>
             </label>
-            <div className={styles.consultOptions}>
-              {availabilitySlots.map((slot) => (
-                <div
-                  key={slot.period}
-                  className={`${styles.consultOpt} ${
-                    selectedSlot?.period === slot.period ? styles.active : ""
-                  }`}
-                  onClick={() => setSelectedSlot(slot)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      setSelectedSlot(slot);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className={styles.coIcon}>🕐</div>
-                  <div className={styles.coLabel}>
-                    {t.availability[slot.labelKey]}
-                  </div>
-                  <div className={styles.coSub}>
-                    {formatAvailabilitySlot(slot)}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {errors.availability && (
-              <p className={styles.error}>{errors.availability}</p>
-            )}
+            <input
+              className={styles.formInput}
+              type="date"
+              min={todayIsoDate()}
+              value={appointmentDate}
+              onChange={(e) => setAppointmentDate(e.target.value)}
+            />
+            {errors.date && <p className={styles.error}>{errors.date}</p>}
           </div>
-        )}
 
-        <div className={styles.formRow}>
+          {doctorHasAnyAvailability && availabilitySlots.length === 0 && (
+            <p className={styles.hint}>{t.book.noAvailabilityDay}</p>
+          )}
+
+          {availabilitySlots.length > 0 && (
+            <>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>
+                  {t.book.availability} <span className={styles.req}>*</span>
+                </label>
+                <div className={styles.consultOptions}>
+                  {availabilitySlots.map((slot) => (
+                    <div
+                      key={slot.period}
+                      className={`${styles.consultOpt} ${
+                        selectedSlot?.period === slot.period ? styles.active : ""
+                      }`}
+                      onClick={() => setSelectedSlot(slot)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ")
+                          setSelectedSlot(slot);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className={styles.coIcon}>🕐</div>
+                      <div className={styles.coLabel}>
+                        {t.availability[slot.labelKey]}
+                      </div>
+                      <div className={styles.coSub}>
+                        {formatAvailabilitySlot(slot)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {errors.availability && (
+                  <p className={styles.error}>{errors.availability}</p>
+                )}
+              </div>
+
+              {selectedSlot && (
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>
+                    {t.book.selectTime}{" "}
+                    <span className={styles.req}>*</span>
+                  </label>
+                  {loadingSlots ? (
+                    <p className={styles.hint}>{t.book.loadingSlots}</p>
+                  ) : timeSlotOptions.length === 0 ? (
+                    <p className={styles.hint}>{t.book.noSlots}</p>
+                  ) : (
+                    <div className={styles.timeGrid}>
+                      {timeSlotOptions.map((slot) => (
+                        <button
+                          key={slot.time}
+                          type="button"
+                          className={`${styles.timeChip} ${
+                            selectedTime?.time === slot.time
+                              ? styles.timeChipActive
+                              : ""
+                          }`}
+                          onClick={() => setSelectedTime(slot)}
+                        >
+                          {slot.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {errors.time && <p className={styles.error}>{errors.time}</p>}
+                </div>
+              )}
+            </>
+          )}
+        </section>
+
+        <section className={styles.formSection}>
+          <h2 className={styles.sectionTitle}>{t.book.sectionDetails}</h2>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>
               {t.book.fullName} <span className={styles.req}>*</span>
@@ -284,7 +590,6 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
             />
             {errors.phone && <p className={styles.error}>{errors.phone}</p>}
           </div>
-        </div>
 
         <div className={styles.formGroup}>
           <label className={styles.formLabel}>
@@ -298,20 +603,6 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
             onChange={(e) => setDisease(e.target.value)}
           />
           {errors.disease && <p className={styles.error}>{errors.disease}</p>}
-        </div>
-
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel}>
-            {t.book.telegram} <span className={styles.req}>*</span>
-          </label>
-          <input
-            className={styles.formInput}
-            type="text"
-            placeholder={t.book.telegramPlaceholder}
-            value={telegram}
-            onChange={(e) => setTelegram(e.target.value)}
-          />
-          {errors.telegram && <p className={styles.error}>{errors.telegram}</p>}
         </div>
 
         <div className={styles.formRow}>
@@ -388,37 +679,89 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
           )}
           {errors.city && <p className={styles.error}>{errors.city}</p>}
         </div>
+        </section>
 
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel}>
-            {t.book.consultType} <span className={styles.req}>*</span>
-          </label>
-          <div className={styles.consultOptions}>
-            {consultOptions.map((opt) => (
-              <div
-                key={opt.type}
-                className={`${styles.consultOpt} ${consult === opt.type ? styles.active : ""}`}
-                onClick={() => setConsult(opt.type)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") setConsult(opt.type);
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                <div className={styles.coIcon}>{opt.icon}</div>
-                <div className={styles.coLabel}>{opt.label}</div>
+        <section className={`${styles.formSection} ${styles.paymentSection}`}>
+          <h2 className={styles.sectionTitle}>{t.book.sectionPayment}</h2>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>
+              {t.book.paymentMethod} <span className={styles.req}>*</span>
+            </label>
+            <div className={styles.paymentMethods}>
+              <label className={styles.paymentOption}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  checked={paymentMethod === "telebirr"}
+                  onChange={() => setPaymentMethod("telebirr")}
+                />
+                <span>{t.book.telebirr}</span>
+              </label>
+              <label className={styles.paymentOption}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  checked={paymentMethod === "cbe"}
+                  onChange={() => setPaymentMethod("cbe")}
+                />
+                <span>{t.book.cbeBank}</span>
+              </label>
+            </div>
+            {errors.payment && <p className={styles.error}>{errors.payment}</p>}
+
+            {paymentMethod && (
+              <div className={styles.paymentDetails}>
+                <p>
+                  <strong>{t.book.sendToAccount}</strong>
+                </p>
+                <p>{getPaymentAccountHolder()}</p>
+                <p className={styles.paymentAccountLabel}>
+                  {paymentMethod === "telebirr"
+                    ? t.book.telebirrNumber
+                    : t.book.cbeAccountNumber}
+                </p>
+                <code>{getPaymentAccount(paymentMethod)}</code>
+                {selectedPrice != null && (
+                  <p>
+                    {t.book.payAmount}:{" "}
+                    <strong>{formatEtb(selectedPrice)}</strong>
+                  </p>
+                )}
               </div>
-            ))}
+            )}
           </div>
-          {errors.consult && <p className={styles.error}>{errors.consult}</p>}
-        </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>
+              {t.book.uploadScreenshot} <span className={styles.req}>*</span>
+            </label>
+            <input
+              className={styles.fileInput}
+              type="file"
+              accept="image/*"
+              onChange={(e) => setScreenshotFile(e.target.files?.[0] ?? null)}
+            />
+            {screenshotFile && (
+              <p className={styles.hint}>{screenshotFile.name}</p>
+            )}
+            {errors.screenshot && (
+              <p className={styles.error}>{errors.screenshot}</p>
+            )}
+          </div>
+
+          <div className={styles.policyBox}>
+            <strong>{t.book.paymentPolicy}</strong>
+            <p>{t.book.paymentPolicyText}</p>
+          </div>
+        </section>
 
         <button
           className={styles.submitBtn}
           onClick={handleSubmit}
           disabled={submitting}
         >
-          {submitting ? t.success.loading : t.book.submit}
+          {submitting ? t.success.loading : t.book.submitPayment}
         </button>
       </div>
     </div>

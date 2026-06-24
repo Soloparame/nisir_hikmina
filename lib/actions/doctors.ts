@@ -6,8 +6,11 @@ import { generateLoginCode } from "../doctor-availability";
 import { notifyAdminNewAppointment } from "../notify-admin-appointment";
 import { createClient } from "../supabase/server";
 import type { AppointmentInsert, DoctorFormData } from "../types/doctor";
-import { PUBLIC_DOCTOR_COLUMNS } from "../types/doctor";
-import { getOrCreateConversation } from "./chat";
+import {
+  PUBLIC_DOCTOR_COLUMNS,
+  PUBLIC_DOCTOR_COLUMNS_NO_DAYS,
+  PUBLIC_DOCTOR_COLUMNS_WITH_TIER,
+} from "../types/doctor";
 
 async function getAuthedClient() {
   const supabase = await createClient();
@@ -34,40 +37,80 @@ export async function getActiveDoctors() {
   const supabase = await createClient();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
+  const primary = await supabase
     .from("doctors")
-    .select(PUBLIC_DOCTOR_COLUMNS)
+    .select(PUBLIC_DOCTOR_COLUMNS_WITH_TIER)
     .eq("is_active", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("getActiveDoctors:", error.message);
-    return [];
+  if (!primary.error) {
+    return primary.data ?? [];
   }
 
-  return data ?? [];
+  if (
+    primary.error.message?.includes("pricing_tier") ||
+    primary.error.message?.includes("morning_days")
+  ) {
+    const fallback = await supabase
+      .from("doctors")
+      .select(PUBLIC_DOCTOR_COLUMNS_NO_DAYS)
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+
+    if (fallback.error) {
+      console.error("getActiveDoctors:", fallback.error.message);
+      return [];
+    }
+
+    return fallback.data ?? [];
+  }
+
+  console.error("getActiveDoctors:", primary.error.message);
+  return [];
 }
 
 export async function getExperiencedDoctors(minYears = 4) {
   const supabase = await createClient();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
+  const primary = await supabase
     .from("doctors")
-    .select(PUBLIC_DOCTOR_COLUMNS)
+    .select(PUBLIC_DOCTOR_COLUMNS_WITH_TIER)
     .eq("is_active", true)
     .gte("experience_years", minYears)
     .order("experience_years", { ascending: false })
     .order("sort_order", { ascending: true })
     .limit(8);
 
-  if (error) {
-    console.error("getExperiencedDoctors:", error.message);
-    return [];
+  if (!primary.error) {
+    return primary.data ?? [];
   }
 
-  return data ?? [];
+  if (
+    primary.error.message?.includes("pricing_tier") ||
+    primary.error.message?.includes("morning_days")
+  ) {
+    const fallback = await supabase
+      .from("doctors")
+      .select(PUBLIC_DOCTOR_COLUMNS_NO_DAYS)
+      .eq("is_active", true)
+      .gte("experience_years", minYears)
+      .order("experience_years", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .limit(8);
+
+    if (fallback.error) {
+      console.error("getExperiencedDoctors:", fallback.error.message);
+      return [];
+    }
+
+    return fallback.data ?? [];
+  }
+
+  console.error("getExperiencedDoctors:", primary.error.message);
+  return [];
 }
 
 export async function getAllDoctorsAdmin() {
@@ -114,6 +157,10 @@ export async function saveDoctor(
       afternoon_end: emptyTimeToNull(form.afternoon_end),
       evening_start: emptyTimeToNull(form.evening_start),
       evening_end: emptyTimeToNull(form.evening_end),
+      morning_days: form.morning_days?.length ? form.morning_days : null,
+      afternoon_days: form.afternoon_days?.length ? form.afternoon_days : null,
+      evening_days: form.evening_days?.length ? form.evening_days : null,
+      pricing_tier: form.pricing_tier ?? "gp",
     };
 
     let loginCode: string | undefined;
@@ -188,7 +235,7 @@ export async function createAppointment(
       user_id: data.user_id ?? null,
       availability_period: data.availability_period ?? null,
       availability_time: data.availability_time ?? null,
-      status: "confirmed",
+      status: "pending_payment",
     })
     .select("id")
     .single();
@@ -209,14 +256,6 @@ export async function createAppointment(
       (doctorRow as { name?: string; name_en?: string | null }).name_en?.trim() ||
       (doctorRow as { name?: string }).name ||
       doctorName;
-  }
-
-  if (data.user_id && inserted?.id) {
-    try {
-      await getOrCreateConversation(data.doctor_id, inserted.id);
-    } catch (e) {
-      console.error("createAppointment conversation:", e);
-    }
   }
 
   try {

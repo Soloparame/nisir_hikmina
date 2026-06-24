@@ -107,11 +107,80 @@
 }
 
 .formPage {
-  max-width: 580px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1.25rem 3rem;
   background: linear-gradient(180deg, #f0fdf9 0%, #f8fafc 100%);
   min-height: calc(100vh - 220px);
+}
+
+.formSection {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.formSection:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #004d4d;
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.paymentSection {
+  background: linear-gradient(180deg, #f0fdfa 0%, #fff 100%);
+  border: 1px solid rgba(0, 153, 102, 0.18);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.pricingTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+}
+
+.pricingTable th,
+.pricingTable td {
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pricingTable th {
+  color: #64748b;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pricingTable tr:last-child td {
+  border-bottom: none;
+}
+
+.pricingTable .activeRow td {
+  background: #ecfdf5;
+  font-weight: 700;
+  color: #004d4d;
+}
+
+.extraRates {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.policyBox p {
+  white-space: pre-line;
 }
 
 .formCard {
@@ -254,6 +323,123 @@
   font-size: 11px;
   color: #64748b;
   margin-top: 2px;
+}
+
+.tierHint {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.hint {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 0.35rem;
+}
+
+.timeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeChip {
+  border: 1.5px solid #d1d5db;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: #f9fafb;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.timeChipActive {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.priceSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #ecfdf5;
+  border: 1px solid rgba(0, 153, 102, 0.15);
+  margin-bottom: 1rem;
+}
+
+.paymentMethods {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paymentOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #f9fafb;
+}
+
+.paymentOption input {
+  accent-color: var(--teal);
+}
+
+.paymentDetails {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f0fdfa;
+  border: 1px solid rgba(0, 153, 102, 0.12);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.paymentDetails code {
+  display: block;
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.paymentAccountLabel {
+  margin: 0.75rem 0 0.15rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.fileInput {
+  width: 100%;
+  font-size: 14px;
+}
+
+.policyBox {
+  margin: 1rem 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.policyBox strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #0f172a;
 }
 
 .submitBtn {

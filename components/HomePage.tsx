@@ -107,7 +107,6 @@ export default function HomePage({
                   {t.hero.tributeNameLatin}
                 </p>
                 <p className={styles.tributeDates}>{t.hero.tributeDates}</p>
-                <p className={styles.tributeBio}>{t.hero.tributeBio}</p>
                 <blockquote className={styles.tributeQuote}>
                   <p>&ldquo;{t.hero.tributeQuote}&rdquo;</p>
                   <cite>{t.hero.tributeQuoteSource}</cite>

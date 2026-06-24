@@ -1,3 +1,7 @@
+import {
+  getWeekdayKeyFromDate,
+  isPeriodAvailableOnDate,
+} from "./availability-days";
 import type { Doctor, DoctorAvailabilityPeriod } from "./types/doctor";
 
 export type AvailabilitySlot = {
@@ -17,32 +21,42 @@ function formatTime(t: string | null): string | null {
   return `${h12}:${min} ${ampm}`;
 }
 
-export function getDoctorAvailabilitySlots(doctor: Doctor): AvailabilitySlot[] {
+export function getDoctorAvailabilitySlots(
+  doctor: Doctor,
+  date?: string
+): AvailabilitySlot[] {
   const slots: AvailabilitySlot[] = [];
+  const weekday = date ? getWeekdayKeyFromDate(date) : null;
 
   if (doctor.morning_start && doctor.morning_end) {
-    slots.push({
-      period: "morning",
-      labelKey: "morning",
-      start: doctor.morning_start,
-      end: doctor.morning_end,
-    });
+    if (!weekday || isPeriodAvailableOnDate(doctor, "morning", date!)) {
+      slots.push({
+        period: "morning",
+        labelKey: "morning",
+        start: doctor.morning_start,
+        end: doctor.morning_end,
+      });
+    }
   }
   if (doctor.afternoon_start && doctor.afternoon_end) {
-    slots.push({
-      period: "afternoon",
-      labelKey: "afternoon",
-      start: doctor.afternoon_start,
-      end: doctor.afternoon_end,
-    });
+    if (!weekday || isPeriodAvailableOnDate(doctor, "afternoon", date!)) {
+      slots.push({
+        period: "afternoon",
+        labelKey: "afternoon",
+        start: doctor.afternoon_start,
+        end: doctor.afternoon_end,
+      });
+    }
   }
   if (doctor.evening_start && doctor.evening_end) {
-    slots.push({
-      period: "evening",
-      labelKey: "evening",
-      start: doctor.evening_start,
-      end: doctor.evening_end,
-    });
+    if (!weekday || isPeriodAvailableOnDate(doctor, "evening", date!)) {
+      slots.push({
+        period: "evening",
+        labelKey: "evening",
+        start: doctor.evening_start,
+        end: doctor.evening_end,
+      });
+    }
   }
 
   return slots;

@@ -23,6 +23,10 @@ function SuccessContent() {
 
   const location = country ? `${city}, ${country}` : city;
 
+  const pending = params.get("pending") === "1";
+  const amount = params.get("amount");
+  const schedule = params.get("schedule");
+
   const rows = [
     { label: t.success.doctor, value: doctor },
     { label: t.success.name, value: name },
@@ -31,13 +35,15 @@ function SuccessContent() {
     { label: t.success.telegram, value: telegram },
     { label: t.success.location, value: location },
     { label: t.success.consultType, value: consult },
+    ...(schedule ? [{ label: "Schedule", value: schedule }] : []),
+    ...(amount ? [{ label: "Amount", value: `${amount} ETB` }] : []),
   ];
 
   return (
     <div className={styles.successPage}>
-      <div className={styles.successIcon}>{t.success.icon}</div>
-      <h2>{t.success.title}</h2>
-      <p>{t.success.message}</p>
+      <div className={styles.successIcon}>{pending ? "⏳" : t.success.icon}</div>
+      <h2>{pending ? t.success.pendingTitle : t.success.title}</h2>
+      <p>{pending ? t.success.pendingMessage : t.success.message}</p>
 
       <div className={styles.summaryCard}>
         <div className={styles.summaryTitle}>{t.success.summary}</div>

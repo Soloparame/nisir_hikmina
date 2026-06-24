@@ -44,6 +44,8 @@ function patientInitials(name: string) {
 
 function statusClass(status: string) {
   if (status === "confirmed") return styles.statusConfirmed;
+  if (status === "pending_payment") return styles.statusPending;
+  if (status === "payment_rejected") return styles.statusDefault;
   if (status === "pending") return styles.statusPending;
   return styles.statusDefault;
 }
@@ -297,7 +299,9 @@ export default function DoctorDashboardPanel({
             ) : (
               appointments.map((a) => {
                 const hasChat = Boolean(
-                  a.user_id && convoByPatientId.has(a.user_id)
+                  a.status === "confirmed" &&
+                    a.user_id &&
+                    convoByPatientId.has(a.user_id)
                 );
                 return (
                   <article key={a.id} className={styles.appointmentCard}>
@@ -312,7 +316,11 @@ export default function DoctorDashboardPanel({
                         </div>
                       </div>
                       <span className={`${styles.badge} ${statusClass(a.status)}`}>
-                        {a.status}
+                        {a.status === "pending_payment"
+                          ? "Awaiting payment"
+                          : a.status === "confirmed"
+                            ? "Active — chat open"
+                            : a.status.replace(/_/g, " ")}
                       </span>
                     </div>
                     <div className={styles.cardMeta}>
@@ -323,6 +331,7 @@ export default function DoctorDashboardPanel({
                     </div>
                     <p className={styles.meta}>
                       {a.country} / {a.city} · {a.consult_type}
+                      {a.amount_etb != null ? ` · ${a.amount_etb} ETB` : ""}
                     </p>
                     {a.availability_time && (
                       <p className={styles.slot}>🕐 {a.availability_time}</p>

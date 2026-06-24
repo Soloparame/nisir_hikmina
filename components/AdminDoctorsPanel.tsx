@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { deleteDoctor, saveDoctor } from "../lib/actions/doctors";
 import { createClient } from "../lib/supabase/client";
 import {
+  DEFAULT_WEEKDAYS,
+  WEEKDAY_OPTIONS,
+  type WeekdayKey,
+} from "../lib/availability-days";
+import {
   DOCTOR_CATEGORIES,
   getSubcategoriesForCategoryLabel,
 } from "../lib/doctor-categories";
@@ -20,10 +25,11 @@ type Props = {
 const emptyForm: DoctorFormData = {
   name: "",
   name_en: "",
-  category: DOCTOR_CATEGORIES[0]?.label ?? "Primary Care & General Medicine",
-  specialization: DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Pediatrics",
+  category: DOCTOR_CATEGORIES[0]?.label ?? "General Practitioners & Residents",
+  specialization:
+    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Practitioner (GP)",
   specialization_en:
-    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Pediatrics",
+    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Practitioner (GP)",
   bio: "",
   bio_en: "",
   image_url: "",
@@ -32,13 +38,49 @@ const emptyForm: DoctorFormData = {
   is_active: true,
   sort_order: 0,
   email: "",
+  pricing_tier: "gp",
   morning_start: "",
   morning_end: "",
   afternoon_start: "",
   afternoon_end: "",
   evening_start: "",
   evening_end: "",
+  morning_days: [...DEFAULT_WEEKDAYS],
+  afternoon_days: [...DEFAULT_WEEKDAYS],
+  evening_days: [...DEFAULT_WEEKDAYS],
 };
+
+function toggleWeekday(days: string[], day: WeekdayKey): string[] {
+  return days.includes(day)
+    ? days.filter((d) => d !== day)
+    : [...days, day];
+}
+
+function AvailabilityDaysPicker({
+  days,
+  onChange,
+}: {
+  days: string[];
+  onChange: (days: string[]) => void;
+}) {
+  return (
+    <div className={styles.dayPicker}>
+      <span className={styles.dayPickerLabel}>Days</span>
+      <div className={styles.dayPickerRow}>
+        {WEEKDAY_OPTIONS.map(({ key, label }) => (
+          <label key={key} className={styles.dayChip}>
+            <input
+              type="checkbox"
+              checked={days.includes(key)}
+              onChange={() => onChange(toggleWeekday(days, key))}
+            />
+            {label}
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function AdminDoctorsPanel({
   initialDoctors,
@@ -70,12 +112,16 @@ export default function AdminDoctorsPanel({
       is_active: d.is_active,
       sort_order: d.sort_order,
       email: d.email ?? "",
+      pricing_tier: d.pricing_tier ?? "gp",
       morning_start: d.morning_start?.slice(0, 5) ?? "",
       morning_end: d.morning_end?.slice(0, 5) ?? "",
       afternoon_start: d.afternoon_start?.slice(0, 5) ?? "",
       afternoon_end: d.afternoon_end?.slice(0, 5) ?? "",
       evening_start: d.evening_start?.slice(0, 5) ?? "",
       evening_end: d.evening_end?.slice(0, 5) ?? "",
+      morning_days: d.morning_days?.length ? [...d.morning_days] : [...DEFAULT_WEEKDAYS],
+      afternoon_days: d.afternoon_days?.length ? [...d.afternoon_days] : [...DEFAULT_WEEKDAYS],
+      evening_days: d.evening_days?.length ? [...d.evening_days] : [...DEFAULT_WEEKDAYS],
     });
   }
 
@@ -255,6 +301,10 @@ export default function AdminDoctorsPanel({
 
           <fieldset className={styles.availabilityFieldset}>
             <legend>Availability — Morning</legend>
+            <AvailabilityDaysPicker
+              days={form.morning_days ?? DEFAULT_WEEKDAYS}
+              onChange={(morning_days) => setForm({ ...form, morning_days })}
+            />
             <div className={styles.timeRow}>
               <input
                 type="time"
@@ -276,6 +326,10 @@ export default function AdminDoctorsPanel({
 
           <fieldset className={styles.availabilityFieldset}>
             <legend>Availability — After Lunch</legend>
+            <AvailabilityDaysPicker
+              days={form.afternoon_days ?? DEFAULT_WEEKDAYS}
+              onChange={(afternoon_days) => setForm({ ...form, afternoon_days })}
+            />
             <div className={styles.timeRow}>
               <input
                 type="time"
@@ -297,6 +351,10 @@ export default function AdminDoctorsPanel({
 
           <fieldset className={styles.availabilityFieldset}>
             <legend>Availability — Evening</legend>
+            <AvailabilityDaysPicker
+              days={form.evening_days ?? DEFAULT_WEEKDAYS}
+              onChange={(evening_days) => setForm({ ...form, evening_days })}
+            />
             <div className={styles.timeRow}>
               <input
                 type="time"
@@ -315,6 +373,22 @@ export default function AdminDoctorsPanel({
               />
             </div>
           </fieldset>
+
+          <label>Pricing tier (consultation fees)</label>
+          <select
+            value={form.pricing_tier ?? "gp"}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                pricing_tier: e.target.value as DoctorFormData["pricing_tier"],
+              })
+            }
+          >
+            <option value="gp">General Practitioner (GP)</option>
+            <option value="resident">Resident Physician</option>
+            <option value="specialist">Specialist Doctor</option>
+            <option value="senior">Subspecialist / Consultant</option>
+          </select>
 
           <label>የስራ ዓመታት</label>
           <input

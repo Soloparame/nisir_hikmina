@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { createServiceClient } from "../supabase/admin";
 import { createClient } from "../supabase/server";
 import { formatLastMessagePreview } from "../chat-display";
 import type {
@@ -66,15 +67,35 @@ export async function getOrCreateConversation(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Not logged in" };
 
+  return ensureConversation(supabase, doctorId, user.id, appointmentId);
+}
+
+export async function ensureConversationForBooking(
+  doctorId: string,
+  patientId: string,
+  appointmentId: string
+): Promise<{ ok: boolean; conversationId?: string; error?: string }> {
+  const supabase = createServiceClient() ?? (await createClient());
+  if (!supabase) return { ok: false, error: "Not configured" };
+
+  return ensureConversation(supabase, doctorId, patientId, appointmentId);
+}
+
+async function ensureConversation(
+  supabase: NonNullable<Awaited<ReturnType<typeof createClient>>>,
+  doctorId: string,
+  patientId: string,
+  appointmentId?: string
+): Promise<{ ok: boolean; conversationId?: string; error?: string }> {
   const { data: existing } = await supabase
     .from("conversations")
-    .select("id")
-    .eq("patient_id", user.id)
+    .select("id, appointment_id")
+    .eq("patient_id", patientId)
     .eq("doctor_id", doctorId)
     .maybeSingle();
 
   if (existing) {
-    if (appointmentId) {
+    if (appointmentId && existing.appointment_id !== appointmentId) {
       await supabase
         .from("conversations")
         .update({ appointment_id: appointmentId })
@@ -86,7 +107,7 @@ export async function getOrCreateConversation(
   const { data: created, error } = await supabase
     .from("conversations")
     .insert({
-      patient_id: user.id,
+      patient_id: patientId,
       doctor_id: doctorId,
       appointment_id: appointmentId ?? null,
     })
@@ -94,6 +115,9 @@ export async function getOrCreateConversation(
     .single();
 
   if (error) return { ok: false, error: error.message };
+  if (!created?.id) {
+    return { ok: false, error: "Could not create conversation" };
+  }
   return { ok: true, conversationId: created.id };
 }
 
