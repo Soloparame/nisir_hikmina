@@ -4,7 +4,7 @@ export const PAYMENT_METHODS: PaymentMethod[] = ["telebirr", "cbe"];
 
 /** Edit these — shown on the book page when patient picks a payment method */
 export const PAYMENT_ACCOUNTS = {
-  accountName: "Nisir Hikimina",
+  accountName: "Mr.Fisiha Guade",
   telebirr: "0947018285",
   cbe: "1000221781574",
 } as const;

@@ -56,7 +56,7 @@ function SuccessContent() {
       </div>
 
       <a
-        href="https://t.me/nisirhealth"
+        href="https://t.me/nisirhikimna"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.tgBtn}
@@ -71,8 +71,8 @@ function SuccessContent() {
       <p className={styles.footerNote}>
         {t.success.footer}
         <br />
-        <a href="https://t.me/nisirhealth" className={styles.tgLink}>
-          t.me/nisirhealth
+        <a href="https://t.me/nisirhikimna" className={styles.tgLink}>
+          t.me/nisirhikimna
         </a>
       </p>
     </div>
