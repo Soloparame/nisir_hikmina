@@ -23,9 +23,13 @@ import {
 } from "../lib/consultation-pricing";
 import {
   formatAvailabilitySlot,
+  formatBookableDateChip,
   getDoctorAvailabilitySlots,
+  getDoctorWeeklySchedule,
+  getUpcomingBookableDates,
   type AvailabilitySlot,
 } from "../lib/doctor-availability";
+import { formatWeekdayList, formatWeekdayName } from "../lib/availability-days";
 import {
   getDoctorName,
   getDoctorSpecialization,
@@ -112,6 +116,14 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
           doctor.afternoon_start ||
           doctor.evening_start
       ),
+    [doctor]
+  );
+  const weeklySchedule = useMemo(
+    () => getDoctorWeeklySchedule(doctor),
+    [doctor]
+  );
+  const upcomingDates = useMemo(
+    () => getUpcomingBookableDates(doctor, todayIsoDate(), 14),
     [doctor]
   );
 
@@ -472,6 +484,52 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
         <section className={styles.formSection}>
           <h2 className={styles.sectionTitle}>{t.book.sectionSchedule}</h2>
 
+          {doctorHasAnyAvailability && weeklySchedule.length > 0 && (
+            <div className={styles.availabilityOverview}>
+              <p className={styles.overviewTitle}>
+                {t.book.doctorWeeklyAvailability}
+              </p>
+              <ul className={styles.scheduleList}>
+                {weeklySchedule.map((entry) => (
+                  <li key={entry.period} className={styles.scheduleItem}>
+                    <div className={styles.schedulePeriod}>
+                      <span className={styles.scheduleIcon}>🕐</span>
+                      <strong>{t.availability[entry.labelKey]}</strong>
+                    </div>
+                    <div className={styles.scheduleMeta}>
+                      <span className={styles.scheduleDays}>
+                        {formatWeekdayList(entry.days, lang)}
+                      </span>
+                      <span className={styles.scheduleTime}>
+                        {entry.timeRange}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {upcomingDates.length > 0 && (
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>{t.book.pickDateQuick}</label>
+              <div className={styles.dateChipRow}>
+                {upcomingDates.map((date) => (
+                  <button
+                    key={date}
+                    type="button"
+                    className={`${styles.dateChip} ${
+                      appointmentDate === date ? styles.dateChipActive : ""
+                    }`}
+                    onClick={() => setAppointmentDate(date)}
+                  >
+                    {formatBookableDateChip(date, lang)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>
               {t.book.appointmentDate} <span className={styles.req}>*</span>
@@ -483,6 +541,11 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
               value={appointmentDate}
               onChange={(e) => setAppointmentDate(e.target.value)}
             />
+            {appointmentDate && (
+              <p className={styles.hint}>
+                {t.book.selectedDay}: {formatWeekdayName(appointmentDate, lang)}
+              </p>
+            )}
             {errors.date && <p className={styles.error}>{errors.date}</p>}
           </div>
 

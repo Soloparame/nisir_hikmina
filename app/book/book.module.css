@@ -360,6 +360,92 @@
   font-weight: 600;
 }
 
+.availabilityOverview {
+  margin-bottom: 1.25rem;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f0fdfa;
+  border: 1px solid rgba(0, 153, 102, 0.15);
+}
+
+.overviewTitle {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.scheduleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.scheduleItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid rgba(0, 77, 77, 0.08);
+}
+
+.schedulePeriod {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #0f766e;
+  font-size: 0.92rem;
+}
+
+.scheduleIcon {
+  font-size: 1rem;
+}
+
+.scheduleMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.84rem;
+  color: #475569;
+}
+
+.scheduleDays {
+  font-weight: 600;
+  color: #334155;
+}
+
+.scheduleTime {
+  color: #64748b;
+}
+
+.dateChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dateChip {
+  border: 1.5px solid #d1d5db;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: #f9fafb;
+  font-size: 13px;
+  cursor: pointer;
+  color: #334155;
+}
+
+.dateChipActive {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+
 .priceSummary {
   display: flex;
   justify-content: space-between;

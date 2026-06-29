@@ -61,6 +61,57 @@ export function getPeriodDays(
   return DEFAULT_WEEKDAYS;
 }
 
+export function formatWeekdayList(
+  days: WeekdayKey[],
+  locale: "en" | "am" = "en"
+): string {
+  const order: WeekdayKey[] = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+  const sorted = [...days].sort(
+    (a, b) => order.indexOf(a) - order.indexOf(b)
+  );
+
+  if (sorted.length === 7) {
+    return locale === "am" ? "ሁሉም ቀናት" : "Every day";
+  }
+
+  const labels: Record<WeekdayKey, { en: string; am: string }> = {
+    monday: { en: "Mon", am: "ሰኞ" },
+    tuesday: { en: "Tue", am: "ማክሰ" },
+    wednesday: { en: "Wed", am: "ረቡዕ" },
+    thursday: { en: "Thu", am: "ሐሙስ" },
+    friday: { en: "Fri", am: "ዓርብ" },
+    saturday: { en: "Sat", am: "ቅዳሜ" },
+    sunday: { en: "Sun", am: "እሁድ" },
+  };
+
+  return sorted.map((d) => labels[d][locale]).join(", ");
+}
+
+export function formatWeekdayName(
+  date: string,
+  locale: "en" | "am" = "en"
+): string {
+  const key = getWeekdayKeyFromDate(date);
+  const labels: Record<WeekdayKey, { en: string; am: string }> = {
+    monday: { en: "Monday", am: "ሰኞ" },
+    tuesday: { en: "Tuesday", am: "ማክሰኞ" },
+    wednesday: { en: "Wednesday", am: "ረቡዕ" },
+    thursday: { en: "Thursday", am: "ሐሙስ" },
+    friday: { en: "Friday", am: "ዓርብ" },
+    saturday: { en: "Saturday", am: "ቅዳሜ" },
+    sunday: { en: "Sunday", am: "እሁድ" },
+  };
+  return labels[key][locale];
+}
+
 export function isPeriodAvailableOnDate(
   doctor: Doctor,
   period: DoctorAvailabilityPeriod,
