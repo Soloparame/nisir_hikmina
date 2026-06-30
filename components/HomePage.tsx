@@ -133,7 +133,7 @@ export default function HomePage({
                 <article key={category.key} className={styles.serviceItem}>
                   <div className={styles.serviceImageWrapper}>
                     <ServiceCategoryIcon
-                      index={index}
+                      categoryKey={category.key}
                       label={category.label}
                     />
                   </div>
