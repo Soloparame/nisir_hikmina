@@ -7,8 +7,9 @@ import Navbar from "./Navbar";
 import SiteFooter from "./SiteFooter";
 import ExperiencedDoctorsSection from "./ExperiencedDoctorsSection";
 import HomeUpdatesSection from "./HomeUpdatesSection";
+import ServiceCategoryIcon from "./ServiceCategoryIcon";
 import { useLanguage } from "../lib/i18n/LanguageContext";
-import { SERVICE_IMAGES } from "../lib/service-images";
+import { DOCTOR_CATEGORIES } from "../lib/doctor-categories";
 import type { Doctor } from "../lib/types/doctor";
 import type { UpdateWithMeta } from "../lib/types/update";
 import styles from "../app/page.module.css";
@@ -23,39 +24,6 @@ export default function HomePage({
   latestUpdates = [],
 }: Props) {
   const { t } = useLanguage();
-
-  const services = [
-    {
-      image: SERVICE_IMAGES.cardiology,
-      name: t.services.cardiology,
-      desc: t.services.cardiologyDesc,
-    },
-    {
-      image: SERVICE_IMAGES.neurology,
-      name: t.services.neurology,
-      desc: t.services.neurologyDesc,
-    },
-    {
-      image: SERVICE_IMAGES.orthopedics,
-      name: t.services.orthopedics,
-      desc: t.services.orthopedicsDesc,
-    },
-    {
-      image: SERVICE_IMAGES.pediatrics,
-      name: t.services.pediatrics,
-      desc: t.services.pediatricsDesc,
-    },
-    {
-      image: SERVICE_IMAGES.primaryCare,
-      name: t.services.primaryCare,
-      desc: t.services.primaryCareDesc,
-    },
-    {
-      image: SERVICE_IMAGES.dermatology,
-      name: t.services.dermatology,
-      desc: t.services.dermatologyDesc,
-    },
-  ];
 
   return (
     <div className={styles.pageShell}>
@@ -161,20 +129,17 @@ export default function HomePage({
               </div>
             </div>
             <div className={styles.servicesGrid}>
-              {services.map((s) => (
-                <article key={s.name} className={styles.serviceItem}>
+              {DOCTOR_CATEGORIES.map((category, index) => (
+                <article key={category.key} className={styles.serviceItem}>
                   <div className={styles.serviceImageWrapper}>
-                    <Image
-                      src={s.image.src}
-                      alt={s.image.alt}
-                      fill
-                      className={styles.serviceImage}
-                      sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 280px"
+                    <ServiceCategoryIcon
+                      index={index}
+                      label={category.label}
                     />
                   </div>
                   <div className={styles.serviceInfo}>
-                    <h4>{s.name}</h4>
-                    <p>{s.desc}</p>
+                    <span className={styles.serviceNumber}>{index + 1}.</span>
+                    <h4>{category.label}</h4>
                   </div>
                 </article>
               ))}

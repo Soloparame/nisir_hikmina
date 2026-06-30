@@ -1,6 +1,7 @@
 "use client";
 
 import DocumentMeta from "./DocumentMeta";
+import TelegramFab from "./TelegramFab";
 import { LanguageProvider, useLanguage } from "../lib/i18n/LanguageContext";
 
 function LocaleKeyedContent({ children }: { children: React.ReactNode }) {
@@ -13,6 +14,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <LanguageProvider>
       <DocumentMeta />
       <LocaleKeyedContent>{children}</LocaleKeyedContent>
+      <TelegramFab />
     </LanguageProvider>
   );
 }

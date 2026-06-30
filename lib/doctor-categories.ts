@@ -160,6 +160,7 @@ export const DOCTOR_CATEGORIES: DoctorCategory[] = [
     key: "orthopedics",
     label: "Orthopedics & Musculoskeletal Care",
     subcategories: [
+      "General Orthopedics and Traumatology Specialist",
       "Joint Reconstruction & Replacement Specialist",
       "Sports Medicine Subspecialist",
       "Pediatric Orthopedic Surgery Subspecialist",
