@@ -1,8 +1,9 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Stethoscope } from "lucide-react";
+import { Search, Stethoscope } from "lucide-react";
 import {
   getDoctorBio,
   getDoctorName,
@@ -18,6 +19,19 @@ type Props = {
 
 export default function DoctorsDirectory({ doctors }: Props) {
   const { t, locale } = useLanguage();
+  const [query, setQuery] = useState("");
+
+  const filteredDoctors = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    if (!term) return doctors;
+
+    return doctors.filter((doctor) => {
+      const names = [doctor.name, doctor.name_en]
+        .filter(Boolean)
+        .map((name) => name!.toLowerCase());
+      return names.some((name) => name.includes(term));
+    });
+  }, [doctors, query]);
 
   return (
     <div className={styles.wrap}>
@@ -26,11 +40,27 @@ export default function DoctorsDirectory({ doctors }: Props) {
         <p>{t.doctorsPage.subtitle}</p>
       </header>
 
+      {doctors.length > 0 && (
+        <div className={styles.searchWrap}>
+          <Search className={styles.searchIcon} size={18} aria-hidden />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t.doctorsPage.searchPlaceholder}
+            className={styles.searchInput}
+            aria-label={t.doctorsPage.searchPlaceholder}
+          />
+        </div>
+      )}
+
       {doctors.length === 0 ? (
         <p className={styles.empty}>{t.doctorsPage.empty}</p>
+      ) : filteredDoctors.length === 0 ? (
+        <p className={styles.empty}>{t.doctorsPage.noSearchResults}</p>
       ) : (
         <div className={styles.grid}>
-          {doctors.map((d) => (
+          {filteredDoctors.map((d) => (
             <article key={d.id} className={styles.card}>
               <div className={styles.avatarWrap}>
                 {d.image_url ? (

@@ -73,6 +73,8 @@ const translationsSource = {
       title: "ዶክተሮቻችን",
       subtitle: "በስፔሻሊቲ ዶክተሮችን ይፈልጉ እና ቀጠሮ ይያዙ",
       empty: "አሁን ንቁ ዶክተሮች የሉም።",
+      searchPlaceholder: "ዶክተርን በስም ይፈልጉ...",
+      noSearchResults: "በዚህ ስም ዶክተር አልተገኘም።",
     },
     whatsNew: {
       empty: "ገና ማሳወቂያ የለም።",
@@ -550,6 +552,8 @@ const translationsSource = {
       title: "Our Doctors",
       subtitle: "Browse specialists and book your appointment",
       empty: "No active doctors at the moment.",
+      searchPlaceholder: "Search doctors by name...",
+      noSearchResults: "No doctors found with that name.",
     },
     whatsNew: {
       empty: "No updates yet. Check back soon.",
