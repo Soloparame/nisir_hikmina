@@ -38,7 +38,7 @@ The app sends email through [Resend](https://resend.com). Without `RESEND_API_KE
 1. Go to [https://resend.com](https://resend.com) and **sign up** (GitHub or email).
 2. Confirm your email if Resend asks you to.
 3. In the Resend dashboard, open **API Keys** (sometimes under **Settings**).
-4. Click **Create API Key**, give it a name (e.g. `nisir-health`), choose permission **Sending access** (or full if that’s the only option).
+4. Click **Create API Key**, give it a name (e.g. `eagle-medical`), choose permission **Sending access** (or full if that’s the only option).
 5. Copy the key — it starts with **`re_`**. You only see the full key once; if you lose it, create a new key.
 6. Add to **`.env.local`** (and to your host’s env vars for production):
 
@@ -48,14 +48,14 @@ The app sends email through [Resend](https://resend.com). Without `RESEND_API_KE
 
 7. **Sender address (optional)**  
    For quick tests, the app defaults to Resend’s test sender:  
-   `Nisir Health <onboarding@resend.dev>`  
+   `Eagle Medical <onboarding@resend.dev>`  
    Resend may restrict who you can send **to** on the free tier (often your own inbox until you add a domain). If mail doesn’t arrive, open Resend → **Logs** / **Emails** to see bounces or errors.
 
 8. **Custom domain (later, optional)**  
    After you verify a domain in Resend, you can set:
 
    ```bash
-   RESEND_FROM_EMAIL=Nisir Health <appointments@yourdomain.com>
+   RESEND_FROM_EMAIL=Eagle Medical <appointments@yourdomain.com>
    ```
 
 9. **Override recipient email (optional)**  
@@ -80,7 +80,7 @@ Telegram’s API does **not** let a server send a private message using only `@N
 
 1. In Telegram, open **[@BotFather](https://t.me/BotFather)**.
 2. Send: **`/newbot`**
-3. Follow prompts: choose a **display name** (e.g. `Nisir Appointments Bot`) and a **username** ending in `bot` (e.g. `nisir_appointments_bot`).
+3. Follow prompts: choose a **display name** (e.g. `Eagle Medical Appointments Bot`) and a **username** ending in `bot` (e.g. `eagle_medical_bot`).
 4. BotFather replies with a **HTTP API token** — a long string like `7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxx`. **Copy it.** That is `TELEGRAM_BOT_TOKEN`.
 
    ```bash

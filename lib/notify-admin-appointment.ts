@@ -40,7 +40,7 @@ function getAdminTelegramDisplay() {
 
 export function formatAppointmentMessage(p: AppointmentNotifyPayload) {
   const lines = [
-    "New appointment — Nisir Health",
+    "New appointment — Eagle Medical",
     "",
     `Doctor: ${p.doctor_name}`,
     `Patient: ${p.patient_name}`,
@@ -68,7 +68,7 @@ async function sendResendEmail(subject: string, text: string, html: string) {
 
   const from =
     process.env.RESEND_FROM_EMAIL?.trim() ||
-    "Nisir Health <onboarding@resend.dev>";
+    "Eagle Medical <onboarding@resend.dev>";
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -149,7 +149,7 @@ async function sendCallMeBotWhatsApp(text: string) {
 
 export async function notifyAdminNewAppointment(p: AppointmentNotifyPayload) {
   const text = formatAppointmentMessage(p);
-  const subject = `[Nisir Health] New appointment — ${p.patient_name}`;
+  const subject = `[Eagle Medical] New appointment — ${p.patient_name}`;
   const html = `
     <h2>New appointment</h2>
     <p><strong>Doctor:</strong> ${escapeHtml(p.doctor_name)}</p>

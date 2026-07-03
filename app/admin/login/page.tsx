@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
   return (
     <div className={styles.page}>
       <form className={styles.card} onSubmit={handleSubmit}>
-        <h1>ንስር ሕክምና</h1>
+        <h1>ኢግል ሜዲካል</h1>
         <p className={styles.sub}>የአስተዳዳሪ መግቢያ</p>
 
         <label className={styles.label}>ኢሜይል</label>

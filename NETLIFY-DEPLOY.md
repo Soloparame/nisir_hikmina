@@ -1,4 +1,4 @@
-# Deploying Nisir Health on Netlify
+# Deploying Eagle Medical on Netlify
 
 Admin login and `/book` doctors need Supabase. If login shows **`fetch failed`** or doctors never load, the site was usually built **without** the right environment variables.
 

@@ -12,7 +12,7 @@ type WidenStrings<T> = T extends string
 const translationsSource = {
   am: {
     meta: {
-      title: "ንስር ሕክምና — የታመነ የጤና መድረክ",
+      title: "ኢግል ሜዲካል — የታመነ የጤና መድረክ",
       description:
         "በብቁ የጤና ባለሙያዎች የሕክምና ምክክር ያስይዙ። በአካል፣ በድምጽ ወይም በቪዲዮ።",
     },
@@ -28,7 +28,7 @@ const translationsSource = {
       profile: "መገለጫ",
     },
     brand: {
-      name: "ንስር ሕክምና",
+      name: "ኢግል ሜዲካል",
       tagline: "የታመነ የጤና አገልግሎት",
     },
     hero: {
@@ -36,11 +36,11 @@ const translationsSource = {
       title: "ከፍተኛ ደረጃ ያላቸው ዶክተሮች።",
       titleAccent: "በእጅዎ ጫፍ ላይ።",
       subtitle:
-        "ንስር ሕክምና ከከፍተኛ የጤና ባለሙያዎች ጋር ያገናኝዎታል። ዶክተርዎን ይምረጡ — ከዚያ በቀላሉ ቀጠሮ ያስይዙ።",
+        "ኢግል ሜዲካል ከከፍተኛ የጤና ባለሙያዎች ጋር ያገናኝዎታል። ዶክተርዎን ይምረጡ — ከዚያ በቀላሉ ቀጠሮ ያስይዙ።",
       cta: "ቀጠሮ ይያዙ",
       trust: "ከ 2,400+ ታካሚዎች 4.9/5",
       review:
-        "« እስካሁን ያለኝ ምርጥ የሕክምና ተሞክሮ። ንስር ሕክምናን በጣም እመክራለሁ! »",
+        "« እስካሁን ያለኝ ምርጥ የሕክምና ተሞክሮ። ኢግል ሜዲካልን በጣም እመክራለሁ! »",
       reviewAuthor: "— ሳራ መ.",
       doctorAlt: "ዶክተር አስራት ወልደየስ",
       tributeName: "አስራት ወልደየስ",
@@ -91,7 +91,7 @@ const translationsSource = {
       commentFailed: "አስተያየት ማስቀመጥ አልተሳካም",
     },
     howItWorks: {
-      title: "ንስር ሕክምና እንዴት ይሠራል",
+      title: "ኢግል ሜዲካል እንዴት ይሠራል",
       subtitle: "በ 3 ቀላል ደረጃዎች የሚፈልጉትን እንክብካቤ ያግኙ",
       step1Title: "1. ዶክተር ይምረጡ",
       step1Desc:
@@ -196,10 +196,10 @@ const translationsSource = {
       rights: "ሁሉም መብቶች የተጠበቁ ናቸው።",
     },
     about: {
-      badge: "ስለ ንስር ሕክምና",
+      badge: "ስለ ኢግል ሜዲካል",
       title: "ጤናን ለሁሉም ተደራሽ እናደርጋለን",
       lead:
-        "ንስር ሕክምና ታካሚዎችን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ የቴሌሕክምና መድረክ ነው። በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር ያስይዙ።",
+        "ኢግል ሜዲካል ታካሚዎችን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ የቴሌሕክምና መድረክ ነው። በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር ያስይዙ።",
       missionTitle: "ተልዕኮአችን",
       missionP1:
         "በኢትዮጵያ እና በውጭ የሚኖሩ ታካሚዎች ከፍተኛ ጥራት ያለው የሕክምና ምክክር እንዲያገኙ እንሠራለን። ዶክተር መምረጥ፣ ቀጠሮ መያዝ እና መረጃ መሙላት በአንድ ቦታ ቀላል ነው።",
@@ -219,7 +219,7 @@ const translationsSource = {
       pillar3Title: "ታካሚ በመረጃ",
       pillar3Desc:
         "የታካሚ መረጃ ደህንነት እና ከቀጠሮ እስከ ምክክር ግልጽ ግንኙነት።",
-      whyTitle: "ለምን ንስር ሕክምና?",
+      whyTitle: "ለምን ኢግል ሜዲካል?",
       whyItems: [
         "በብቁ ዶክተሮች በስፔሻሊቲ ይፈልጉ እና ይምረጡ",
         "ቀላል የቀጠሮ ቅጽ — አማርኛ እና እንግሊዝኛ",
@@ -235,7 +235,7 @@ const translationsSource = {
       storyHeading: "የእኛ",
       storyHeadingAccent: "ታሪክ",
       storyIntro:
-        "ንስር ሕክምና ታካሊያን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ መድረክ ነው።",
+        "ኢግል ሜዲካል ታካሊያን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ መድረክ ነው።",
       storyTimeline1:
         "በኢትዮጵያ እና በውጭ የሚኖሩ ታካሚዎች ለእነሱ የሚስማማውን ስፔሻሊቲ ይመርጣሉ፣ ቀጠሮ ያስይዛሉ፣ ከዚያም በቀላሉ ቅጽ ዝርዝር መረጃ ይሙላሉ።",
       storyTimeline2:
@@ -467,7 +467,7 @@ const translationsSource = {
       icon: "✅",
       title: "ጥያቄዎን ተቀብለናል!",
       message:
-        "ንስር ሕክምናን ስለተመረጡ እናመሰግናለን። የሕክምና ቡድናችን በቅርቡ በቴሌግራም ወይም በስልክ ቀጠሮዎን ለማረጋገጥ ያገኝዎታል።",
+        "ኢግል ሜዲካልን ስለተመረጡ እናመሰግናለን። የሕክምና ቡድናችን በቅርቡ በቴሌግራም ወይም በስልክ ቀጠሮዎን ለማረጋገጥ ያገኝዎታል።",
       pendingTitle: "ክፍያዎ በመገ검ያ ላይ",
       pendingMessage:
         "ቀጠሮዎ ተመዝግቧል። ክፍያዎን ከማረጋገጥ በኋላ ዶክተርዎ ጋር መገናኘት ይችላሉ። እስከ 24 ሰዓት ውስጥ እንረዳዎታለን።",
@@ -481,7 +481,7 @@ const translationsSource = {
       consultType: "የምክክር አይነት",
       joinTelegram: "✈️ የቴሌግራም ቻናላችንን ይቀላቀሉ",
       backHome: "← ወደ መነሻ ተመለስ",
-      footer: "ንስር ሕክምና · በሁሉም ሀገሮች አገልግሎት",
+      footer: "ኢግል ሜዲካል · በሁሉም ሀገሮች አገልግሎት",
       loading: "በመጫን ላይ...",
     },
     lang: {
@@ -491,7 +491,7 @@ const translationsSource = {
   },
   en: {
     meta: {
-      title: "Nisir Hikimina — Ethiopia's Trusted Health Platform",
+      title: "Eagle Medical — Ethiopia's Trusted Health Platform",
       description:
         "Book medical consultations with qualified professionals. In person, audio call, or video call.",
     },
@@ -507,7 +507,7 @@ const translationsSource = {
       profile: "Profile",
     },
     brand: {
-      name: "Nisir Hikimina",
+      name: "Eagle Medical",
       tagline: "Trusted Health Care",
     },
     hero: {
@@ -515,11 +515,11 @@ const translationsSource = {
       title: "World-class doctors.",
       titleAccent: "At your fingertips.",
       subtitle:
-        "Nisir Hikimina connects you with top-tier medical professionals. Book an in-person visit or a virtual consultation from the comfort of your home.",
+        "Eagle Medical connects you with top-tier medical professionals. Book an in-person visit or a virtual consultation from the comfort of your home.",
       cta: "Book an Appointment",
       trust: "4.9/5 from 2,400+ patients",
       review:
-        '"The best medical experience I\'ve ever had. Highly recommend Nisir Hikimina!"',
+        '"The best medical experience I\'ve ever had. Highly recommend Eagle Medical!"',
       reviewAuthor: "— Sarah M.",
       doctorAlt: "Dr. Asrat Woldeyes",
       tributeName: "Asrat Woldeyes",
@@ -570,7 +570,7 @@ const translationsSource = {
       commentFailed: "Could not post comment",
     },
     howItWorks: {
-      title: "How Nisir Hikimina works",
+      title: "How Eagle Medical works",
       subtitle: "Get the care you need in 3 simple steps",
       step1Title: "1. Choose your doctor",
       step1Desc:
@@ -688,10 +688,10 @@ const translationsSource = {
       rights: "All rights reserved.",
     },
     about: {
-      badge: "About Nisir Hikimina",
+      badge: "About Eagle Medical",
       title: "Making quality healthcare accessible",
       lead:
-        "Nisir Hikimina is a modern telehealth platform that connects patients with qualified specialists. Book in-person, audio, or video consultations in a few simple steps.",
+        "Eagle Medical is a modern telehealth platform that connects patients with qualified specialists. Book in-person, audio, or video consultations in a few simple steps.",
       missionTitle: "Our mission",
       missionP1:
         "We help patients in Ethiopia and abroad access trusted medical consultations without unnecessary complexity. Choosing a doctor, booking, and sharing your details happens in one clear flow.",
@@ -711,7 +711,7 @@ const translationsSource = {
       pillar3Title: "Patient-first",
       pillar3Desc:
         "Clear communication and respect for your information at every step.",
-      whyTitle: "Why Nisir Hikimina?",
+      whyTitle: "Why Eagle Medical?",
       whyItems: [
         "Browse and choose doctors by specialty",
         "Simple booking form in Amharic and English",
@@ -727,7 +727,7 @@ const translationsSource = {
       storyHeading: "Our",
       storyHeadingAccent: "Story",
       storyIntro:
-        "Nisir Hikimina is a modern platform that connects patients with qualified specialists across many medical fields.",
+        "Eagle Medical is a modern platform that connects patients with qualified specialists across many medical fields.",
       storyTimeline1:
         "Patients in Ethiopia and abroad choose the right specialty, book an appointment, and share details through one simple form.",
       storyTimeline2:
@@ -961,7 +961,7 @@ const translationsSource = {
       icon: "✅",
       title: "We've Received Your Request!",
       message:
-        "Thank you for trusting Nisir Hikimina. Our medical team will contact you shortly via Telegram or phone number to confirm your appointment details.",
+        "Thank you for trusting Eagle Medical. Our medical team will contact you shortly via Telegram or phone number to confirm your appointment details.",
       pendingTitle: "Payment under review",
       pendingMessage:
         "Your booking is saved. Once we verify your payment, your doctor will be notified and you can start chatting. We usually review within 24 hours.",
@@ -975,7 +975,7 @@ const translationsSource = {
       consultType: "Consult Type",
       joinTelegram: "✈️ Join Our Telegram Channel",
       backHome: "← Back to Home",
-      footer: "Nisir Hikimina · Serving worldwide",
+      footer: "Eagle Medical · Serving worldwide",
       loading: "Loading...",
     },
     lang: {

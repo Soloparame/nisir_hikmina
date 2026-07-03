@@ -1,11 +1,11 @@
-# Nisir Health — Next.js App
+# Eagle Medical — Next.js App
 
 Ethiopia's trusted health appointment booking platform.
 
 ## Project Structure
 
 ```
-nisir-health/
+eagle-medical/
 ├── app/
 │   ├── globals.css          # Global styles & CSS variables
 │   ├── layout.tsx           # Root layout with metadata
@@ -27,7 +27,7 @@ nisir-health/
 
 ## Pages
 
-- `/` — Landing page: hero, services, about Nisir, how it works, footer
+- `/` — Landing page: hero, services, about Eagle Medical, how it works, footer
 - `/book` — Booking form: name, disease, phone, Telegram, city (Ethiopia only), consult type
 - `/success` — Confirmation: booking summary, Telegram channel link, back to home
 

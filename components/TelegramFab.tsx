@@ -17,7 +17,7 @@ export default function TelegramFab() {
       className={styles.fab}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Contact Nisir on Telegram @NisirAd"
+      aria-label="Contact Eagle Medical on Telegram @NisirAd"
     >
       <span className={styles.pulse} aria-hidden />
       <span className={styles.badge} aria-hidden />

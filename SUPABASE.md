@@ -1,4 +1,4 @@
-# Supabase setup for Nisir Health
+# Supabase setup for Eagle Medical
 
 ## 1. Create a Supabase project
 

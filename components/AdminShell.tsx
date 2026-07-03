@@ -38,7 +38,7 @@ export default function AdminShell({ children }: Props) {
         <div className={styles.brand}>
           <LayoutDashboard size={22} />
           <div>
-            <strong>ንስር Admin</strong>
+            <strong>Eagle Medical Admin</strong>
             <span>Dashboard</span>
           </div>
         </div>

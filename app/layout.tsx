@@ -3,7 +3,7 @@ import Providers from "../components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ንስር ሕክምና — የታመነ የጤና መድረክ",
+  title: "ኢግል ሜዲካል — የታመነ የጤና መድረክ",
   description:
     "በብቁ የጤና ባለሙያዎች የሕክምና ምክክር ያስይዙ። በአካል፣ በድምጽ ወይም በቪዲዮ።",
 };
