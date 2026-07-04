@@ -33,8 +33,8 @@ const translationsSource = {
     },
     hero: {
       badge: "24/7 የጤና አገልግሎት",
-      title: "ከፍተኛ ደረጃ ያላቸው ዶክተሮች።",
-      titleAccent: "በእጅዎ ጫፍ ላይ።",
+      title: "ጤናዎ ቅድሚያችን ነው፣",
+      titleAccent: "በየትም፣ በማንኛውም ጊዜ!",
       subtitle:
         "ኢግል ሜዲካል ከከፍተኛ የጤና ባለሙያዎች ጋር ያገናኝዎታል። ዶክተርዎን ይምረጡ — ከዚያ በቀላሉ ቀጠሮ ያስይዙ።",
       cta: "ቀጠሮ ይያዙ",
@@ -42,7 +42,7 @@ const translationsSource = {
       review:
         "« እስካሁን ያለኝ ምርጥ የሕክምና ተሞክሮ። ኢግል ሜዲካልን በጣም እመክራለሁ! »",
       reviewAuthor: "— ሳራ መ.",
-      doctorAlt: "ዶክተር አስራት ወልደየስ",
+      doctorAlt: "የቴሌሕክምና ምክክር ምስል",
       tributeName: "አስራት ወልደየስ",
       tributeNameLatin: "Asrat Woldeyes",
       tributeDates: "ግንቦት ፲፪ ፣ ፲፱፻፳ — ግንቦት ፮ ፣ ፲፱፻፺፱",
@@ -512,8 +512,8 @@ const translationsSource = {
     },
     hero: {
       badge: "24/7 Healthcare Access",
-      title: "World-class doctors.",
-      titleAccent: "At your fingertips.",
+      title: "Your health, our priority.",
+      titleAccent: "Anywhere, Anytime!",
       subtitle:
         "Eagle Medical connects you with top-tier medical professionals. Book an in-person visit or a virtual consultation from the comfort of your home.",
       cta: "Book an Appointment",
@@ -521,7 +521,7 @@ const translationsSource = {
       review:
         '"The best medical experience I\'ve ever had. Highly recommend Eagle Medical!"',
       reviewAuthor: "— Sarah M.",
-      doctorAlt: "Dr. Asrat Woldeyes",
+      doctorAlt: "Online doctor consultation illustration",
       tributeName: "Asrat Woldeyes",
       tributeNameLatin: "አስራት ወልደየስ",
       tributeDates: "June 20, 1928 – May 14, 1999",

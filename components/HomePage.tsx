@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, CheckCircle2, Pill, User } from "lucide-react";
+import { Calendar, Pill, User } from "lucide-react";
 import Navbar from "./Navbar";
 import SiteFooter from "./SiteFooter";
 import ExperiencedDoctorsSection from "./ExperiencedDoctorsSection";
@@ -37,49 +37,36 @@ export default function HomePage({
           </div>
           <div className={styles.heroOverlay} aria-hidden />
           <div className={styles.heroContainer}>
-            <div className={styles.heroText}>
-              <h1 className={styles.heroTitle}>
-                {t.hero.title}
-                <br />
-                <span className={styles.heroAccent}>{t.hero.titleAccent}</span>
-              </h1>
-              <p className={styles.heroSub}>{t.hero.subtitle}</p>
+            <div className={styles.heroMain}>
+              <div className={styles.heroText}>
+                <h1 className={styles.heroTitle}>
+                  {t.hero.title}
+                  <br />
+                  <span className={styles.heroAccent}>{t.hero.titleAccent}</span>
+                </h1>
+                <p className={styles.heroSub}>{t.hero.subtitle}</p>
+              </div>
+
+              <div className={styles.heroVisual}>
+                <Image
+                  src="/images/hero-telemedicine.png"
+                  alt={t.hero.doctorAlt}
+                  width={640}
+                  height={520}
+                  className={styles.heroIllustration}
+                  priority
+                  sizes="(max-width: 768px) 92vw, (max-width: 992px) 420px, 520px"
+                />
+              </div>
+
               <div className={styles.heroActions}>
-                <Link href="/book">
-                  <button className={styles.btnPrimary}>
-                    <Calendar size={18} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'text-bottom' }} />
+                <Link href="/book" className={styles.heroBookLink}>
+                  <button type="button" className={styles.heroBtnPrimary}>
+                    <Calendar size={18} aria-hidden />
                     {t.hero.cta}
                   </button>
                 </Link>
               </div>
-            </div>
-            
-            <div className={styles.heroImageWrap}>
-              <div className={styles.heroImageBlock}>
-                <Image
-                  src="/doctor_hero.jpg"
-                  alt={t.hero.doctorAlt}
-                  width={720}
-                  height={900}
-                  className={styles.heroImage}
-                  priority
-                  sizes="(max-width: 768px) 94vw, (max-width: 992px) 480px, 640px"
-                />
-              </div>
-              <aside
-                className={styles.heroFloatingBox}
-                aria-label={`${t.hero.tributeName} biography`}
-              >
-                <h4 className={styles.tributeName}>{t.hero.tributeName}</h4>
-                <p className={styles.tributeNameLatin}>
-                  {t.hero.tributeNameLatin}
-                </p>
-                <p className={styles.tributeDates}>{t.hero.tributeDates}</p>
-                <blockquote className={styles.tributeQuote}>
-                  <p>&ldquo;{t.hero.tributeQuote}&rdquo;</p>
-                  <cite>{t.hero.tributeQuoteSource}</cite>
-                </blockquote>
-              </aside>
             </div>
           </div>
         </section>

@@ -68,19 +68,12 @@
   transform: translateY(-2px);
 }
 
-/* HERO — sits high under floating nav; same horizontal rhythm as .container */
+/* HERO — clean telemedicine layout */
 .hero {
   position: relative;
-  overflow-x: clip;
-  overflow-y: visible;
-  background: linear-gradient(
-    165deg,
-    #f8fafc 0%,
-    #f1f5f9 40%,
-    #ecfdf5 100%
-  );
-  padding: 0 0 5.5rem;
-  margin-top: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbf8 100%);
+  padding: 1.25rem 0 3rem;
   isolation: isolate;
 }
 
@@ -92,7 +85,6 @@
   overflow: hidden;
 }
 
-/* Fine grid + larger accent grid */
 .heroGridLines {
   position: absolute;
   inset: 0;
@@ -158,7 +150,6 @@
 }
 
 .heroOverlay {
-  display: block;
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -177,187 +168,112 @@
   z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.75rem 2rem 4rem;
+  padding: 0.5rem 1.5rem 0;
+}
+
+.heroMain {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-areas:
+    "text visual"
+    "actions visual";
+  gap: 1.5rem 2rem;
   align-items: center;
 }
 
-/* Decorative frame corners (subtle) */
-.heroContainer::before {
-  content: "";
-  position: absolute;
-  top: 1.25rem;
-  left: 0.5rem;
-  width: min(120px, 18vw);
-  height: min(120px, 18vw);
-  border-top: 2px solid rgba(0, 153, 102, 0.25);
-  border-left: 2px solid rgba(0, 153, 102, 0.25);
-  border-radius: 4px 0 0 0;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.heroContainer::after {
-  content: "";
-  position: absolute;
-  bottom: 2rem;
-  right: 1rem;
-  width: min(100px, 16vw);
-  height: min(100px, 16vw);
-  border-bottom: 2px solid rgba(0, 77, 77, 0.2);
-  border-right: 2px solid rgba(0, 77, 77, 0.2);
-  border-radius: 0 0 4px 0;
-  pointer-events: none;
-  z-index: -1;
-}
-
 .heroText {
-  position: relative;
-  z-index: 2;
-  padding-right: 2rem;
+  grid-area: text;
+  align-self: end;
 }
 
 .heroTitle {
-  font-size: clamp(32px, 4vw, 52px);
-  line-height: 1.1;
+  font-size: clamp(2rem, 4.8vw, 3.35rem);
+  line-height: 1.12;
   color: var(--primary);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   font-weight: 800;
-  letter-spacing: -1px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.03em;
 }
 
 .heroAccent {
-  color: var(--btn-green);
+  color: var(--primary);
 }
 
 .heroSub {
-  font-size: clamp(16px, 2vw, 18px);
-  color: var(--text-light);
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  font-size: clamp(0.98rem, 1.8vw, 1.12rem);
+  color: #64748b;
+  margin: 0;
+  line-height: 1.65;
+  max-width: 34rem;
+}
+
+.heroVisual {
+  grid-area: visual;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.heroVisual::before {
+  content: "";
+  position: absolute;
+  width: min(88%, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(186, 230, 253, 0.55) 0%,
+    rgba(224, 242, 254, 0.25) 45%,
+    transparent 72%
+  );
+  z-index: 0;
+}
+
+.heroIllustration {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: min(520px, 100%);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 36px rgba(0, 77, 77, 0.12));
 }
 
 .heroActions {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  grid-area: actions;
+  align-self: start;
 }
 
-.heroImageWrap {
-  position: relative;
+.heroBookLink {
+  display: inline-block;
+  text-decoration: none;
   width: 100%;
-  z-index: 2;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
+  max-width: 320px;
+}
+
+.heroBtnPrimary {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
-  overflow: visible;
-}
-
-.heroImageBlock {
-  position: relative;
-  z-index: 2;
-  flex: 0 0 auto;
-  width: min(640px, 64%);
-  max-width: 640px;
-  margin: -2.5rem 0 0;
-  padding: 0;
-  align-self: flex-start;
-}
-
-.heroImage {
-  display: block;
+  gap: 10px;
   width: 100%;
-  height: auto;
-  max-height: min(860px, 88vh);
-  object-fit: contain;
-  object-position: bottom center;
-  filter: drop-shadow(0 20px 40px rgba(0, 51, 51, 0.24));
+  background: linear-gradient(135deg, #009966 0%, #007a52 100%);
+  color: #fff;
+  border: none;
+  padding: 16px 28px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 28px rgba(0, 153, 102, 0.28);
 }
 
-.heroFloatingBox {
-  position: relative;
-  flex: 1 1 180px;
-  min-width: 0;
-  max-width: min(260px, 40%);
-  align-self: flex-end;
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(10px);
-  padding: 0.9rem 1rem;
-  border-radius: 18px 22px 18px 22px;
-  box-shadow:
-    0 16px 40px rgba(0, 77, 77, 0.18),
-    0 0 0 1px rgba(0, 153, 102, 0.12);
-  z-index: 3;
-  text-align: left;
-  max-height: min(360px, 52vh);
-  overflow-y: auto;
-  animation: heroFloat 5s ease-in-out infinite;
-  pointer-events: auto;
-}
-
-@keyframes heroFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.tributeName {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin: 0 0 0.2rem;
-  line-height: 1.25;
-}
-
-.tributeNameLatin {
-  font-size: 0.82rem;
-  color: var(--text-light);
-  margin: 0 0 0.45rem;
-  font-weight: 600;
-}
-
-.tributeDates {
-  font-size: 0.78rem;
-  color: #64748b;
-  margin: 0 0 0.65rem;
-  font-weight: 600;
-}
-
-.tributeBio {
-  color: var(--text);
-  font-size: 0.8rem;
-  line-height: 1.55;
-  margin: 0 0 0.75rem;
-}
-
-.tributeQuote {
-  margin: 0;
-  padding: 0.65rem 0 0;
-  border-top: 1px solid rgba(0, 77, 77, 0.1);
-}
-
-.tributeQuote p {
-  margin: 0 0 0.35rem;
-  font-size: 0.78rem;
-  font-style: italic;
-  line-height: 1.5;
-  color: var(--primary);
-}
-
-.tributeQuote cite {
-  font-size: 0.72rem;
-  font-style: normal;
-  color: var(--text-light);
-  font-weight: 600;
+.heroBtnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0, 153, 102, 0.34);
 }
 
 /* TRUST BANNER */
@@ -762,68 +678,62 @@
   }
 
   .hero {
-    padding-bottom: 4rem;
+    padding: 0.35rem 0 2.5rem;
+    margin-top: 0;
+  }
+
+  .howItWorks {
+    margin-top: 0;
+    padding-top: 1.5rem;
   }
 
   .heroContainer {
+    padding: 0.5rem 1rem 0;
+  }
+
+  .heroMain {
     grid-template-columns: 1fr;
-    text-align: center;
-    padding: 1.5rem 1.25rem 3rem;
-    gap: 1.75rem;
+    grid-template-areas:
+      "text"
+      "visual"
+      "actions";
+    gap: 1rem;
   }
 
   .heroText {
-    padding-right: 0;
-    order: 1;
-  }
-
-  .heroImageWrap {
-    order: 2;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
-  }
-
-  .heroImageBlock {
-    width: 100%;
-    max-width: min(480px, 94vw);
-    margin: 0 auto;
-    align-self: center;
-  }
-
-  .heroFloatingBox {
-    flex: none;
-    width: 100%;
-    max-width: min(420px, 100%);
-    max-height: none;
-    align-self: center;
+    align-self: auto;
+    text-align: left;
   }
 
   .heroTitle {
-    font-size: clamp(28px, 6vw, 40px);
-    margin-bottom: 1rem;
+    font-size: clamp(1.75rem, 6.5vw, 2.35rem);
+    margin-bottom: 0.85rem;
   }
 
   .heroSub {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 32rem;
-    margin-bottom: 1.5rem;
+    max-width: 100%;
+  }
+
+  .heroVisual {
+    min-height: 220px;
+  }
+
+  .heroIllustration {
+    max-width: min(380px, 92vw);
   }
 
   .heroActions {
-    align-items: center;
+    align-self: stretch;
   }
 
-  .heroImage {
-    max-height: min(560px, 66vh);
+  .heroBookLink {
+    max-width: none;
   }
 
-  .heroContainer::before,
-  .heroContainer::after {
-    opacity: 0.35;
-    width: 72px;
-    height: 72px;
+  .heroBtnPrimary {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 12px;
   }
 
   .valueGrid {
@@ -837,40 +747,25 @@
 
 @media (max-width: 768px) {
   .heroContainer {
-    padding: 1.25rem 1rem 2.5rem;
-    gap: 1.25rem;
+    padding: 0.65rem 0.85rem 0;
   }
 
   .heroTitle {
-    font-size: clamp(26px, 7vw, 34px);
-    letter-spacing: -0.5px;
+    font-size: clamp(1.55rem, 7.5vw, 2rem);
+    letter-spacing: -0.02em;
   }
 
   .heroSub {
-    font-size: 15px;
-    line-height: 1.55;
-    max-width: 100%;
-    padding: 0 0.25rem;
+    font-size: 0.94rem;
+    line-height: 1.58;
   }
 
-  .heroImageBlock {
-    max-width: min(440px, 96vw);
+  .heroVisual {
+    min-height: 200px;
   }
 
-  .heroImage {
-    max-height: min(520px, 62vh);
-  }
-
-  .heroFloatingBox {
-    padding: 1rem 1.1rem;
-    max-width: 100%;
-  }
-
-  .heroActions .btnPrimary {
-    width: 100%;
-    max-width: 280px;
-    padding: 14px 24px;
-    font-size: 16px;
+  .heroIllustration {
+    max-width: min(340px, 94vw);
   }
 
   .logos {
@@ -916,19 +811,10 @@
 
 @media (max-width: 480px) {
   .heroContainer {
-    padding: 1rem 0.75rem 2rem;
+    padding: 0.75rem 0.75rem 0;
   }
 
-  .heroImageBlock {
-    max-width: min(400px, 98vw);
-  }
-
-  .heroImage {
-    max-height: min(480px, 58vh);
-  }
-
-  .heroContainer::before,
-  .heroContainer::after {
-    display: none;
+  .heroIllustration {
+    max-width: min(300px, 96vw);
   }
 }
