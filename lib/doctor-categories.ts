@@ -265,6 +265,10 @@ export const DOCTOR_CATEGORIES: DoctorCategory[] = [
   },
 ];
 
+export function getCategoryByKey(key: string) {
+  return DOCTOR_CATEGORIES.find((c) => c.key === key);
+}
+
 export function getCategoryByLabel(label: string) {
   return DOCTOR_CATEGORIES.find((c) => c.label === label);
 }

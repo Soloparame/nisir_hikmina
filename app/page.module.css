@@ -424,6 +424,15 @@
   gap: 1.5rem 1.25rem;
 }
 
+.serviceItemLink {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  outline-offset: 4px;
+}
+
 .serviceItem {
   display: flex;
   flex-direction: column;

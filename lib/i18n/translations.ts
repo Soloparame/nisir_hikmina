@@ -14,7 +14,7 @@ const translationsSource = {
     meta: {
       title: "ኢግል ሜዲካል — የታመነ የጤና መድረክ",
       description:
-        "በብቁ የጤና ባለሙያዎች የሕክምና ምክክር ያስይዙ። በአካል፣ በድምጽ ወይም በቪዲዮ።",
+        "በብቁ የጤና ባለሙያዎች የሕክምና ምክክር ያስይዙ። በጽሑፍ፣ በድምጽ ወይም በቪዲዮ።",
     },
     nav: {
       home: "መነሻ",
@@ -36,7 +36,7 @@ const translationsSource = {
       title: "ጤናዎ ቅድሚያችን ነው፣",
       titleAccent: "በየትም፣ በማንኛውም ጊዜ!",
       subtitle:
-        "ኢግል ሜዲካል ከከፍተኛ የጤና ባለሙያዎች ጋር ያገናኝዎታል። ዶክተርዎን ይምረጡ — ከዚያ በቀላሉ ቀጠሮ ያስይዙ።",
+        "ኢግል ሜዲካል ከከፍተኛ የጤና ባለሙያዎች ጋር ያገናኝዎታል። በጽሑፍ፣ በድምጽ ወይም በቪዲዮ ምክክር ያስይዙ።",
       cta: "ቀጠሮ ይያዙ",
       trust: "ከ 2,400+ ታካሚዎች 4.9/5",
       review:
@@ -72,9 +72,13 @@ const translationsSource = {
     doctorsPage: {
       title: "ዶክተሮቻችን",
       subtitle: "በስፔሻሊቲ ዶክተሮችን ይፈልጉ እና ቀጠሮ ይያዙ",
+      categorySubtitle: "{category} — ባለሙያዎችን ይመልከቱ እና ቀጠሮ ያስይዙ",
+      filteringBy: "በ {category} ላይ እያሳዩ ነው",
+      clearCategory: "ሁሉንም ዶክተሮች ይመልከቱ",
       empty: "አሁን ንቁ ዶክተሮች የሉም።",
       searchPlaceholder: "ዶክተርን በስም ይፈልጉ...",
       noSearchResults: "በዚህ ስም ዶክተር አልተገኘም።",
+      noCategoryResults: "በዚህ ምድብ ውስጥ ዶክተሮች አልተገኙም።",
     },
     whatsNew: {
       empty: "ገና ማሳወቂያ የለም።",
@@ -101,7 +105,7 @@ const translationsSource = {
         "ስም፣ ስልክ፣ ቴሌግራም እና አድራሻዎን በቀላሉ ይሙሉ። ለኢትዮጵያውያን ቀላል ቅጽ ነው።",
       step3Title: "3. ዶክተርዎን ይገናኙ",
       step3Desc:
-        "በቪዲዮ፣ በድምጽ ወይም በአካል ምክክር ያድርጉ። ምርመራ እና ማዘዣ ወዲያውኑ ይቀበላሉ።",
+        "በጽሑፍ፣ በድምጽ ወይም በቪዲዮ ምክክር ያድርጉ። ምርመራ እና ማዘዣ ወዲያውኑ ይቀበላሉ።",
     },
     services: {
       title: "ምን እናከም",
@@ -199,7 +203,7 @@ const translationsSource = {
       badge: "ስለ ኢግል ሜዲካል",
       title: "ጤናን ለሁሉም ተደራሽ እናደርጋለን",
       lead:
-        "ኢግል ሜዲካል ታካሚዎችን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ የቴሌሕክምና መድረክ ነው። በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር ያስይዙ።",
+        "ኢግል ሜዲካል ታካሚዎችን ከብቁ የጤና ባለሙያዎች ጋር በቀላሉ የሚያገናኝ ዘመናዊ የቴሌሕክምና መድረክ ነው። በጽሑፍ፣ በድምጽ ወይም በቪዲዮ ምክክር በጥቂት ቀላል ደረጃዎች ያስይዙ።",
       missionTitle: "ተልዕኮአችን",
       missionP1:
         "በኢትዮጵያ እና በውጭ የሚኖሩ ታካሚዎች ከፍተኛ ጥራት ያለው የሕክምና ምክክር እንዲያገኙ እንሠራለን። ዶክተር መምረጥ፣ ቀጠሮ መያዝ እና መረጃ መሙላት በአንድ ቦታ ቀላል ነው።",
@@ -223,7 +227,7 @@ const translationsSource = {
       whyItems: [
         "በብቁ ዶክተሮች በስፔሻሊቲ ይፈልጉ እና ይምረጡ",
         "ቀላል የቀጠሮ ቅጽ — አማርኛ እና እንግሊዝኛ",
-        "በአካል፣ በድምጽ ወይም በቪዲዮ ምክክር",
+        "በጽሑፍ፣ በድምጽ ወይም በቪዲዮ ምክክር",
         "ፈጣን ምላሽ ከሕክምና ቡድናችን",
         "ሚስጥራዊነት — በአለም አቀፍ የተቀበሉ የግላዊነት እና የሚስጥር ጥበቃ ደረጃዎች",
       ],
@@ -493,7 +497,7 @@ const translationsSource = {
     meta: {
       title: "Eagle Medical — Ethiopia's Trusted Health Platform",
       description:
-        "Book medical consultations with qualified professionals. In person, audio call, or video call.",
+        "Book medical consultations with qualified professionals via text, audio, or video.",
     },
     nav: {
       home: "Home",
@@ -515,7 +519,7 @@ const translationsSource = {
       title: "Your health, our priority.",
       titleAccent: "Anywhere, Anytime!",
       subtitle:
-        "Eagle Medical connects you with top-tier medical professionals. Book an in-person visit or a virtual consultation from the comfort of your home.",
+        "Eagle Medical connects you with top-tier medical professionals. Book a text, audio, or video consultation from the comfort of your home.",
       cta: "Book an Appointment",
       trust: "4.9/5 from 2,400+ patients",
       review:
@@ -551,9 +555,13 @@ const translationsSource = {
     doctorsPage: {
       title: "Our Doctors",
       subtitle: "Browse specialists and book your appointment",
+      categorySubtitle: "{category} — browse specialists and book your appointment",
+      filteringBy: "Showing {category}",
+      clearCategory: "View all doctors",
       empty: "No active doctors at the moment.",
       searchPlaceholder: "Search doctors by name...",
       noSearchResults: "No doctors found with that name.",
+      noCategoryResults: "No doctors found in this category yet.",
     },
     whatsNew: {
       empty: "No updates yet. Check back soon.",
@@ -580,7 +588,7 @@ const translationsSource = {
         "Enter your name, phone, Telegram, and location in a simple form.",
       step3Title: "3. Meet your doctor",
       step3Desc:
-        "Consult via video, audio, or in person. Get diagnosis and prescription quickly.",
+        "Consult via text, audio, or video. Get diagnosis and prescription quickly.",
     },
     services: {
       title: "What we treat",
@@ -691,7 +699,7 @@ const translationsSource = {
       badge: "About Eagle Medical",
       title: "Making quality healthcare accessible",
       lead:
-        "Eagle Medical is a modern telehealth platform that connects patients with qualified specialists. Book in-person, audio, or video consultations in a few simple steps.",
+        "Eagle Medical is a modern telehealth platform that connects patients with qualified specialists. Book text, audio, or video consultations in a few simple steps.",
       missionTitle: "Our mission",
       missionP1:
         "We help patients in Ethiopia and abroad access trusted medical consultations without unnecessary complexity. Choosing a doctor, booking, and sharing your details happens in one clear flow.",
@@ -715,7 +723,7 @@ const translationsSource = {
       whyItems: [
         "Browse and choose doctors by specialty",
         "Simple booking form in Amharic and English",
-        "In-person, audio, or video consultations",
+        "Text, audio, or video consultations",
         "Fast follow-up from our medical team",
         "Confidentiality — care delivered under internationally accepted privacy and confidentiality standards",
       ],

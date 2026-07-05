@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, Stethoscope } from "lucide-react";
+import { getCategoryByKey } from "../lib/doctor-categories";
 import {
   getDoctorBio,
   getDoctorName,
@@ -15,30 +16,67 @@ import styles from "./DoctorsDirectory.module.css";
 
 type Props = {
   doctors: Doctor[];
+  initialCategoryKey?: string;
 };
 
-export default function DoctorsDirectory({ doctors }: Props) {
+export default function DoctorsDirectory({
+  doctors,
+  initialCategoryKey,
+}: Props) {
   const { t, locale } = useLanguage();
   const [query, setQuery] = useState("");
 
-  const filteredDoctors = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    if (!term) return doctors;
+  const activeCategory = useMemo(
+    () =>
+      initialCategoryKey ? getCategoryByKey(initialCategoryKey) ?? null : null,
+    [initialCategoryKey]
+  );
 
-    return doctors.filter((doctor) => {
+  const filteredDoctors = useMemo(() => {
+    let list = doctors;
+
+    if (activeCategory) {
+      list = list.filter((doctor) => doctor.category === activeCategory.label);
+    }
+
+    const term = query.trim().toLowerCase();
+    if (!term) return list;
+
+    return list.filter((doctor) => {
       const names = [doctor.name, doctor.name_en]
         .filter(Boolean)
         .map((name) => name!.toLowerCase());
       return names.some((name) => name.includes(term));
     });
-  }, [doctors, query]);
+  }, [doctors, activeCategory, query]);
 
   return (
     <div className={styles.wrap}>
       <header className={styles.hero}>
         <h1>{t.doctorsPage.title}</h1>
-        <p>{t.doctorsPage.subtitle}</p>
+        <p>
+          {activeCategory
+            ? t.doctorsPage.categorySubtitle.replace(
+                "{category}",
+                activeCategory.label
+              )
+            : t.doctorsPage.subtitle}
+        </p>
       </header>
+
+      {activeCategory && (
+        <div className={styles.filterBar}>
+          <span className={styles.filterLabel}>
+            {t.doctorsPage.filteringBy.replace(
+              "{category}",
+              activeCategory.label
+            )}
+          </span>
+          <Link href="/doctors" className={styles.clearFilter}>
+            {t.doctorsPage.clearCategory}
+          </Link>
+        </div>
+      )}
 
       {doctors.length > 0 && (
         <div className={styles.searchWrap}>
@@ -57,7 +95,11 @@ export default function DoctorsDirectory({ doctors }: Props) {
       {doctors.length === 0 ? (
         <p className={styles.empty}>{t.doctorsPage.empty}</p>
       ) : filteredDoctors.length === 0 ? (
-        <p className={styles.empty}>{t.doctorsPage.noSearchResults}</p>
+        <p className={styles.empty}>
+          {activeCategory
+            ? t.doctorsPage.noCategoryResults
+            : t.doctorsPage.noSearchResults}
+        </p>
       ) : (
         <div className={styles.grid}>
           {filteredDoctors.map((d) => (

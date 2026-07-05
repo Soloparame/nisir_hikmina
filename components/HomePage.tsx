@@ -117,18 +117,24 @@ export default function HomePage({
             </div>
             <div className={styles.servicesGrid}>
               {DOCTOR_CATEGORIES.map((category, index) => (
-                <article key={category.key} className={styles.serviceItem}>
-                  <div className={styles.serviceImageWrapper}>
-                    <ServiceCategoryIcon
-                      categoryKey={category.key}
-                      label={category.label}
-                    />
-                  </div>
-                  <div className={styles.serviceInfo}>
-                    <span className={styles.serviceNumber}>{index + 1}.</span>
-                    <h4>{category.label}</h4>
-                  </div>
-                </article>
+                <Link
+                  key={category.key}
+                  href={`/doctors?category=${encodeURIComponent(category.key)}`}
+                  className={styles.serviceItemLink}
+                >
+                  <article className={styles.serviceItem}>
+                    <div className={styles.serviceImageWrapper}>
+                      <ServiceCategoryIcon
+                        categoryKey={category.key}
+                        label={category.label}
+                      />
+                    </div>
+                    <div className={styles.serviceInfo}>
+                      <span className={styles.serviceNumber}>{index + 1}.</span>
+                      <h4>{category.label}</h4>
+                    </div>
+                  </article>
+                </Link>
               ))}
             </div>
           </div>
