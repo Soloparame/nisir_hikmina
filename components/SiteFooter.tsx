@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { DOCTOR_CATEGORIES } from "../lib/doctor-categories";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import styles from "./SiteFooter.module.css";
 
@@ -36,22 +35,8 @@ export default function SiteFooter() {
             </div>
             <div className={`${styles.linkGroup} ${styles.servicesGroup}`}>
               <h4>{t.footer.services}</h4>
-              <ul className={styles.serviceList}>
-                {DOCTOR_CATEGORIES.map((category, index) => (
-                  <li key={category.key} className={styles.serviceCategory}>
-                    <span className={styles.serviceCategoryTitle}>
-                      {index + 1}. {category.label}
-                    </span>
-                    {category.subcategories.length > 0 && (
-                      <ul className={styles.serviceSubList}>
-                        {category.subcategories.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              <p className={styles.servicesSummary}>{t.footer.servicesSummary}</p>
+              <Link href="/doctors">{t.footer.browseDoctors}</Link>
             </div>
             <div className={styles.linkGroup}>
               <h4>{t.footer.legal}</h4>

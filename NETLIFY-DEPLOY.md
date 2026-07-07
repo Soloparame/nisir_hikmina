@@ -10,13 +10,8 @@ In **Netlify** → your site → **Site configuration** → **Environment variab
 |----------|---------|
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxx.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` **or** `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | From Supabase → **Project Settings** → **API** |
-
-Copy from Supabase **Project Settings → API**:
-
-- **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-- **anon public** (starts with `eyJ…`) **or** **publishable** (starts with `sb_publishable_…`) → one of the key variables above
-
-Optional (booking alerts): `RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`, etc. — see `NOTIFICATIONS.md`.
+| `NEXT_PUBLIC_SITE_URL` | `https://eaglemedicalcare.com` (doctor welcome emails) |
+| `RESEND_API_KEY` | For appointment alerts **and** doctor welcome emails |
 
 **Important**
 

@@ -1,0 +1,113 @@
+import { getDoctorLoginUrl } from "./site-url";
+
+export type DoctorWelcomePayload = {
+  doctor_name: string;
+  doctor_email: string;
+  login_code: string;
+  specialization?: string;
+};
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export function formatDoctorWelcomeMessage(p: DoctorWelcomePayload) {
+  const loginUrl = getDoctorLoginUrl(p.login_code);
+  const lines = [
+    "Welcome to Eagle Medical",
+    "",
+    `Hello ${p.doctor_name},`,
+    "",
+    "Your doctor portal account is ready. Use the details below to sign in and set your password on first visit.",
+    "",
+    `Doctor ID: ${p.login_code.toUpperCase()}`,
+    `Login link: ${loginUrl}`,
+    `Registered email: ${p.doctor_email}`,
+    ...(p.specialization ? [`Specialty: ${p.specialization}`] : []),
+    "",
+    "First visit:",
+    "1. Open the login link above",
+    "2. Enter your Doctor ID and registered email",
+    "3. Create your password",
+    "",
+    "After that, use the same link with your email, password, and Doctor ID.",
+    "",
+    "— Eagle Medical",
+  ];
+  return { text: lines.join("\n"), loginUrl };
+}
+
+export async function notifyDoctorWelcome(
+  p: DoctorWelcomePayload
+): Promise<{ sent: boolean; error?: string }> {
+  const key = process.env.RESEND_API_KEY?.trim();
+  if (!key) {
+    const msg =
+      "RESEND_API_KEY is not set — welcome email not sent. Add it in .env.local / Netlify env.";
+    console.warn("[notify-doctor-welcome]", msg);
+    return { sent: false, error: msg };
+  }
+
+  const to = p.doctor_email.trim();
+  if (!to) {
+    return { sent: false, error: "Doctor email is missing." };
+  }
+
+  const from =
+    process.env.RESEND_FROM_EMAIL?.trim() ||
+    "Eagle Medical <onboarding@resend.dev>";
+
+  const { text, loginUrl } = formatDoctorWelcomeMessage(p);
+  const subject = "Your Eagle Medical doctor portal login";
+  const html = `
+    <div style="font-family: system-ui, sans-serif; line-height: 1.6; color: #0f172a; max-width: 560px;">
+      <h2 style="color: #004d4d; margin-bottom: 0.25rem;">Welcome to Eagle Medical</h2>
+      <p>Hello <strong>${escapeHtml(p.doctor_name)}</strong>,</p>
+      <p>Your doctor portal account is ready. Use the details below to sign in and <strong>create your password on first visit</strong>.</p>
+      <div style="background: #f4fbf8; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.15rem; margin: 1.25rem 0;">
+        <p style="margin: 0 0 0.5rem;"><strong>Doctor ID</strong><br /><code style="font-size: 1.05rem;">${escapeHtml(p.login_code.toUpperCase())}</code></p>
+        <p style="margin: 0 0 0.5rem;"><strong>Registered email</strong><br />${escapeHtml(to)}</p>
+        ${p.specialization ? `<p style="margin: 0 0 0.5rem;"><strong>Specialty</strong><br />${escapeHtml(p.specialization)}</p>` : ""}
+        <p style="margin: 0;"><strong>Login link</strong><br /><a href="${escapeHtml(loginUrl)}" style="color: #009966;">${escapeHtml(loginUrl)}</a></p>
+      </div>
+      <p><strong>First visit</strong></p>
+      <ol>
+        <li>Open the login link above</li>
+        <li>Enter your Doctor ID and registered email</li>
+        <li>Create your password</li>
+      </ol>
+      <p style="color: #64748b; font-size: 0.92rem;">After that, use the same link with your email, password, and Doctor ID.</p>
+      <p style="margin-top: 1.5rem;">— Eagle Medical</p>
+    </div>
+  `;
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      subject,
+      text,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("[notify-doctor-welcome] Resend error:", res.status, errText);
+    return {
+      sent: false,
+      error: `Email could not be sent (${res.status}). Check Resend settings.`,
+    };
+  }
+
+  return { sent: true };
+}

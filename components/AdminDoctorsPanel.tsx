@@ -176,9 +176,18 @@ export default function AdminDoctorsPanel({
     }
 
     if (result.login_code) {
-      setMessage(
-        `Doctor added. ID: ${result.login_code} — they sign in at /doctor/${result.login_code}/login using their registered email + this ID (first visit: they set a password).`
-      );
+      const loginPath = `/doctor/${result.login_code}/login`;
+      let msg = `Doctor saved. ID: ${result.login_code} — login: ${loginPath}`;
+      if (form.email?.trim()) {
+        if (result.welcome_email_sent) {
+          msg += ` — welcome email sent to ${form.email.trim()}.`;
+        } else if (result.welcome_email_error) {
+          msg += ` — could not email doctor (${result.welcome_email_error}).`;
+        }
+      } else {
+        msg += " — add an email to send the doctor their login link automatically.";
+      }
+      setMessage(msg);
     } else {
       setMessage(editingId ? "Doctor updated" : "Doctor added");
     }

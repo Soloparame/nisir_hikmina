@@ -145,6 +145,9 @@ const translationsSource = {
       careers: "ስራዎች",
       contact: "ያግኙን",
       services: "አገልግሎቶች",
+      servicesSummary:
+        "ከዋና እንክብካቤ እስከ ስፔሻሊስት ምክክር — በጽሑፍ፣ በድምጽ እና በቪዲዮ በ20+ የሕክምና መስኮች ውስጥ ቴሌሕክምና።",
+      browseDoctors: "ሁሉንም ስፔሻሊቲዎች ይመልከቱ →",
       serviceCategories: [
         {
           title: "1. ዋና እንክብካቤ እና አጠቃላይ ሕክምና",
@@ -634,6 +637,9 @@ const translationsSource = {
       careers: "Careers",
       contact: "Contact",
       services: "Services",
+      servicesSummary:
+        "Telehealth across 20+ specialties — from primary care and mental health to pediatrics, surgery, and more. Text, audio, and video consultations.",
+      browseDoctors: "Browse all specialties →",
       serviceCategories: [
         {
           title: "1. Primary Care & General Medicine",

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { isAdminRole } from "../auth-roles";
 import { generateLoginCode } from "../doctor-availability";
+import { notifyDoctorWelcome } from "../notify-doctor-welcome";
 import { notifyAdminNewAppointment } from "../notify-admin-appointment";
 import { createClient } from "../supabase/server";
 import type { AppointmentInsert, DoctorFormData } from "../types/doctor";
@@ -133,7 +134,13 @@ function emptyTimeToNull(t?: string) {
 export async function saveDoctor(
   form: DoctorFormData,
   id?: string
-): Promise<{ ok: boolean; error?: string; login_code?: string }> {
+): Promise<{
+  ok: boolean;
+  error?: string;
+  login_code?: string;
+  welcome_email_sent?: boolean;
+  welcome_email_error?: string;
+}> {
   try {
     const supabase = await getAuthedClient();
 
@@ -192,7 +199,40 @@ export async function saveDoctor(
 
     revalidatePath("/book");
     revalidatePath("/admin/doctors");
-    return { ok: true, login_code: loginCode };
+
+    let welcome_email_sent: boolean | undefined;
+    let welcome_email_error: string | undefined;
+
+    const doctorEmail = form.email?.trim();
+    if (loginCode && doctorEmail) {
+      const doctorName =
+        form.name_en?.trim() || form.name.trim() || "Doctor";
+      const specialization =
+        form.specialization_en?.trim() || form.specialization.trim();
+
+      try {
+        const emailResult = await notifyDoctorWelcome({
+          doctor_name: doctorName,
+          doctor_email: doctorEmail,
+          login_code: loginCode,
+          specialization: specialization || undefined,
+        });
+        welcome_email_sent = emailResult.sent;
+        welcome_email_error = emailResult.error;
+      } catch (e) {
+        console.error("saveDoctor welcome email:", e);
+        welcome_email_sent = false;
+        welcome_email_error =
+          e instanceof Error ? e.message : "Welcome email failed";
+      }
+    }
+
+    return {
+      ok: true,
+      login_code: loginCode,
+      welcome_email_sent,
+      welcome_email_error,
+    };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Failed" };
   }

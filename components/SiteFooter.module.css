@@ -82,65 +82,12 @@
   min-width: 0;
 }
 
-.serviceList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-height: 320px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
-}
-
-.serviceList::-webkit-scrollbar {
-  width: 6px;
-}
-
-.serviceList::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-}
-
-.serviceCategory {
-  font-size: 0.8rem;
-  line-height: 1.4;
-  margin-bottom: 0.65rem;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.serviceCategory:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.serviceCategoryTitle {
-  display: block;
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 700;
-  font-size: 0.82rem;
-  margin-bottom: 0.2rem;
-}
-
-.serviceSubList {
-  list-style: none;
-  margin: 0.2rem 0 0;
-  padding: 0 0 0 0.75rem;
-  border-left: 2px solid rgba(255, 255, 255, 0.12);
-}
-
-.serviceSubList li {
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 0.76rem;
-  line-height: 1.45;
-  margin-bottom: 0.2rem;
-}
-
-.serviceSubList li::before {
-  content: "– ";
-  opacity: 0.65;
+.servicesSummary {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 0.85rem;
+  max-width: 28rem;
 }
 
 .legalText {
@@ -164,40 +111,21 @@
   }
 
   .links {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem 1.25rem;
   }
 
-  .serviceList {
-    max-height: none;
-    overflow: visible;
-    padding-right: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem 1rem;
+  .servicesGroup {
+    grid-column: 1 / -1;
   }
 
-  .serviceCategory {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
-    padding: 0.55rem 0.65rem;
-  }
-
-  .serviceCategoryTitle {
-    font-size: 0.74rem;
-    line-height: 1.35;
-    margin-bottom: 0;
-  }
-
-  .serviceSubList {
-    display: none;
+  .servicesSummary {
+    max-width: none;
   }
 }
 
 @media (max-width: 480px) {
-  .serviceList {
+  .links {
     grid-template-columns: 1fr;
   }
 }

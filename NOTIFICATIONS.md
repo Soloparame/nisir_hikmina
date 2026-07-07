@@ -1,4 +1,25 @@
-# Admin notifications (new appointments)
+# Notifications (appointments & doctor onboarding)
+
+## Doctor welcome email (new doctors)
+
+When an admin **adds a doctor** (or assigns a login ID for the first time) and saves with an **email** on the form, the server emails that doctor:
+
+- **Doctor ID** (e.g. `E7VLHSS7`)
+- **Full login link** (e.g. `https://eaglemedicalcare.com/doctor/E7VLHSS7/login`)
+- First-login instructions (create password)
+
+Requires:
+
+- `RESEND_API_KEY` (same as appointment alerts)
+- `NEXT_PUBLIC_SITE_URL=https://eaglemedicalcare.com` in Netlify / `.env.local` (no trailing slash)
+
+Uses `RESEND_FROM_EMAIL` if set; otherwise Resend’s test sender.
+
+**Note:** On Resend’s free tier, you can only send to **verified** recipient emails until your domain is verified.
+
+---
+
+## Admin notifications (new appointments)
 
 When a patient completes the booking form, the server saves the row in Supabase, then tries to notify you by **email** (Resend), **Telegram** (optional bot), and **WhatsApp** (optional CallMeBot).
 
