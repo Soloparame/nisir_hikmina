@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { deleteDoctor, saveDoctor } from "../lib/actions/doctors";
+import { deleteDoctor, resendDoctorWelcomeEmail, saveDoctor } from "../lib/actions/doctors";
 import { createClient } from "../lib/supabase/client";
+import { getDoctorLoginUrl } from "../lib/site-url";
 import {
   DEFAULT_WEEKDAYS,
   WEEKDAY_OPTIONS,
@@ -94,9 +95,42 @@ export default function AdminDoctorsPanel({
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDoctors(initialDoctors);
+  }, [initialDoctors]);
+
+  function buildSaveMessage(
+    result: Awaited<ReturnType<typeof saveDoctor>>,
+    email: string | undefined
+  ) {
+    if (!result.login_code) {
+      return editingId ? "Doctor updated." : "Doctor added.";
+    }
+
+    const loginUrl = getDoctorLoginUrl(result.login_code);
+    let msg = `Doctor saved. ID: ${result.login_code} — ${loginUrl}`;
+
+    if (email?.trim()) {
+      if (result.welcome_email_sent) {
+        msg += ` Welcome email sent to ${email.trim()}.`;
+      } else if (result.welcome_email_error) {
+        msg += ` Welcome email failed: ${result.welcome_email_error}`;
+      } else {
+        msg += " Welcome email was not sent (no new login ID). Use Resend email on the doctor list.";
+      }
+    } else {
+      msg += " Add an email to send the doctor their login link.";
+    }
+
+    return msg;
+  }
 
   function loadDoctor(d: Doctor) {
     setEditingId(d.id);
+    setMessage("");
+    setError("");
     const detectedSubcategory = d.specialization_en ?? d.specialization;
     setForm({
       name: d.name,
@@ -168,6 +202,7 @@ export default function AdminDoctorsPanel({
     setMessage("");
     setError("");
 
+    const savedEmail = form.email?.trim();
     const result = await saveDoctor(form, editingId ?? undefined);
     if (!result.ok) {
       setError(result.error ?? "Save failed");
@@ -175,27 +210,46 @@ export default function AdminDoctorsPanel({
       return;
     }
 
-    if (result.login_code) {
-      const loginPath = `/doctor/${result.login_code}/login`;
-      let msg = `Doctor saved. ID: ${result.login_code} — login: ${loginPath}`;
-      if (form.email?.trim()) {
-        if (result.welcome_email_sent) {
-          msg += ` — welcome email sent to ${form.email.trim()}.`;
-        } else if (result.welcome_email_error) {
-          msg += ` — could not email doctor (${result.welcome_email_error}).`;
-        }
-      } else {
-        msg += " — add an email to send the doctor their login link automatically.";
-      }
-      setMessage(msg);
+    if (result.welcome_email_sent) {
+      setMessage(buildSaveMessage(result, savedEmail));
+    } else if (result.welcome_email_error) {
+      setError(buildSaveMessage(result, savedEmail));
     } else {
-      setMessage(editingId ? "Doctor updated" : "Doctor added");
+      setMessage(buildSaveMessage(result, savedEmail));
     }
+
     resetForm();
     router.refresh();
     setSaving(false);
+  }
 
-    window.location.reload();
+  async function handleResendWelcome(d: Doctor) {
+    if (!d.email?.trim()) {
+      setError("Add an email to this doctor before resending the welcome email.");
+      setMessage("");
+      return;
+    }
+    if (!d.login_code) {
+      setError("This doctor has no login ID yet. Save the doctor again first.");
+      setMessage("");
+      return;
+    }
+
+    setResendingId(d.id);
+    setMessage("");
+    setError("");
+
+    const result = await resendDoctorWelcomeEmail(d.id);
+    setResendingId(null);
+
+    if (result.sent) {
+      setMessage(
+        `Welcome email sent to ${d.email.trim()} with login link ${getDoctorLoginUrl(d.login_code)}.`
+      );
+      return;
+    }
+
+    setError(result.error ?? "Could not send welcome email.");
   }
 
   async function handleDelete(id: string) {
@@ -218,6 +272,15 @@ export default function AdminDoctorsPanel({
           <p>Register and manage doctor profiles</p>
         </div>
       </header>
+
+      {(message || error) && (
+        <div
+          className={message ? styles.bannerSuccess : styles.bannerError}
+          role="status"
+        >
+          {message || error}
+        </div>
+      )}
 
       <div className={styles.grid}>
         <form className={styles.formCard} onSubmit={handleSave}>
@@ -444,9 +507,6 @@ export default function AdminDoctorsPanel({
             Active (visible to patients)
           </label>
 
-          {message && <p className={styles.success}>{message}</p>}
-          {error && <p className={styles.error}>{error}</p>}
-
           <div className={styles.formActions}>
             {editingId && (
               <button type="button" className={styles.secondary} onClick={resetForm}>
@@ -499,11 +559,26 @@ export default function AdminDoctorsPanel({
                     )}
                     {d.login_code && (
                       <span className={styles.doctorId}>
-                        ID: {d.login_code} · /doctor/{d.login_code}/login
+                        ID: {d.login_code}
+                        <br />
+                        {getDoctorLoginUrl(d.login_code)}
                       </span>
+                    )}
+                    {d.email && (
+                      <span className={styles.doctorEmail}>{d.email}</span>
                     )}
                   </div>
                   <div className={styles.listActions}>
+                    {d.login_code && d.email && (
+                      <button
+                        type="button"
+                        className={styles.resendBtn}
+                        disabled={resendingId === d.id}
+                        onClick={() => handleResendWelcome(d)}
+                      >
+                        {resendingId === d.id ? "Sending…" : "Resend email"}
+                      </button>
+                    )}
                     <button type="button" onClick={() => loadDoctor(d)}>
                       Edit
                     </button>

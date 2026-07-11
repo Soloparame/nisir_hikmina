@@ -171,6 +171,7 @@ export async function saveDoctor(
     };
 
     let loginCode: string | undefined;
+    let effectiveLoginCode: string | undefined;
 
     if (id) {
       const { data: existing } = await supabase
@@ -179,9 +180,12 @@ export async function saveDoctor(
         .eq("id", id)
         .maybeSingle();
 
+      effectiveLoginCode = existing?.login_code ?? undefined;
+
       if (!existing?.login_code) {
         loginCode = generateLoginCode();
         payload.login_code = loginCode;
+        effectiveLoginCode = loginCode;
       }
 
       const { error } = await supabase
@@ -191,6 +195,7 @@ export async function saveDoctor(
       if (error) return { ok: false, error: error.message };
     } else {
       loginCode = generateLoginCode();
+      effectiveLoginCode = loginCode;
       const { error } = await supabase
         .from("doctors")
         .insert({ ...payload, login_code: loginCode });
@@ -229,12 +234,68 @@ export async function saveDoctor(
 
     return {
       ok: true,
-      login_code: loginCode,
+      login_code: effectiveLoginCode,
       welcome_email_sent,
       welcome_email_error,
     };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Failed" };
+  }
+}
+
+export async function resendDoctorWelcomeEmail(
+  doctorId: string
+): Promise<{ ok: boolean; sent?: boolean; error?: string }> {
+  try {
+    const supabase = await getAuthedClient();
+
+    const { data: doctor, error } = await supabase
+      .from("doctors")
+      .select(
+        "name, name_en, email, login_code, specialization, specialization_en"
+      )
+      .eq("id", doctorId)
+      .maybeSingle();
+
+    if (error) return { ok: false, error: error.message };
+    if (!doctor) return { ok: false, error: "Doctor not found." };
+
+    const email = (doctor.email as string | null)?.trim();
+    if (!email) {
+      return { ok: false, error: "This doctor has no email on file." };
+    }
+
+    const loginCode = (doctor.login_code as string | null)?.trim();
+    if (!loginCode) {
+      return { ok: false, error: "This doctor has no login ID yet. Save them again first." };
+    }
+
+    const doctorName =
+      (doctor.name_en as string | null)?.trim() ||
+      (doctor.name as string)?.trim() ||
+      "Doctor";
+    const specialization =
+      (doctor.specialization_en as string | null)?.trim() ||
+      (doctor.specialization as string | null)?.trim() ||
+      undefined;
+
+    const emailResult = await notifyDoctorWelcome({
+      doctor_name: doctorName,
+      doctor_email: email,
+      login_code: loginCode,
+      specialization,
+    });
+
+    if (!emailResult.sent) {
+      return { ok: false, sent: false, error: emailResult.error };
+    }
+
+    return { ok: true, sent: true };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : "Failed to send welcome email",
+    };
   }
 }
 

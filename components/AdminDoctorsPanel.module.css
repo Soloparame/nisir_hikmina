@@ -88,6 +88,28 @@
   margin-top: 1rem;
 }
 
+.bannerSuccess,
+.bannerError {
+  margin-bottom: 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.bannerSuccess {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.bannerError {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
 .error {
   color: #dc2626;
   font-size: 0.85rem;
@@ -267,6 +289,26 @@
   font-size: 0.75rem !important;
   font-weight: 600;
   margin-top: 4px;
+  line-height: 1.45;
+  word-break: break-all;
+}
+
+.doctorEmail {
+  display: block;
+  color: #64748b !important;
+  font-size: 0.74rem !important;
+  margin-top: 2px;
+}
+
+.resendBtn {
+  color: #009966 !important;
+  border-color: #a7f3d0 !important;
+  font-weight: 600 !important;
+}
+
+.resendBtn:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 @media (max-width: 900px) {

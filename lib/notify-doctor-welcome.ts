@@ -100,13 +100,18 @@ export async function notifyDoctorWelcome(
     }),
   });
 
+  const raw = await res.text();
+
   if (!res.ok) {
-    const errText = await res.text();
-    console.error("[notify-doctor-welcome] Resend error:", res.status, errText);
-    return {
-      sent: false,
-      error: `Email could not be sent (${res.status}). Check Resend settings.`,
-    };
+    let errMsg = `Email could not be sent (HTTP ${res.status}).`;
+    try {
+      const body = JSON.parse(raw) as { message?: string };
+      if (body.message) errMsg = body.message;
+    } catch {
+      if (raw) errMsg = raw.slice(0, 280);
+    }
+    console.error("[notify-doctor-welcome] Resend error:", errMsg);
+    return { sent: false, error: errMsg };
   }
 
   return { sent: true };
