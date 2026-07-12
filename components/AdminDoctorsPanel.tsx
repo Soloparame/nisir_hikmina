@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Plus, Search, Stethoscope, UserPlus } from "lucide-react";
 import { deleteDoctor, resendDoctorWelcomeEmail, saveDoctor } from "../lib/actions/doctors";
 import { createClient } from "../lib/supabase/client";
 import { getDoctorLoginUrl } from "../lib/site-url";
@@ -17,6 +18,10 @@ import {
 } from "../lib/doctor-categories";
 import type { Doctor, DoctorFormData } from "../lib/types/doctor";
 import styles from "./AdminDoctorsPanel.module.css";
+
+const LIST_PAGE_SIZE = 12;
+
+type StatusFilter = "all" | "active" | "inactive";
 
 type Props = {
   initialDoctors: Doctor[];
@@ -96,10 +101,54 @@ export default function AdminDoctorsPanel({
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [resendingId, setResendingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [visibleCount, setVisibleCount] = useState(LIST_PAGE_SIZE);
 
   useEffect(() => {
     setDoctors(initialDoctors);
   }, [initialDoctors]);
+
+  useEffect(() => {
+    setVisibleCount(LIST_PAGE_SIZE);
+  }, [searchQuery, statusFilter]);
+
+  const activeCount = useMemo(
+    () => doctors.filter((d) => d.is_active).length,
+    [doctors]
+  );
+
+  const filteredDoctors = useMemo(() => {
+    const term = searchQuery.trim().toLowerCase();
+    return doctors.filter((d) => {
+      if (statusFilter === "active" && !d.is_active) return false;
+      if (statusFilter === "inactive" && d.is_active) return false;
+      if (!term) return true;
+
+      const haystack = [
+        d.name,
+        d.name_en,
+        d.email,
+        d.category,
+        d.specialization,
+        d.specialization_en,
+        d.login_code,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(term);
+    });
+  }, [doctors, searchQuery, statusFilter]);
+
+  const visibleDoctors = filteredDoctors.slice(0, visibleCount);
+  const hasMoreDoctors = visibleCount < filteredDoctors.length;
+
+  const editingDoctor = useMemo(
+    () => doctors.find((d) => d.id === editingId) ?? null,
+    [doctors, editingId]
+  );
 
   function buildSaveMessage(
     result: Awaited<ReturnType<typeof saveDoctor>>,
@@ -128,10 +177,10 @@ export default function AdminDoctorsPanel({
   }
 
   function loadDoctor(d: Doctor) {
+    const detectedSubcategory = d.specialization_en ?? d.specialization;
     setEditingId(d.id);
     setMessage("");
     setError("");
-    const detectedSubcategory = d.specialization_en ?? d.specialization;
     setForm({
       name: d.name,
       name_en: d.name_en ?? "",
@@ -162,6 +211,12 @@ export default function AdminDoctorsPanel({
   function resetForm() {
     setEditingId(null);
     setForm(emptyForm);
+    setMessage("");
+    setError("");
+  }
+
+  function startNewDoctor() {
+    resetForm();
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -282,9 +337,186 @@ export default function AdminDoctorsPanel({
         </div>
       )}
 
-      <div className={styles.grid}>
+      <div className={styles.layout}>
+        <aside className={styles.listPanel}>
+          <div className={styles.listCard}>
+            <div className={styles.listHead}>
+              <div>
+                <h2>Registered Doctors</h2>
+                <p className={styles.listSub}>
+                  {filteredDoctors.length} shown · {activeCount} active ·{" "}
+                  {doctors.length} total
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.addNewBtn}
+                onClick={startNewDoctor}
+              >
+                <Plus size={16} aria-hidden />
+                Add new
+              </button>
+            </div>
+
+            <div className={styles.searchWrap}>
+              <Search className={styles.searchIcon} size={18} aria-hidden />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, email, specialty, ID…"
+                className={styles.searchInput}
+                aria-label="Search doctors"
+              />
+            </div>
+
+            <div className={styles.filterRow}>
+              {(["all", "active", "inactive"] as const).map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={`${styles.filterChip} ${
+                    statusFilter === key ? styles.filterChipActive : ""
+                  }`}
+                  onClick={() => setStatusFilter(key)}
+                >
+                  {key === "all"
+                    ? "All"
+                    : key === "active"
+                      ? "Active"
+                      : "Inactive"}
+                </button>
+              ))}
+            </div>
+
+            {loadError && (
+              <p className={styles.error} role="alert">
+                {loadError}
+              </p>
+            )}
+
+            {doctors.length === 0 && !loadError ? (
+              <p className={styles.empty}>No doctors yet. Add your first doctor.</p>
+            ) : filteredDoctors.length === 0 ? (
+              <p className={styles.empty}>No doctors match your search.</p>
+            ) : (
+              <>
+                <ul className={styles.list}>
+                  {visibleDoctors.map((d) => (
+                    <li
+                      key={d.id}
+                      className={`${styles.listItem} ${
+                        editingId === d.id ? styles.listItemActive : ""
+                      }`}
+                    >
+                      {d.image_url ? (
+                        <Image
+                          src={d.image_url}
+                          alt={d.name}
+                          width={44}
+                          height={44}
+                          className={styles.thumb}
+                        />
+                      ) : (
+                        <div className={styles.thumbFallback}>
+                          <Stethoscope size={18} />
+                        </div>
+                      )}
+                      <div className={styles.listInfo}>
+                        <div className={styles.listTitleRow}>
+                          <strong>{d.name_en?.trim() || d.name}</strong>
+                          <span
+                            className={
+                              d.is_active ? styles.badgeActive : styles.badgeInactive
+                            }
+                          >
+                            {d.is_active ? "Active" : "Inactive"}
+                          </span>
+                        </div>
+                        {d.name_en && d.name !== d.name_en && (
+                          <span className={styles.listMeta}>{d.name}</span>
+                        )}
+                        <span className={styles.listMeta}>
+                          {d.category ? `${d.category} · ` : ""}
+                          {d.specialization}
+                        </span>
+                        {d.email && (
+                          <span className={styles.doctorEmail}>{d.email}</span>
+                        )}
+                        {d.login_code && (
+                          <span className={styles.doctorId}>ID: {d.login_code}</span>
+                        )}
+                      </div>
+                      <div className={styles.listActions}>
+                        <button type="button" onClick={() => loadDoctor(d)}>
+                          Edit
+                        </button>
+                        {d.login_code && d.email && (
+                          <button
+                            type="button"
+                            className={styles.resendBtn}
+                            disabled={resendingId === d.id}
+                            onClick={() => handleResendWelcome(d)}
+                          >
+                            {resendingId === d.id ? "…" : "Email"}
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className={styles.danger}
+                          onClick={() => handleDelete(d.id)}
+                        >
+                          Del
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                {hasMoreDoctors && (
+                  <button
+                    type="button"
+                    className={styles.showMoreBtn}
+                    onClick={() =>
+                      setVisibleCount((n) => n + LIST_PAGE_SIZE)
+                    }
+                  >
+                    Show more ({filteredDoctors.length - visibleCount} remaining)
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </aside>
+
+        <section className={styles.formPanel}>
         <form className={styles.formCard} onSubmit={handleSave}>
-          <h2>{editingId ? "ዶክተር አርም" : "አዲስ ዶክተር"}</h2>
+          <div className={styles.formHead}>
+            <div className={styles.formHeadIcon}>
+              <UserPlus size={20} aria-hidden />
+            </div>
+            <div>
+              <h2>{editingId ? "Edit doctor" : "Add new doctor"}</h2>
+              <p className={styles.formSub}>
+                {editingId
+                  ? "Update profile, availability, and login details."
+                  : "Register a specialist — welcome email sends on save."}
+              </p>
+            </div>
+          </div>
+
+          {editingDoctor?.login_code && (
+            <div className={styles.loginHint}>
+              <strong>Portal login</strong>
+              <span>ID: {editingDoctor.login_code}</span>
+              <a
+                href={getDoctorLoginUrl(editingDoctor.login_code)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {getDoctorLoginUrl(editingDoctor.login_code)}
+              </a>
+            </div>
+          )}
 
           <label>ስም (አማርኛ) *</label>
           <input
@@ -518,83 +750,7 @@ export default function AdminDoctorsPanel({
             </button>
           </div>
         </form>
-
-        <div className={styles.listCard}>
-          <h2>Registered Doctors ({doctors.length})</h2>
-          {loadError && (
-            <p className={styles.error} role="alert">
-              {loadError}
-              <br />
-              <small>
-                Run <code>migration-v9-fix-doctors-rls-recursion.sql</code> in
-                Supabase SQL Editor if you see infinite recursion.
-              </small>
-            </p>
-          )}
-          {doctors.length === 0 && !loadError ? (
-            <p className={styles.empty}>No doctors yet. Add your first doctor.</p>
-          ) : doctors.length === 0 ? null : (
-            <ul className={styles.list}>
-              {doctors.map((d) => (
-                <li key={d.id} className={styles.listItem}>
-                  {d.image_url ? (
-                    <Image
-                      src={d.image_url}
-                      alt={d.name}
-                      width={48}
-                      height={48}
-                      className={styles.thumb}
-                    />
-                  ) : (
-                    <div className={styles.thumbFallback}>👨‍⚕️</div>
-                  )}
-                  <div className={styles.listInfo}>
-                    <strong>{d.name}</strong>
-                    <span>
-                      {d.category ? `${d.category} — ` : ""}
-                      {d.specialization}
-                    </span>
-                    {!d.is_active && (
-                      <span className={styles.inactive}>Inactive</span>
-                    )}
-                    {d.login_code && (
-                      <span className={styles.doctorId}>
-                        ID: {d.login_code}
-                        <br />
-                        {getDoctorLoginUrl(d.login_code)}
-                      </span>
-                    )}
-                    {d.email && (
-                      <span className={styles.doctorEmail}>{d.email}</span>
-                    )}
-                  </div>
-                  <div className={styles.listActions}>
-                    {d.login_code && d.email && (
-                      <button
-                        type="button"
-                        className={styles.resendBtn}
-                        disabled={resendingId === d.id}
-                        onClick={() => handleResendWelcome(d)}
-                      >
-                        {resendingId === d.id ? "Sending…" : "Resend email"}
-                      </button>
-                    )}
-                    <button type="button" onClick={() => loadDoctor(d)}>
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.danger}
-                      onClick={() => handleDelete(d.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        </section>
       </div>
     </div>
   );

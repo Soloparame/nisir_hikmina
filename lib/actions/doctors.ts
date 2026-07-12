@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { isAdminRole } from "../auth-roles";
 import { generateLoginCode } from "../doctor-availability";
+import {
+  duplicateDoctorMessage,
+  findDuplicateDoctor,
+} from "../doctor-duplicates";
 import { notifyDoctorWelcome } from "../notify-doctor-welcome";
 import { notifyAdminNewAppointment } from "../notify-admin-appointment";
 import { createClient } from "../supabase/server";
@@ -143,6 +147,19 @@ export async function saveDoctor(
 }> {
   try {
     const supabase = await getAuthedClient();
+
+    const { data: allDoctors, error: listError } = await supabase
+      .from("doctors")
+      .select("id, name, name_en, email");
+
+    if (listError) {
+      return { ok: false, error: listError.message };
+    }
+
+    const duplicate = findDuplicateDoctor(allDoctors ?? [], form, id);
+    if (duplicate) {
+      return { ok: false, error: duplicateDoctorMessage(duplicate) };
+    }
 
     const payload: Record<string, unknown> = {
       name: form.name.trim(),
