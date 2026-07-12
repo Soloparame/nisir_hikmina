@@ -15,6 +15,8 @@ Requires:
 
 Uses `RESEND_FROM_EMAIL` if set; otherwise Resend’s test sender.
 
+**Important:** The email address domain must **exactly match** a **Verified** domain in Resend. If you verified `updates.eaglemedicalcare.com`, use e.g. `noreply@updates.eaglemedicalcare.com` — **not** `noreply@eaglemedicalcare.com` (root is a separate domain in Resend).
+
 **Note:** On Resend’s free tier, you can only send to **verified** recipient emails until your domain is verified.
 
 ---

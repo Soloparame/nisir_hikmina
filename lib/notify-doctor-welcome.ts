@@ -1,4 +1,9 @@
 import { getDoctorLoginUrl } from "./site-url";
+import {
+  enrichResendError,
+  getResendApiKey,
+  getResendFromAddress,
+} from "./resend-config";
 
 export type DoctorWelcomePayload = {
   doctor_name: string;
@@ -6,6 +11,35 @@ export type DoctorWelcomePayload = {
   login_code: string;
   specialization?: string;
 };
+
+const DEFAULT_DOCTOR_WHATSAPP_GROUP =
+  "https://chat.whatsapp.com/BVcdM8SO8Ch7FOzUA1RXrK?mode=gi_t";
+
+function getDoctorWhatsappGroupUrl() {
+  return (
+    process.env.DOCTOR_WHATSAPP_GROUP_URL?.trim() ||
+    DEFAULT_DOCTOR_WHATSAPP_GROUP
+  );
+}
+
+function whatsappGroupBlockText() {
+  const url = getDoctorWhatsappGroupUrl();
+  return [
+    "",
+    "Join our Eagle Medical doctors WhatsApp group:",
+    url,
+  ];
+}
+
+function whatsappGroupBlockHtml() {
+  const url = getDoctorWhatsappGroupUrl();
+  return `
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem 1.15rem; margin: 1.25rem 0;">
+        <p style="margin: 0 0 0.5rem;"><strong>Join our doctors WhatsApp group</strong></p>
+        <p style="margin: 0; font-size: 0.92rem;">Stay connected with the team — tap to join:</p>
+        <p style="margin: 0.65rem 0 0;"><a href="${escapeHtml(url)}" style="color: #009966; font-weight: 600;">${escapeHtml(url)}</a></p>
+      </div>`;
+}
 
 function escapeHtml(s: string) {
   return s
@@ -35,6 +69,7 @@ export function formatDoctorWelcomeMessage(p: DoctorWelcomePayload) {
     "3. Create your password",
     "",
     "After that, use the same link with your email, password, and Doctor ID.",
+    ...whatsappGroupBlockText(),
     "",
     "— Eagle Medical",
   ];
@@ -44,7 +79,7 @@ export function formatDoctorWelcomeMessage(p: DoctorWelcomePayload) {
 export async function notifyDoctorWelcome(
   p: DoctorWelcomePayload
 ): Promise<{ sent: boolean; error?: string }> {
-  const key = process.env.RESEND_API_KEY?.trim();
+  const key = getResendApiKey();
   if (!key) {
     const msg =
       "RESEND_API_KEY is not set — welcome email not sent. Add it in .env.local / Netlify env.";
@@ -57,9 +92,7 @@ export async function notifyDoctorWelcome(
     return { sent: false, error: "Doctor email is missing." };
   }
 
-  const from =
-    process.env.RESEND_FROM_EMAIL?.trim() ||
-    "Eagle Medical <onboarding@resend.dev>";
+  const from = getResendFromAddress();
 
   const { text, loginUrl } = formatDoctorWelcomeMessage(p);
   const subject = "Your Eagle Medical doctor portal login";
@@ -81,6 +114,7 @@ export async function notifyDoctorWelcome(
         <li>Create your password</li>
       </ol>
       <p style="color: #64748b; font-size: 0.92rem;">After that, use the same link with your email, password, and Doctor ID.</p>
+      ${whatsappGroupBlockHtml()}
       <p style="margin-top: 1.5rem;">— Eagle Medical</p>
     </div>
   `;
@@ -106,7 +140,7 @@ export async function notifyDoctorWelcome(
     let errMsg = `Email could not be sent (HTTP ${res.status}).`;
     try {
       const body = JSON.parse(raw) as { message?: string };
-      if (body.message) errMsg = body.message;
+      if (body.message) errMsg = enrichResendError(body.message);
     } catch {
       if (raw) errMsg = raw.slice(0, 280);
     }

@@ -1,3 +1,8 @@
+import {
+  enrichResendError,
+  getResendApiKey,
+  getResendFromAddress,
+} from "./resend-config";
 /**
  * Sends admin alerts when a patient books an appointment.
  *
@@ -58,7 +63,7 @@ export function formatAppointmentMessage(p: AppointmentNotifyPayload) {
 }
 
 async function sendResendEmail(subject: string, text: string, html: string) {
-  const key = process.env.RESEND_API_KEY?.trim();
+  const key = getResendApiKey();
   if (!key) {
     console.warn(
       "[notify-admin] RESEND_API_KEY is not set — email notifications disabled. Add it in .env.local / hosting env."
@@ -66,9 +71,7 @@ async function sendResendEmail(subject: string, text: string, html: string) {
     return false;
   }
 
-  const from =
-    process.env.RESEND_FROM_EMAIL?.trim() ||
-    "Eagle Medical <onboarding@resend.dev>";
+  const from = getResendFromAddress();
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -87,7 +90,14 @@ async function sendResendEmail(subject: string, text: string, html: string) {
 
   if (!res.ok) {
     const errText = await res.text();
-    console.error("[notify-admin] Resend error:", res.status, errText);
+    let logged = errText;
+    try {
+      const body = JSON.parse(errText) as { message?: string };
+      if (body.message) logged = enrichResendError(body.message);
+    } catch {
+      /* use raw */
+    }
+    console.error("[notify-admin] Resend error:", res.status, logged);
     return false;
   }
   return true;
