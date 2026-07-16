@@ -9,8 +9,13 @@ import {
 } from "../doctor-duplicates";
 import { notifyDoctorWelcome } from "../notify-doctor-welcome";
 import { notifyAdminNewAppointment } from "../notify-admin-appointment";
+import { createServiceClient } from "../supabase/admin";
 import { createClient } from "../supabase/server";
-import type { AppointmentInsert, DoctorFormData } from "../types/doctor";
+import type {
+  AppointmentInsert,
+  DoctorFormData,
+  DoctorSelfProfileData,
+} from "../types/doctor";
 import {
   PUBLIC_DOCTOR_COLUMNS,
   PUBLIC_DOCTOR_COLUMNS_NO_DAYS,
@@ -221,6 +226,9 @@ export async function saveDoctor(
 
     revalidatePath("/book");
     revalidatePath("/admin/doctors");
+    if (effectiveLoginCode) {
+      revalidatePath(`/doctor/${effectiveLoginCode}/dashboard`);
+    }
 
     let welcome_email_sent: boolean | undefined;
     let welcome_email_error: string | undefined;
@@ -255,6 +263,131 @@ export async function saveDoctor(
       welcome_email_sent,
       welcome_email_error,
     };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "Failed" };
+  }
+}
+
+/**
+ * Doctor updates their own profile on the same `doctors` row the admin manages.
+ * Does not allow changing email, login_code, is_active, pricing_tier, or sort_order.
+ */
+export async function updateDoctorOwnProfile(
+  loginCode: string,
+  form: DoctorSelfProfileData
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const supabase = await createClient();
+    if (!supabase) {
+      return { ok: false, error: "Supabase is not configured" };
+    }
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { ok: false, error: "Not logged in" };
+    }
+
+    const code = loginCode.trim().toUpperCase();
+    if (!code) {
+      return { ok: false, error: "Invalid doctor ID" };
+    }
+
+    const name = form.name.trim();
+    const specialization = form.specialization.trim();
+    if (!name || !specialization) {
+      return { ok: false, error: "Name and specialization are required" };
+    }
+
+    const { data: existing, error: existingError } = await supabase
+      .from("doctors")
+      .select("id, auth_user_id, login_code, name, name_en, email")
+      .eq("login_code", code)
+      .eq("auth_user_id", user.id)
+      .maybeSingle();
+
+    if (existingError) {
+      return { ok: false, error: existingError.message };
+    }
+
+    if (!existing) {
+      return {
+        ok: false,
+        error: "Doctor profile not found for this account",
+      };
+    }
+
+    const listClient = createServiceClient() ?? supabase;
+    const { data: peers, error: peersError } = await listClient
+      .from("doctors")
+      .select("id, name, name_en, email");
+
+    if (peersError) {
+      return { ok: false, error: peersError.message };
+    }
+
+    const duplicate = findDuplicateDoctor(
+      peers ?? [],
+      {
+        name,
+        name_en: form.name_en,
+        email: existing.email ?? undefined,
+        category: form.category,
+        specialization,
+        experience_years: form.experience_years,
+        languages: form.languages,
+        is_active: true,
+        sort_order: 0,
+      },
+      existing.id
+    );
+
+    if (duplicate) {
+      return { ok: false, error: duplicateDoctorMessage(duplicate) };
+    }
+
+    const payload = {
+      name,
+      name_en: form.name_en?.trim() || null,
+      category: form.category.trim() || null,
+      specialization,
+      specialization_en: form.specialization_en?.trim() || null,
+      bio: form.bio?.trim() || null,
+      bio_en: form.bio_en?.trim() || null,
+      image_url: form.image_url?.trim() || null,
+      experience_years: Number.isFinite(form.experience_years)
+        ? Math.max(0, Math.floor(form.experience_years))
+        : 0,
+      languages: form.languages?.length ? form.languages : ["አማርኛ"],
+      morning_start: emptyTimeToNull(form.morning_start),
+      morning_end: emptyTimeToNull(form.morning_end),
+      afternoon_start: emptyTimeToNull(form.afternoon_start),
+      afternoon_end: emptyTimeToNull(form.afternoon_end),
+      evening_start: emptyTimeToNull(form.evening_start),
+      evening_end: emptyTimeToNull(form.evening_end),
+      morning_days: form.morning_days?.length ? form.morning_days : null,
+      afternoon_days: form.afternoon_days?.length ? form.afternoon_days : null,
+      evening_days: form.evening_days?.length ? form.evening_days : null,
+    };
+
+    const { error } = await supabase
+      .from("doctors")
+      .update(payload)
+      .eq("id", existing.id)
+      .eq("auth_user_id", user.id);
+
+    if (error) {
+      return { ok: false, error: error.message };
+    }
+
+    revalidatePath("/book");
+    revalidatePath("/doctors");
+    revalidatePath("/admin/doctors");
+    revalidatePath(`/doctor/${code}/dashboard`);
+
+    return { ok: true };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Failed" };
   }

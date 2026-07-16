@@ -64,6 +64,10 @@ Run `supabase/storage-doctor-images.sql` in the SQL Editor (only the `insert int
 
 **Minimum required:** Policy 1 (SELECT) + Policy 2 (INSERT).
 
+Logged-in doctors use the same INSERT policy to upload their own profile photo from the doctor portal.
+
+Also run `supabase/migration-v18-doctor-self-edit.sql` so doctors can update their own profile row after they sign in.
+
 ---
 
 ## Step 3 — Test

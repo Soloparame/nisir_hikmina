@@ -69,6 +69,29 @@ export type DoctorFormData = {
   evening_days?: string[];
 };
 
+/** Fields a doctor may edit on their own profile (same DB row as admin). */
+export type DoctorSelfProfileData = {
+  name: string;
+  name_en?: string;
+  category: string;
+  specialization: string;
+  specialization_en?: string;
+  bio?: string;
+  bio_en?: string;
+  image_url?: string;
+  experience_years: number;
+  languages: string[];
+  morning_start?: string;
+  morning_end?: string;
+  afternoon_start?: string;
+  afternoon_end?: string;
+  evening_start?: string;
+  evening_end?: string;
+  morning_days?: string[];
+  afternoon_days?: string[];
+  evening_days?: string[];
+};
+
 export type AppointmentInsert = {
   doctor_id: string;
   patient_name: string;

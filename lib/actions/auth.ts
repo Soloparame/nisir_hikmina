@@ -83,7 +83,7 @@ export async function getDoctorProfileForSession(loginCode: string) {
   const { data } = await supabase
     .from("doctors")
     .select(
-      "id, name, name_en, email, login_code, auth_user_id, category, specialization, specialization_en, bio, bio_en, experience_years, languages, is_active, morning_start, morning_end, afternoon_start, afternoon_end, evening_start, evening_end"
+      "id, name, name_en, email, login_code, auth_user_id, category, specialization, specialization_en, bio, bio_en, image_url, experience_years, languages, is_active, pricing_tier, morning_start, morning_end, afternoon_start, afternoon_end, evening_start, evening_end, morning_days, afternoon_days, evening_days"
     )
     .eq("login_code", loginCode.toUpperCase())
     .eq("auth_user_id", user.id)

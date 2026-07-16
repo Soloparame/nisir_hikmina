@@ -12,23 +12,33 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/login/page": [
+    "/admin/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/login/page.css",
-      "static/chunks/app/login/page.js"
-    ],
-    "/admin/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/admin/login/page.css",
-      "static/chunks/app/admin/login/page.js"
+      "static/chunks/app/admin/page.js"
     ],
     "/admin/doctors/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/admin/doctors/page.css",
       "static/chunks/app/admin/doctors/page.js"
+    ],
+    "/doctor/[code]/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/doctor/[code]/login/page.css",
+      "static/chunks/app/doctor/[code]/login/page.js"
+    ],
+    "/doctor/[code]/dashboard/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/doctor/[code]/dashboard/page.css",
+      "static/chunks/app/doctor/[code]/dashboard/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

@@ -1,0 +1,485 @@
+{
+  "info": {
+    "_postman_id": "eagle-medical-api-tests",
+    "name": "Eagle Medical — API & Security Tests",
+    "description": "Test Eagle Medical connectivity and Supabase RLS/auth.\n\n**Important:** Booking, admin panels, and chat use Next.js **Server Actions** (not REST). Postman cannot call those directly — use the browser for those flows. This collection covers:\n- App health check\n- Supabase Auth (login tokens)\n- Supabase REST (public doctors, RLS checks)\n\n**Setup:**\n1. Import this collection + `Eagle-Medical.postman_environment.json`\n2. Select the environment and fill `supabase_url`, `supabase_anon_key`, test account emails/passwords\n3. Run **Auth → Sign in (patient/admin/doctor)** first\n4. Run **Security checks** folder to verify RLS\n\nDo **not** commit real passwords or production keys to git.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "site_url",
+      "value": "https://eaglemedicalcare.com"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 — App health",
+      "item": [
+        {
+          "name": "GET Supabase health (Next.js)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{site_url}}/api/health/supabase",
+              "host": ["{{site_url}}"],
+              "path": ["api", "health", "supabase"]
+            },
+            "description": "Only REST route on the Next.js app. Expect `ok: true` and `supabaseReachable: true` in production."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('Response is JSON with ok field', () => {",
+                  "  pm.expect(body).to.have.property('ok');",
+                  "});",
+                  "if (body.ok) {",
+                  "  pm.test('Supabase reachable', () => pm.expect(body.supabaseReachable).to.eql(true));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2 — Supabase Auth",
+      "item": [
+        {
+          "name": "Sign in (patient) → saves token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{patient_email}}\",\n  \"password\": \"{{patient_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{supabase_url}}/auth/v1/token?grant_type=password",
+              "host": ["{{supabase_url}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [{ "key": "grant_type", "value": "password" }]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "if (body.access_token) {",
+                  "  pm.environment.set('patient_access_token', body.access_token);",
+                  "  pm.test('Patient token saved', () => pm.expect(body.access_token).to.be.a('string'));",
+                  "  const role = body.user?.user_metadata?.role;",
+                  "  console.log('Patient role in metadata:', role);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sign in (admin) → saves token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{supabase_url}}/auth/v1/token?grant_type=password",
+              "host": ["{{supabase_url}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [{ "key": "grant_type", "value": "password" }]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "if (body.access_token) {",
+                  "  pm.environment.set('admin_access_token', body.access_token);",
+                  "  const role = body.user?.user_metadata?.role;",
+                  "  console.log('Admin role in metadata:', role ?? '(missing — app treats as admin!)');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sign in (doctor) → saves token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{doctor_email}}\",\n  \"password\": \"{{doctor_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{supabase_url}}/auth/v1/token?grant_type=password",
+              "host": ["{{supabase_url}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [{ "key": "grant_type", "value": "password" }]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "if (body.access_token) {",
+                  "  pm.environment.set('doctor_access_token', body.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET current user (patient token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{patient_access_token}}" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/auth/v1/user",
+              "host": ["{{supabase_url}}"],
+              "path": ["auth", "v1", "user"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Has user id', () => pm.expect(pm.response.json().id).to.be.a('string'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3 — Public data (no login)",
+      "item": [
+        {
+          "name": "List active doctors (public)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{supabase_anon_key}}" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/doctors?select=id,name,name_en,specialization,is_active&is_active=eq.true&order=sort_order.asc&limit=5",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "doctors"],
+              "query": [
+                { "key": "select", "value": "id,name,name_en,specialization,is_active" },
+                { "key": "is_active", "value": "eq.true" },
+                { "key": "order", "value": "sort_order.asc" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json();",
+                  "pm.test('Returns array', () => pm.expect(rows).to.be.an('array'));",
+                  "if (rows.length > 0 && rows[0].id) {",
+                  "  pm.environment.set('sample_doctor_id', rows[0].id);",
+                  "  console.log('Saved sample_doctor_id:', rows[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "List published updates (public)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{supabase_anon_key}}" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/updates?select=id,title,created_at&is_published=eq.true&order=created_at.desc&limit=5",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "updates"],
+              "query": [
+                { "key": "select", "value": "id,title,created_at" },
+                { "key": "is_published", "value": "eq.true" },
+                { "key": "order", "value": "created_at.desc" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 or 404 if table missing', () => {",
+                  "  pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4 — Security / RLS checks",
+      "item": [
+        {
+          "name": "[anon] List appointments — should be empty or 401",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{supabase_anon_key}}" },
+              { "key": "Prefer", "value": "count=exact" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/appointments?select=id,patient_name,status&limit=5",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "appointments"],
+              "query": [
+                { "key": "select", "value": "id,patient_name,status" },
+                { "key": "limit", "value": "5" }
+              ]
+            },
+            "description": "Anonymous users must NOT see patient appointment rows. Expect `[]` (RLS blocks) — not a list of real patients."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json();",
+                  "pm.test('No appointment rows for anonymous', () => {",
+                  "  pm.expect(rows).to.be.an('array');",
+                  "  pm.expect(rows.length).to.eql(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "[patient] List appointments — own only",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{patient_access_token}}" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/appointments?select=id,patient_name,status,user_id&limit=10",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "appointments"],
+              "query": [
+                { "key": "select", "value": "id,patient_name,status,user_id" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Run patient sign-in first. Patients should only see their own bookings (or empty if none)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "[admin] List appointments — should succeed",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{admin_access_token}}" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/appointments?select=id,patient_name,status,created_at&order=created_at.desc&limit=5",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "appointments"],
+              "query": [
+                { "key": "select", "value": "id,patient_name,status,created_at" },
+                { "key": "order", "value": "created_at.desc" },
+                { "key": "limit", "value": "5" }
+              ]
+            },
+            "description": "Run admin sign-in first. Admin should read appointments for the bookings panel."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "[patient] Try insert doctor — should fail (403/401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{patient_access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Prefer", "value": "return=representation" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Intrusion Test\",\n  \"specialization\": \"Test\",\n  \"experience_years\": 0,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/doctors",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "doctors"]
+            },
+            "description": "Patients must not create doctor records. Expect 401/403 or RLS error — NOT 201."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Not allowed to create doctor', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([401, 403, 409, 422]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "[anon] Insert test appointment — open insert policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{supabase_anon_key}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Prefer", "value": "return=representation" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": \"{{sample_doctor_id}}\",\n  \"patient_name\": \"Postman Spam Test — DELETE ME\",\n  \"phone\": \"+251900000000\",\n  \"disease\": \"RLS test only\",\n  \"telegram\": \"@postman_test\",\n  \"consult_type\": \"Text\",\n  \"status\": \"pending_payment\"\n}"
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/appointments",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "appointments"]
+            },
+            "description": "Documents known gap: anonymous insert is allowed by RLS. Use only in staging; delete test row in Supabase after."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Insert attempted (201 or 400 if doctor_id missing)', () => {",
+                  "  pm.expect([201, 400, 404, 409, 422]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "  const row = pm.response.json();",
+                  "  const id = Array.isArray(row) ? row[0]?.id : row?.id;",
+                  "  if (id) console.warn('Created test appointment — delete in Supabase:', id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "[patient] List conversations — participant only",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{supabase_anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{patient_access_token}}" }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/conversations?select=id,patient_id,doctor_id&limit=5",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "conversations"],
+              "query": [
+                { "key": "select", "value": "id,patient_id,doctor_id" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -69,6 +69,8 @@ export function formatDoctorWelcomeMessage(p: DoctorWelcomePayload) {
     "3. Create your password",
     "",
     "After that, use the same link with your email, password, and Doctor ID.",
+    "",
+    "Once signed in, open Profile to update your bio, photo, and availability times. Changes sync with the admin panel.",
     ...whatsappGroupBlockText(),
     "",
     "— Eagle Medical",
@@ -114,6 +116,7 @@ export async function notifyDoctorWelcome(
         <li>Create your password</li>
       </ol>
       <p style="color: #64748b; font-size: 0.92rem;">After that, use the same link with your email, password, and Doctor ID.</p>
+      <p>Once signed in, open <strong>Profile</strong> to update your bio, photo, and availability. Changes sync with the admin panel.</p>
       ${whatsappGroupBlockHtml()}
       <p style="margin-top: 1.5rem;">— Eagle Medical</p>
     </div>

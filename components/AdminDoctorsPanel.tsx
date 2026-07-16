@@ -498,7 +498,7 @@ export default function AdminDoctorsPanel({
               <h2>{editingId ? "Edit doctor" : "Add new doctor"}</h2>
               <p className={styles.formSub}>
                 {editingId
-                  ? "Update profile, availability, and login details."
+                  ? "Update profile, availability, and login details. Doctors can also edit their profile in the portal — both sides share the same record."
                   : "Register a specialist — welcome email sends on save."}
               </p>
             </div>
