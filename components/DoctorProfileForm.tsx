@@ -22,6 +22,7 @@ import styles from "./DoctorProfileForm.module.css";
 type Props = {
   loginCode: string;
   doctor: Doctor;
+  embedded?: boolean;
 };
 
 function toggleWeekday(days: string[], day: WeekdayKey): string[] {
@@ -87,7 +88,11 @@ function doctorToForm(d: Doctor): DoctorSelfProfileData {
   };
 }
 
-export default function DoctorProfileForm({ loginCode, doctor }: Props) {
+export default function DoctorProfileForm({
+  loginCode,
+  doctor,
+  embedded = true,
+}: Props) {
   const { t } = useLanguage();
   const router = useRouter();
   const [form, setForm] = useState<DoctorSelfProfileData>(() =>
@@ -159,7 +164,10 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
     form.name_en?.trim() || form.name.trim() || doctor.name;
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.form} ${embedded ? "" : styles.formStandalone}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.readOnlyBar}>
         <div>
           <span>{t.doctorAuth.profileId}</span>
@@ -181,8 +189,9 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
 
       <p className={styles.hint}>{t.doctorAuth.profileEditHint}</p>
 
-      <div className={styles.photoRow}>
-        <div className={styles.photoPreview}>
+      <div className={styles.photoSection}>
+        <div className={styles.photoRow}>
+          <div className={styles.photoPreview}>
           {form.image_url ? (
             <Image
               src={form.image_url}
@@ -222,7 +231,10 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
           )}
         </div>
       </div>
+      </div>
 
+      <div className={styles.formSection}>
+        <h3 className={styles.sectionTitle}>{t.doctorAuth.profileName}</h3>
       <div className={styles.grid}>
         <label className={styles.field}>
           <span>{t.doctorAuth.profileNameAm} *</span>
@@ -293,7 +305,10 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
           </select>
         </label>
       </div>
+      </div>
 
+      <div className={styles.formSection}>
+        <h3 className={styles.sectionTitle}>{t.doctorAuth.profileBio}</h3>
       <label className={styles.field}>
         <span>{t.doctorAuth.profileBioAm}</span>
         <textarea
@@ -311,7 +326,9 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
           rows={3}
         />
       </label>
+      </div>
 
+      <div className={styles.formSection}>
       <div className={styles.grid}>
         <label className={styles.field}>
           <span>{t.doctorAuth.profileExperience}</span>
@@ -344,11 +361,14 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
           />
         </label>
       </div>
+      </div>
 
+      <div className={styles.formSection}>
       <h3 className={styles.sectionTitle}>
         {t.doctorAuth.profileAvailability}
       </h3>
 
+      <div className={styles.availabilityGrid}>
       <fieldset className={styles.availabilityFieldset}>
         <legend>{t.doctorAuth.profileMorning}</legend>
         <AvailabilityDaysPicker
@@ -419,10 +439,13 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
           />
         </div>
       </fieldset>
+      </div>
+      </div>
 
       {error && <p className={styles.error}>{error}</p>}
       {message && <p className={styles.success}>{message}</p>}
 
+      <div className={styles.formFooter}>
       <button
         type="submit"
         className={styles.saveBtn}
@@ -431,6 +454,7 @@ export default function DoctorProfileForm({ loginCode, doctor }: Props) {
         <Save size={18} />
         {saving ? t.doctorAuth.profileSaving : t.doctorAuth.profileSave}
       </button>
+      </div>
     </form>
   );
 }

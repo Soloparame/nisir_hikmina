@@ -191,7 +191,7 @@ export default function DoctorDashboardPanel({
       </nav>
 
       {tab === "profile" ? (
-        <section className={styles.section}>
+        <section className={`${styles.section} ${styles.sectionProfile}`}>
           <div className={styles.sectionHead}>
             <h2>{t.doctorAuth.profileTitle}</h2>
             <p>{t.doctorAuth.profileSub}</p>
