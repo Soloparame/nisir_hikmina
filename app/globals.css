@@ -38,6 +38,15 @@ body {
   overflow-x: clip;
 }
 
+/* Desktop visual density: match the spacious feel of browser zoom at 90%. */
+@media (min-width: 769px) {
+  body {
+    zoom: 0.9;
+    width: 111.111%;
+    margin-left: -5.5555%;
+  }
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--ff-display);
   font-weight: 700;
