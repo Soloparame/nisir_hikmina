@@ -38,12 +38,10 @@ body {
   overflow-x: clip;
 }
 
-/* Desktop visual density: match the spacious feel of browser zoom at 90%. */
+/* Compact desktop density without CSS zoom (zoom interferes with sticky UI). */
 @media (min-width: 769px) {
-  body {
-    zoom: 0.9;
-    width: 111.111%;
-    margin-left: -5.5555%;
+  html {
+    font-size: 90%;
   }
 }
 

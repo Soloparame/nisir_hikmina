@@ -231,27 +231,54 @@
 
 @media (max-width: 768px) {
   .navShell {
+    position: sticky;
+    top: 0;
+    z-index: 200;
     padding: 0.5rem 0.65rem 0.25rem;
   }
 
   .nav {
     border-radius: 18px;
+    width: 100%;
   }
 
   .navInner {
+    gap: 0.5rem;
     padding: 0.5rem 0.75rem;
+  }
+
+  .logo {
+    gap: 8px;
+    flex: 1;
+  }
+
+  .logoMark {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .logoText strong {
+    font-size: 0.95rem;
   }
 
   .links {
     display: none;
   }
 
-  .bookBtn {
+  .bookBtn,
+  .authLink,
+  .iconBtn {
     display: none;
+  }
+
+  .actions {
+    gap: 6px;
   }
 
   .menuBtn {
     display: flex;
+    flex-shrink: 0;
   }
 
   .mobileMenu {
@@ -299,5 +326,35 @@
 
   .logoText small {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .navShell {
+    padding: 0.4rem 0.45rem 0.2rem;
+  }
+
+  .navInner {
+    padding: 0.45rem 0.6rem;
+  }
+
+  .logoMark {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logoText strong {
+    font-size: 0.86rem;
+    letter-spacing: -0.2px;
+  }
+
+  .menuBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .mobileMenu {
+    padding: 0.4rem 0.8rem 0.85rem;
   }
 }

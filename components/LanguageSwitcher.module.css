@@ -41,3 +41,16 @@
 .label {
   white-space: nowrap;
 }
+
+@media (max-width: 480px) {
+  .switcher {
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .label {
+    display: none;
+  }
+}
