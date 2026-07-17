@@ -13,9 +13,16 @@ export default function ServiceCategoryIcon({ categoryKey, label }: Props) {
     return <div className={styles.fallback} aria-label={label} role="img" />;
   }
 
+  const { Icon, alt, bg, color } = icon;
+
   return (
-    <div className={styles.iconShell} style={{ backgroundColor: icon.bg }}>
-      <img className={styles.icon} src={icon.src} alt={icon.alt} loading="lazy" />
+    <div
+      className={styles.iconShell}
+      style={{ backgroundColor: bg }}
+      role="img"
+      aria-label={alt}
+    >
+      <Icon className={styles.icon} color={color} strokeWidth={2} aria-hidden />
     </div>
   );
 }

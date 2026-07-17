@@ -628,10 +628,13 @@
 
 .serviceImageWrapper {
   position: relative;
-  width: 100%;
+  box-sizing: border-box;
+  width: 124px;
+  height: 124px;
   max-width: 124px;
+  flex: 0 0 auto;
   aspect-ratio: 1 / 1;
-  margin-bottom: 0.85rem;
+  margin: 0 auto 0.85rem;
   border-radius: 50%;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.92);
@@ -869,7 +872,9 @@
   }
 
   .serviceImageWrapper {
-    max-width: 110px;
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
   }
 
   .hero {
@@ -1017,13 +1022,71 @@
     position: static;
   }
 
+  /* Safe phone layout for all mobile widths — fixed icon size, no clipped circles */
   .servicesGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem 0.85rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+    width: 100%;
+  }
+
+  .serviceItemLink {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .serviceItem {
+    width: 100%;
+    min-height: 78px;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.8rem;
+    text-align: left;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .serviceItem:hover {
+    transform: none;
   }
 
   .serviceImageWrapper {
-    max-width: 96px;
+    width: 58px;
+    height: 58px;
+    max-width: 58px;
+    min-width: 58px;
+    flex: 0 0 58px;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    box-shadow:
+      0 7px 18px rgba(0, 0, 0, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .serviceItem:hover .serviceImageWrapper {
+    transform: none;
+  }
+
+  .serviceInfo {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .serviceNumber {
+    display: inline-block;
+    margin: 0 0.35rem 0 0;
+    font-size: 0.72rem;
+    vertical-align: top;
+  }
+
+  .serviceInfo h4 {
+    display: inline;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
   }
 
   .footerLinks {
@@ -1044,5 +1107,26 @@
 
   .heroIllustration {
     max-width: min(300px, 96vw);
+  }
+
+  .servicesSection {
+    padding: 3rem 0;
+    overflow: hidden;
+  }
+
+  .servicesContainer {
+    padding: 0 0.85rem;
+    gap: 1.25rem;
+  }
+
+  .servicesHeader .sectionTitle {
+    font-size: clamp(1.7rem, 8vw, 2.15rem);
+    margin-bottom: 0.65rem;
+  }
+
+  .servicesHeader .sectionSub {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
   }
 }

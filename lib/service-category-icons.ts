@@ -1,110 +1,162 @@
-export const SERVICE_CATEGORY_ICONS: Record<
-  string,
-  { src: string; alt: string; bg: string }
-> = {
-  gp_residents: {
-    src: "https://api.iconify.design/lucide/stethoscope.svg?color=%23004d4d",
-    alt: "Stethoscope icon",
-    bg: "#dbeafe",
-  },
-  mind_mental_health: {
-    src: "https://api.iconify.design/lucide/brain.svg?color=%237c3aed",
-    alt: "Brain icon",
-    bg: "#ede9fe",
-  },
-  family_medicine: {
-    src: "https://api.iconify.design/lucide/house.svg?color=%23008966",
-    alt: "Home icon",
-    bg: "#dcfce7",
-  },
-  skin_hair: {
-    src: "https://api.iconify.design/lucide/sparkles.svg?color=%23ea580c",
-    alt: "Skin care icon",
-    bg: "#ffedd5",
-  },
-  internal_medicine: {
-    src: "https://api.iconify.design/lucide/heart-pulse.svg?color=%23dc2626",
-    alt: "Heart pulse icon",
-    bg: "#dbeafe",
-  },
-  womens_pregnancy: {
-    src: "https://api.iconify.design/lucide/heart.svg?color=%23db2777",
-    alt: "Women's health icon",
-    bg: "#fce7f3",
-  },
-  pediatrics: {
-    src: "https://api.iconify.design/lucide/baby.svg?color=%23a16207",
-    alt: "Pediatrics icon",
-    bg: "#fef3c7",
-  },
-  neurology: {
-    src: "https://api.iconify.design/lucide/brain-circuit.svg?color=%236b21a8",
-    alt: "Neurology icon",
-    bg: "#ede9fe",
-  },
-  emergency_urgent: {
-    src: "https://api.iconify.design/lucide/siren.svg?color=%23dc2626",
-    alt: "Emergency icon",
-    bg: "#fee2e2",
-  },
-  aesthetic_sexual_health: {
-    src: "https://api.iconify.design/lucide/leaf.svg?color=%23089981",
-    alt: "Aesthetic health icon",
-    bg: "#dcfce7",
-  },
-  pain_anesthesia: {
-    src: "https://api.iconify.design/lucide/activity.svg?color=%2302569b",
-    alt: "Pain management icon",
-    bg: "#dbeafe",
-  },
-  ent: {
-    src: "https://api.iconify.design/lucide/ear.svg?color=%23b45309",
-    alt: "ENT icon",
-    bg: "#cffafe",
-  },
-  ophthalmology: {
-    src: "https://api.iconify.design/lucide/eye.svg?color=%231d4ed8",
-    alt: "Eye icon",
-    bg: "#dbeafe",
-  },
-  orthopedics: {
-    src: "https://api.iconify.design/lucide/bone.svg?color=%230f766e",
-    alt: "Orthopedics icon",
-    bg: "#dcfce7",
-  },
-  dental: {
-    src: "https://api.iconify.design/lucide/heart-plus.svg?color=%230ea5e9",
-    alt: "Dental care icon",
-    bg: "#cffafe",
-  },
-  surgery: {
-    src: "https://api.iconify.design/lucide/scissors.svg?color=%2302569b",
-    alt: "Surgery icon",
-    bg: "#dbeafe",
-  },
-  radiology: {
-    src: "https://api.iconify.design/lucide/scan.svg?color=%237c3aed",
-    alt: "Radiology icon",
-    bg: "#ede9fe",
-  },
-  pathology: {
-    src: "https://api.iconify.design/lucide/microscope.svg?color=%23089981",
-    alt: "Microscope icon",
-    bg: "#dcfce7",
-  },
-  physiotherapy: {
-    src: "https://api.iconify.design/lucide/accessibility.svg?color=%231d4ed8",
-    alt: "Rehabilitation icon",
-    bg: "#dbeafe",
-  },
-  nutrition: {
-    src: "https://api.iconify.design/lucide/apple.svg?color=%2316a34a",
-    alt: "Nutrition icon",
-    bg: "#fef3c7",
-  },
-  speech_therapy: {
-    src: "https://api.iconify.design/lucide/messages-square.svg?color=%233b82f6",
-    alt: "Speech therapy icon",
-    bg: "#e9d5ff",
-  },
+import type { LucideIcon } from "lucide-react";
+import {
+  Accessibility,
+  Activity,
+  Apple,
+  Baby,
+  Bone,
+  Brain,
+  BrainCircuit,
+  Ear,
+  Eye,
+  Heart,
+  HeartPlus,
+  HeartPulse,
+  House,
+  Leaf,
+  MessagesSquare,
+  Microscope,
+  Scan,
+  Scissors,
+  Siren,
+  Sparkles,
+  Stethoscope,
+} from "lucide-react";
+
+export type ServiceCategoryIconConfig = {
+  Icon: LucideIcon;
+  alt: string;
+  bg: string;
+  color: string;
 };
+
+/** Local Lucide icons — no external CDN (works offline / all networks). */
+export const SERVICE_CATEGORY_ICONS: Record<string, ServiceCategoryIconConfig> =
+  {
+    gp_residents: {
+      Icon: Stethoscope,
+      alt: "Stethoscope icon",
+      bg: "#dbeafe",
+      color: "#004d4d",
+    },
+    mind_mental_health: {
+      Icon: Brain,
+      alt: "Brain icon",
+      bg: "#ede9fe",
+      color: "#7c3aed",
+    },
+    family_medicine: {
+      Icon: House,
+      alt: "Home icon",
+      bg: "#dcfce7",
+      color: "#008966",
+    },
+    skin_hair: {
+      Icon: Sparkles,
+      alt: "Skin care icon",
+      bg: "#ffedd5",
+      color: "#ea580c",
+    },
+    internal_medicine: {
+      Icon: HeartPulse,
+      alt: "Heart pulse icon",
+      bg: "#dbeafe",
+      color: "#dc2626",
+    },
+    womens_pregnancy: {
+      Icon: Heart,
+      alt: "Women's health icon",
+      bg: "#fce7f3",
+      color: "#db2777",
+    },
+    pediatrics: {
+      Icon: Baby,
+      alt: "Pediatrics icon",
+      bg: "#fef3c7",
+      color: "#a16207",
+    },
+    neurology: {
+      Icon: BrainCircuit,
+      alt: "Neurology icon",
+      bg: "#ede9fe",
+      color: "#6b21a8",
+    },
+    emergency_urgent: {
+      Icon: Siren,
+      alt: "Emergency icon",
+      bg: "#fee2e2",
+      color: "#dc2626",
+    },
+    aesthetic_sexual_health: {
+      Icon: Leaf,
+      alt: "Aesthetic health icon",
+      bg: "#dcfce7",
+      color: "#089981",
+    },
+    pain_anesthesia: {
+      Icon: Activity,
+      alt: "Pain management icon",
+      bg: "#dbeafe",
+      color: "#02569b",
+    },
+    ent: {
+      Icon: Ear,
+      alt: "ENT icon",
+      bg: "#cffafe",
+      color: "#b45309",
+    },
+    ophthalmology: {
+      Icon: Eye,
+      alt: "Eye icon",
+      bg: "#dbeafe",
+      color: "#1d4ed8",
+    },
+    orthopedics: {
+      Icon: Bone,
+      alt: "Orthopedics icon",
+      bg: "#dcfce7",
+      color: "#0f766e",
+    },
+    dental: {
+      Icon: HeartPlus,
+      alt: "Dental care icon",
+      bg: "#cffafe",
+      color: "#0ea5e9",
+    },
+    surgery: {
+      Icon: Scissors,
+      alt: "Surgery icon",
+      bg: "#dbeafe",
+      color: "#02569b",
+    },
+    radiology: {
+      Icon: Scan,
+      alt: "Radiology icon",
+      bg: "#ede9fe",
+      color: "#7c3aed",
+    },
+    pathology: {
+      Icon: Microscope,
+      alt: "Microscope icon",
+      bg: "#dcfce7",
+      color: "#089981",
+    },
+    physiotherapy: {
+      Icon: Accessibility,
+      alt: "Rehabilitation icon",
+      bg: "#dbeafe",
+      color: "#1d4ed8",
+    },
+    nutrition: {
+      Icon: Apple,
+      alt: "Nutrition icon",
+      bg: "#fef3c7",
+      color: "#16a34a",
+    },
+    speech_therapy: {
+      Icon: MessagesSquare,
+      alt: "Speech therapy icon",
+      bg: "#e9d5ff",
+      color: "#3b82f6",
+    },
+  };
