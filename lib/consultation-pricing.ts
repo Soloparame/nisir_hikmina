@@ -99,3 +99,30 @@ export const ALL_PRICING_TIERS: PricingTier[] = [
   "specialist",
   "senior",
 ];
+
+/** Display order: Subspecialists → Specialists → Residents → GPs */
+const TIER_DISPLAY_RANK: Record<PricingTier, number> = {
+  senior: 0,
+  specialist: 1,
+  resident: 2,
+  gp: 3,
+};
+
+export function sortDoctorsByTier<T extends Doctor>(doctors: T[]): T[] {
+  return [...doctors].sort((a, b) => {
+    const tierDiff =
+      TIER_DISPLAY_RANK[getDoctorPricingTier(a)] -
+      TIER_DISPLAY_RANK[getDoctorPricingTier(b)];
+    if (tierDiff !== 0) return tierDiff;
+
+    const sortDiff = (a.sort_order ?? 0) - (b.sort_order ?? 0);
+    if (sortDiff !== 0) return sortDiff;
+
+    const expDiff = (b.experience_years ?? 0) - (a.experience_years ?? 0);
+    if (expDiff !== 0) return expDiff;
+
+    const nameA = (a.name_en || a.name || "").toLowerCase();
+    const nameB = (b.name_en || b.name || "").toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+}

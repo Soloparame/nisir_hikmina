@@ -19,7 +19,11 @@ import {
   getDoctorAvailabilitySlots,
 } from "../lib/doctor-availability";
 import type { Doctor } from "../lib/types/doctor";
-import { PUBLIC_DOCTOR_COLUMNS } from "../lib/types/doctor";
+import {
+  PUBLIC_DOCTOR_COLUMNS,
+  PUBLIC_DOCTOR_COLUMNS_WITH_TIER,
+} from "../lib/types/doctor";
+import { sortDoctorsByTier } from "../lib/consultation-pricing";
 import styles from "./DoctorPicker.module.css";
 
 type Props = {
@@ -47,6 +51,7 @@ export default function DoctorPicker({
 
   useEffect(() => {
     if (initialDoctors.length > 0) {
+      setDoctors(sortDoctorsByTier(initialDoctors));
       setLoading(false);
       return;
     }
@@ -61,23 +66,40 @@ export default function DoctorPicker({
         return;
       }
 
-      const { data, error } = await supabase
+      const primary = await supabase
         .from("doctors")
-        .select(PUBLIC_DOCTOR_COLUMNS)
+        .select(PUBLIC_DOCTOR_COLUMNS_WITH_TIER)
         .eq("is_active", true)
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: false });
 
-      if (error) {
-        setLoadError(error.message);
-      } else if (data) {
-        setDoctors(data as Doctor[]);
+      if (
+        primary.error &&
+        (primary.error.message?.includes("pricing_tier") ||
+          primary.error.message?.includes("morning_days"))
+      ) {
+        const fallback = await supabase
+          .from("doctors")
+          .select(PUBLIC_DOCTOR_COLUMNS)
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true })
+          .order("created_at", { ascending: false });
+
+        if (fallback.error) {
+          setLoadError(fallback.error.message);
+        } else if (fallback.data) {
+          setDoctors(sortDoctorsByTier(fallback.data as Doctor[]));
+        }
+      } else if (primary.error) {
+        setLoadError(primary.error.message);
+      } else if (primary.data) {
+        setDoctors(sortDoctorsByTier(primary.data as Doctor[]));
       }
       setLoading(false);
     }
 
     load();
-  }, [initialDoctors.length]);
+  }, [initialDoctors]);
 
   const selected = doctors.find((d) => d.id === selectedId);
 
@@ -98,14 +120,17 @@ export default function DoctorPicker({
     });
   }, [selectedCategory, subcategorySearch]);
 
-  const filteredDoctors = doctors.filter((d) => {
-    const sub = d.specialization_en ?? d.specialization;
-    const cat = d.category ?? findCategoryLabelBySubcategory(sub);
+  const filteredDoctors = useMemo(() => {
+    const list = doctors.filter((d) => {
+      const sub = d.specialization_en ?? d.specialization;
+      const cat = d.category ?? findCategoryLabelBySubcategory(sub);
 
-    if (selectedCategory !== "All" && cat !== selectedCategory) return false;
-    if (selectedSubcategory && sub !== selectedSubcategory) return false;
-    return true;
-  });
+      if (selectedCategory !== "All" && cat !== selectedCategory) return false;
+      if (selectedSubcategory && sub !== selectedSubcategory) return false;
+      return true;
+    });
+    return sortDoctorsByTier(list);
+  }, [doctors, selectedCategory, selectedSubcategory]);
 
   const hasActiveFilter =
     selectedCategory !== "All" || selectedSubcategory !== null;

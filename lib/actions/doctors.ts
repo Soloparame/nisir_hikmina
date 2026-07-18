@@ -13,6 +13,7 @@ import { createServiceClient } from "../supabase/admin";
 import { createClient } from "../supabase/server";
 import type {
   AppointmentInsert,
+  Doctor,
   DoctorFormData,
   DoctorSelfProfileData,
 } from "../types/doctor";
@@ -21,6 +22,7 @@ import {
   PUBLIC_DOCTOR_COLUMNS_NO_DAYS,
   PUBLIC_DOCTOR_COLUMNS_WITH_TIER,
 } from "../types/doctor";
+import { sortDoctorsByTier } from "../consultation-pricing";
 
 async function getAuthedClient() {
   const supabase = await createClient();
@@ -55,7 +57,7 @@ export async function getActiveDoctors() {
     .order("created_at", { ascending: false });
 
   if (!primary.error) {
-    return primary.data ?? [];
+    return sortDoctorsByTier((primary.data as Doctor[] | null) ?? []);
   }
 
   if (
@@ -74,53 +76,124 @@ export async function getActiveDoctors() {
       return [];
     }
 
-    return fallback.data ?? [];
+    return sortDoctorsByTier((fallback.data as Doctor[] | null) ?? []);
   }
 
   console.error("getActiveDoctors:", primary.error.message);
   return [];
 }
 
+/** Featured on homepage even if below experience threshold. */
+const HOMEPAGE_FEATURED_DOCTOR_NAMES = [
+  "Bemulu Fasika",
+  "Tadesse Fenat",
+  "Temesgen Adugnaw",
+];
+
+function normalizeDoctorName(value: string | null | undefined) {
+  return (value ?? "")
+    .toLowerCase()
+    .replace(/^dr\.?\s*/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isHomepageFeaturedDoctor(doctor: {
+  name?: string | null;
+  name_en?: string | null;
+}) {
+  const names = [
+    normalizeDoctorName(doctor.name),
+    normalizeDoctorName(doctor.name_en),
+  ].filter(Boolean);
+
+  return HOMEPAGE_FEATURED_DOCTOR_NAMES.some((featured) => {
+    const target = normalizeDoctorName(featured);
+    return names.some(
+      (n) => n === target || n.includes(target) || target.includes(n)
+    );
+  });
+}
+
+function featuredDoctorSortIndex(doctor: {
+  name?: string | null;
+  name_en?: string | null;
+}) {
+  const names = [
+    normalizeDoctorName(doctor.name),
+    normalizeDoctorName(doctor.name_en),
+  ].filter(Boolean);
+
+  return HOMEPAGE_FEATURED_DOCTOR_NAMES.findIndex((featured) => {
+    const target = normalizeDoctorName(featured);
+    return names.some(
+      (n) => n === target || n.includes(target) || target.includes(n)
+    );
+  });
+}
+
 export async function getExperiencedDoctors(minYears = 4) {
   const supabase = await createClient();
   if (!supabase) return [];
 
-  const primary = await supabase
-    .from("doctors")
-    .select(PUBLIC_DOCTOR_COLUMNS_WITH_TIER)
-    .eq("is_active", true)
-    .gte("experience_years", minYears)
-    .order("experience_years", { ascending: false })
-    .order("sort_order", { ascending: true })
-    .limit(8);
-
-  if (!primary.error) {
-    return primary.data ?? [];
+  async function selectDoctors(columns: string) {
+    return supabase!
+      .from("doctors")
+      .select(columns)
+      .eq("is_active", true)
+      .order("experience_years", { ascending: false })
+      .order("sort_order", { ascending: true });
   }
 
-  if (
+  let rows: Record<string, unknown>[] = [];
+  const primary = await selectDoctors(PUBLIC_DOCTOR_COLUMNS_WITH_TIER);
+
+  if (!primary.error) {
+    rows = (primary.data as Record<string, unknown>[] | null) ?? [];
+  } else if (
     primary.error.message?.includes("pricing_tier") ||
     primary.error.message?.includes("morning_days")
   ) {
-    const fallback = await supabase
-      .from("doctors")
-      .select(PUBLIC_DOCTOR_COLUMNS_NO_DAYS)
-      .eq("is_active", true)
-      .gte("experience_years", minYears)
-      .order("experience_years", { ascending: false })
-      .order("sort_order", { ascending: true })
-      .limit(8);
-
+    const fallback = await selectDoctors(PUBLIC_DOCTOR_COLUMNS_NO_DAYS);
     if (fallback.error) {
       console.error("getExperiencedDoctors:", fallback.error.message);
       return [];
     }
-
-    return fallback.data ?? [];
+    rows = (fallback.data as Record<string, unknown>[] | null) ?? [];
+  } else {
+    console.error("getExperiencedDoctors:", primary.error.message);
+    return [];
   }
 
-  console.error("getExperiencedDoctors:", primary.error.message);
-  return [];
+  const featured = rows
+    .filter((d) =>
+      isHomepageFeaturedDoctor({
+        name: d.name as string | null,
+        name_en: d.name_en as string | null,
+      })
+    )
+    .sort(
+      (a, b) =>
+        featuredDoctorSortIndex({
+          name: a.name as string | null,
+          name_en: a.name_en as string | null,
+        }) -
+        featuredDoctorSortIndex({
+          name: b.name as string | null,
+          name_en: b.name_en as string | null,
+        })
+    );
+
+  const featuredIds = new Set(featured.map((d) => d.id as string));
+
+  const experienced = rows.filter(
+    (d) =>
+      !featuredIds.has(d.id as string) &&
+      Number(d.experience_years ?? 0) >= minYears
+  );
+
+  // Featured trio first (exceptionally), then other experienced doctors.
+  return [...featured, ...experienced].slice(0, 8);
 }
 
 export async function getAllDoctorsAdmin() {

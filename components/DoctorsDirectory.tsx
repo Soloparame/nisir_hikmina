@@ -12,6 +12,7 @@ import {
 } from "../lib/doctor-display";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import type { Doctor } from "../lib/types/doctor";
+import { sortDoctorsByTier } from "../lib/consultation-pricing";
 import styles from "./DoctorsDirectory.module.css";
 
 type Props = {
@@ -40,14 +41,16 @@ export default function DoctorsDirectory({
     }
 
     const term = query.trim().toLowerCase();
-    if (!term) return list;
+    if (term) {
+      list = list.filter((doctor) => {
+        const names = [doctor.name, doctor.name_en]
+          .filter(Boolean)
+          .map((name) => name!.toLowerCase());
+        return names.some((name) => name.includes(term));
+      });
+    }
 
-    return list.filter((doctor) => {
-      const names = [doctor.name, doctor.name_en]
-        .filter(Boolean)
-        .map((name) => name!.toLowerCase());
-      return names.some((name) => name.includes(term));
-    });
+    return sortDoctorsByTier(list);
   }, [doctors, activeCategory, query]);
 
   return (
