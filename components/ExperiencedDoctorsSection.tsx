@@ -67,7 +67,7 @@ export default function ExperiencedDoctorsSection({ doctors }: Props) {
               {getDoctorBio(d, locale) && (
                 <p className={styles.bio}>{getDoctorBio(d, locale)}</p>
               )}
-              <Link href="/book" className={styles.bookBtn}>
+              <Link href={`/book?doctor=${d.id}`} className={styles.bookBtn}>
                 {t.nav.bookAppointment}
               </Link>
             </article>

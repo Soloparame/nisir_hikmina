@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
@@ -23,17 +23,9 @@ export default function BookFlow({ initialDoctors, initialDoctorId }: Props) {
   const [step, setStep] = useState<"doctor" | "form">("doctor");
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [checkingAuth, setCheckingAuth] = useState(false);
+  const appliedInitialDoctor = useRef(false);
 
-  useEffect(() => {
-    if (!initialDoctorId || initialDoctors.length === 0) return;
-    const found = initialDoctors.find((d) => d.id === initialDoctorId);
-    if (found) {
-      setDoctor(found);
-      setStep("form");
-    }
-  }, [initialDoctorId, initialDoctors]);
-
-  async function handleDoctorSelect(selected: Doctor) {
+  async function continueWithDoctor(selected: Doctor) {
     setCheckingAuth(true);
 
     const supabase = createClient();
@@ -49,8 +41,9 @@ export default function BookFlow({ initialDoctors, initialDoctorId }: Props) {
     } = await supabase.auth.getUser();
 
     if (!user) {
+      const bookPath = `/book?doctor=${encodeURIComponent(selected.id)}`;
       router.push(
-        `/login?redirect=${encodeURIComponent("/book")}&doctor=${selected.id}`
+        `/login?redirect=${encodeURIComponent(bookPath)}&doctor=${encodeURIComponent(selected.id)}`
       );
       setCheckingAuth(false);
       return;
@@ -59,6 +52,37 @@ export default function BookFlow({ initialDoctors, initialDoctorId }: Props) {
     setDoctor(selected);
     setStep("form");
     setCheckingAuth(false);
+
+    // Keep URL in sync so refresh / share keeps the selected doctor
+    if (typeof window !== "undefined") {
+      const next = `/book?doctor=${encodeURIComponent(selected.id)}`;
+      if (window.location.pathname + window.location.search !== next) {
+        router.replace(next);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (appliedInitialDoctor.current) return;
+    if (!initialDoctorId || initialDoctors.length === 0) return;
+
+    const found = initialDoctors.find((d) => d.id === initialDoctorId);
+    if (!found) return;
+
+    appliedInitialDoctor.current = true;
+    void continueWithDoctor(found);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once when doctors + id are ready
+  }, [initialDoctorId, initialDoctors]);
+
+  async function handleDoctorSelect(selected: Doctor) {
+    await continueWithDoctor(selected);
+  }
+
+  function handleChangeDoctor() {
+    setStep("doctor");
+    setDoctor(null);
+    appliedInitialDoctor.current = true;
+    router.replace("/book");
   }
 
   return (
@@ -93,20 +117,21 @@ export default function BookFlow({ initialDoctors, initialDoctorId }: Props) {
 
       <div className={styles.pageBody}>
         {step === "doctor" ? (
-          <DoctorPicker
-            initialDoctors={initialDoctors}
-            onSelect={handleDoctorSelect}
-            checkingAuth={checkingAuth}
-          />
+          checkingAuth && initialDoctorId ? (
+            <div className={styles.loadingBox}>
+              <div className={styles.spinner} />
+              <p>{t.book.loadingDoctors}</p>
+            </div>
+          ) : (
+            <DoctorPicker
+              initialDoctors={initialDoctors}
+              onSelect={handleDoctorSelect}
+              checkingAuth={checkingAuth}
+            />
+          )
         ) : (
           doctor && (
-            <BookForm
-              doctor={doctor}
-              onChangeDoctor={() => {
-                setStep("doctor");
-                setDoctor(null);
-              }}
-            />
+            <BookForm doctor={doctor} onChangeDoctor={handleChangeDoctor} />
           )
         )}
       </div>

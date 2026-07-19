@@ -66,9 +66,11 @@ function SignupForm() {
       return;
     }
 
-    const dest = doctorId
-      ? `${redirect}${redirect.includes("?") ? "&" : "?"}doctor=${doctorId}`
-      : redirect;
+    const dest = (() => {
+      if (!doctorId) return redirect;
+      if (redirect.includes(`doctor=${doctorId}`)) return redirect;
+      return `${redirect}${redirect.includes("?") ? "&" : "?"}doctor=${doctorId}`;
+    })();
     router.push(dest);
     router.refresh();
   }
