@@ -11,6 +11,7 @@ import {
   Phone,
   User,
 } from "lucide-react";
+import PatientTerms from "../../components/PatientTerms";
 import { signUpPatientClient } from "../../lib/auth/browser";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import styles from "../auth.module.css";
@@ -23,6 +24,7 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,9 +37,15 @@ function SignupForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
     setSuccess("");
+
+    if (!acceptedTerms) {
+      setError(t.auth.patientTermsRequired);
+      return;
+    }
+
+    setLoading(true);
 
     const result = await signUpPatientClient({
       email,
@@ -190,6 +198,12 @@ function SignupForm() {
             </div>
           </div>
 
+          <PatientTerms
+            requireAccept
+            accepted={acceptedTerms}
+            onAcceptedChange={setAcceptedTerms}
+          />
+
           {error && (
             <div className={`${styles.alert} ${styles.alertError}`}>{error}</div>
           )}
@@ -199,7 +213,11 @@ function SignupForm() {
             </div>
           )}
 
-          <button className={styles.btn} type="submit" disabled={loading}>
+          <button
+            className={styles.btn}
+            type="submit"
+            disabled={loading || !acceptedTerms}
+          >
             {loading ? t.auth.signingUp : t.auth.signupBtn}
           </button>
 

@@ -41,6 +41,31 @@ function whatsappGroupBlockHtml() {
       </div>`;
 }
 
+function doctorTermsBlockText() {
+  return [
+    "",
+    "Doctor Terms",
+    "",
+    "Professional Verification — Doctors must provide accurate qualifications and maintain valid professional licenses and certifications.",
+    "",
+    "Professional Responsibilities — Doctors are responsible for the medical advice, diagnosis, and services they provide to patients.",
+    "",
+    "Patient Privacy & Conduct — Doctors must protect patient information and maintain professional and ethical conduct.",
+  ];
+}
+
+function doctorTermsBlockHtml() {
+  return `
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.15rem; margin: 1.25rem 0;">
+        <p style="margin: 0 0 0.75rem;"><strong>Doctor Terms</strong></p>
+        <ul style="margin: 0; padding-left: 1.15rem; font-size: 0.9rem; color: #334155;">
+          <li style="margin-bottom: 0.55rem;"><strong>Professional Verification</strong> — Doctors must provide accurate qualifications and maintain valid professional licenses and certifications.</li>
+          <li style="margin-bottom: 0.55rem;"><strong>Professional Responsibilities</strong> — Doctors are responsible for the medical advice, diagnosis, and services they provide to patients.</li>
+          <li style="margin-bottom: 0;"><strong>Patient Privacy &amp; Conduct</strong> — Doctors must protect patient information and maintain professional and ethical conduct.</li>
+        </ul>
+      </div>`;
+}
+
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")
@@ -72,6 +97,7 @@ export function formatDoctorWelcomeMessage(p: DoctorWelcomePayload) {
     "",
     "Once signed in, open Profile to update your bio, photo, and availability times. Changes sync with the admin panel.",
     ...whatsappGroupBlockText(),
+    ...doctorTermsBlockText(),
     "",
     "— Eagle Medical",
   ];
@@ -118,6 +144,7 @@ export async function notifyDoctorWelcome(
       <p style="color: #64748b; font-size: 0.92rem;">After that, use the same link with your email, password, and Doctor ID.</p>
       <p>Once signed in, open <strong>Profile</strong> to update your bio, photo, and availability. Changes sync with the admin panel.</p>
       ${whatsappGroupBlockHtml()}
+      ${doctorTermsBlockHtml()}
       <p style="margin-top: 1.5rem;">— Eagle Medical</p>
     </div>
   `;

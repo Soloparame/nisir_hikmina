@@ -51,6 +51,7 @@ export default function Navbar() {
     { href: "/about", label: t.nav.about },
     { href: "/doctors", label: t.nav.doctors },
     { href: "/whats-new", label: t.nav.whatsNew },
+    { href: "/privacy", label: t.nav.privacy },
   ];
 
   function linkClass(href: string) {

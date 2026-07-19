@@ -30,12 +30,39 @@ export const PRESCRIPTION_SERVICES = {
 export function getDoctorPricingTier(doctor: Doctor): PricingTier {
   const tier = doctor.pricing_tier;
   if (
+    tier === "gp" ||
     tier === "resident" ||
     tier === "specialist" ||
     tier === "senior"
   ) {
     return tier;
   }
+
+  // Infer when pricing_tier is missing so lists still sort correctly
+  const text =
+    `${doctor.specialization_en ?? ""} ${doctor.specialization ?? ""} ${doctor.category ?? ""}`.toLowerCase();
+
+  if (
+    text.includes("subspecial") ||
+    text.includes("consultant") ||
+    text.includes("senior specialist")
+  ) {
+    return "senior";
+  }
+  if (text.includes("resident")) {
+    return "resident";
+  }
+  if (text.includes("specialist")) {
+    return "specialist";
+  }
+  if (
+    text.includes("general practitioner") ||
+    text.includes("(gp)") ||
+    /\bgp\b/.test(text)
+  ) {
+    return "gp";
+  }
+
   return "gp";
 }
 

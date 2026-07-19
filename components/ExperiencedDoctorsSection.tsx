@@ -8,6 +8,7 @@ import {
   getDoctorName,
   getDoctorSpecialization,
 } from "../lib/doctor-display";
+import { sortDoctorsByTier } from "../lib/consultation-pricing";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import type { Doctor } from "../lib/types/doctor";
 import styles from "./ExperiencedDoctorsSection.module.css";
@@ -18,8 +19,9 @@ type Props = {
 
 export default function ExperiencedDoctorsSection({ doctors }: Props) {
   const { t, locale } = useLanguage();
+  const sortedDoctors = sortDoctorsByTier(doctors);
 
-  if (doctors.length === 0) return null;
+  if (sortedDoctors.length === 0) return null;
 
   return (
     <section className={styles.section}>
@@ -37,7 +39,7 @@ export default function ExperiencedDoctorsSection({ doctors }: Props) {
         </div>
 
         <div className={styles.grid}>
-          {doctors.map((d) => (
+          {sortedDoctors.map((d) => (
             <article key={d.id} className={styles.card}>
               <div className={styles.avatarWrap}>
                 {d.image_url ? (

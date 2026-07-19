@@ -43,10 +43,16 @@ export default function DoctorsDirectory({
     const term = query.trim().toLowerCase();
     if (term) {
       list = list.filter((doctor) => {
-        const names = [doctor.name, doctor.name_en]
+        const haystack = [
+          doctor.name,
+          doctor.name_en,
+          doctor.specialization,
+          doctor.specialization_en,
+          doctor.category,
+        ]
           .filter(Boolean)
-          .map((name) => name!.toLowerCase());
-        return names.some((name) => name.includes(term));
+          .map((value) => String(value).toLowerCase());
+        return haystack.some((value) => value.includes(term));
       });
     }
 

@@ -40,7 +40,8 @@ export default function SiteFooter() {
             </div>
             <div className={styles.linkGroup}>
               <h4>{t.footer.legal}</h4>
-              <p className={styles.legalText}>{t.footer.privacy}</p>
+              <Link href="/privacy">{t.footer.privacy}</Link>
+              <p className={styles.legalText}>{t.footer.privacySummary}</p>
               <p className={styles.legalText}>{t.footer.terms}</p>
             </div>
           </div>

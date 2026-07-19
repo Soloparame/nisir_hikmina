@@ -21,6 +21,7 @@ const translationsSource = {
       about: "ስለ እኛ",
       doctors: "ዶክተሮች",
       whatsNew: "የጤና ትምህርት",
+      privacy: "ግላዊነት እና ፖሊሲ",
       bookAppointment: "ቀጠሮ",
       bookNow: "ቀጠሮ ይያዙ",
       login: "ግባ",
@@ -196,11 +197,30 @@ const translationsSource = {
         { title: "21. ፊዚዮቴራፒ እና ማሻሻያ", items: [] },
       ],
       legal: "ሕጋዊ",
-      privacy:
+      privacy: "ግላዊነት እና ፖሊሲ",
+      privacySummary:
         "የግላዊነት ፖሊሲ — ከመጀመሪያ እስከ መጨረሻ ምስጠራ፣ ግላዊነትዎ የተጠበቀ እና ሚስጥራዊ፣ የጤና መረጃ ለሶስተኛ ወገን አይጋራም።",
       terms:
         "የአገልግሎት ውሎች — ግላዊነትዎ የተጠበቀ፣ ሚስጥራዊ እና ለሶስተኛ ወገን አይጋራም።",
       rights: "ሁሉም መብቶች የተጠበቁ ናቸው።",
+    },
+    privacyPage: {
+      badge: "ሕጋዊ",
+      title: "ግላዊነት እና ፖሊሲዎች",
+      lead:
+        "እንዴት የግል እና የጤና መረጃዎን እንደምንሰበስብ፣ እንደምንጠቀም እና እንደምንጠብቅ ይወቁ።",
+      lastUpdated: "መጨረሻ የተዘመነ",
+      onThisPage: "በዚህ ገጽ",
+      disclaimerTitle: "የሕክምና ማስተባበያ",
+      disclaimerLead:
+        "ኢግል ሜዲካል ኬር እንደ ቴክኖሎጂ መድረክ ስላለው ወሰን አስፈላጊ መረጃ።",
+      contactOrg: "ኢግል ሜዲካል ኬር",
+      contactEmail: "contact@eaglemedicalcare.com",
+      contactWebsite: "https://eaglemedicalcare.com",
+      contactWebsiteLabel: "eaglemedicalcare.com",
+      contactAddress: "አዲስ አበባ፣ ኢትዮጵያ",
+      ctaTitle: "ለመቀጠል ዝግጁ ነዎት?",
+      ctaSub: "ዶክተር ይምረጡ ወይም ስለ እኛ ተጨማሪ ይወቁ።",
     },
     about: {
       badge: "ስለ ኢግል ሜዲካል",
@@ -254,6 +274,7 @@ const translationsSource = {
       chooseDoctorTitle: "ዶክተርዎን ይምረጡ",
       filterTitle: "ማጣሪያ",
       searchPlaceholder: "ስፔሻሊቲ ይፈልጉ...",
+      doctorSearchPlaceholder: "ዶክተርን በስም ወይም በስፔሻሊቲ ይፈልጉ...",
       allCategories: "ሁሉ",
       clearFilters: "ማጣሪያ አጽዳ",
       noMatch: "በዚህ ማጣሪያ ምንም ዶክተር አልተገኘም።",
@@ -460,6 +481,18 @@ const translationsSource = {
       saving: "በማስቀመጥ ላይ...",
       profileSaved: "መገለጫ ተቀምጧል",
       signOut: "ውጣ",
+      patientTermsTitle: "የታካሚ ውሎች",
+      patientTermsAccountTitle: "መለያ እና የተጠቃሚ ኃላፊነቶች",
+      patientTermsAccountBody:
+        "ታካሚዎች ትክክለኛ መረጃ ማቅረብ እና መድረኩን በኃላፊነት መጠቀም አለባቸው።",
+      patientTermsAppointmentsTitle: "ቀጠሮዎች እና የህክምና አገልግሎቶች",
+      patientTermsAppointmentsBody:
+        "ታካሚዎች ትክክለኛ የጤና መረጃ ለማቅረብ እና የቀጠሮና የጤና ባለሙያ መመሪያዎችን ለመከተል ኃላፊነት አለባቸው።",
+      patientTermsUsageTitle: "የመድረክ አጠቃቀም",
+      patientTermsUsageBody:
+        "ታካሚዎች መድረኩን አላግባብ መጠቀም፣ ሌሎችን መምሰል፣ ወይም ህገወጥ ወይም አጸያፊ ተግባራት መፈጸም የለባቸውም።",
+      patientTermsAgree: "የታካሚ ውሎችን አንብቤ ተስማምቻለሁ።",
+      patientTermsRequired: "ለመቀጠል የታካሚ ውሎችን መቀበል ያስፈልጋል።",
     },
     chat: {
       title: "መልዕክቶች",
@@ -524,6 +557,7 @@ const translationsSource = {
       about: "About",
       doctors: "Doctors",
       whatsNew: "Health Education",
+      privacy: "Privacy & Policies",
       bookAppointment: "Book",
       bookNow: "Book Now",
       login: "Log in",
@@ -712,11 +746,30 @@ const translationsSource = {
         },
       ],
       legal: "Legal",
-      privacy:
+      privacy: "Privacy & Policies",
+      privacySummary:
         "Privacy Policy — End-to-end encryption. Your privacy is kept confidential and health data is never shared with third parties.",
       terms:
         "Terms of Service — Your privacy is kept confidential. No health data is shared with third parties.",
       rights: "All rights reserved.",
+    },
+    privacyPage: {
+      badge: "Legal",
+      title: "Privacy & Policies",
+      lead:
+        "Learn how Eagle Medical Care collects, uses, stores, and protects your personal and health information.",
+      lastUpdated: "Last updated",
+      onThisPage: "On this page",
+      disclaimerTitle: "Medical Disclaimer",
+      disclaimerLead:
+        "Important information about the limits of Eagle Medical Care as a technology platform.",
+      contactOrg: "Eagle Medical Care",
+      contactEmail: "contact@eaglemedicalcare.com",
+      contactWebsite: "https://eaglemedicalcare.com",
+      contactWebsiteLabel: "eaglemedicalcare.com",
+      contactAddress: "Addis Ababa, Ethiopia",
+      ctaTitle: "Ready to continue?",
+      ctaSub: "Book a doctor or learn more about Eagle Medical.",
     },
     about: {
       badge: "About Eagle Medical",
@@ -771,6 +824,7 @@ const translationsSource = {
       chooseDoctorTitle: "Choose Your Doctor",
       filterTitle: "Filters",
       searchPlaceholder: "Search specialties...",
+      doctorSearchPlaceholder: "Search doctors by name or specialty...",
       allCategories: "All",
       clearFilters: "Clear filters",
       noMatch: "No doctors match this filter.",
@@ -976,6 +1030,18 @@ const translationsSource = {
       saving: "Saving...",
       profileSaved: "Profile saved",
       signOut: "Sign out",
+      patientTermsTitle: "Patient Terms",
+      patientTermsAccountTitle: "Account & User Responsibilities",
+      patientTermsAccountBody:
+        "Patients must provide accurate information and use the platform responsibly.",
+      patientTermsAppointmentsTitle: "Appointments & Medical Services",
+      patientTermsAppointmentsBody:
+        "Patients are responsible for providing accurate health information and following appointment and healthcare professional guidelines.",
+      patientTermsUsageTitle: "Platform Usage",
+      patientTermsUsageBody:
+        "Patients must not misuse the platform, impersonate others, or engage in illegal or abusive activities.",
+      patientTermsAgree: "I have read and agree to the Patient Terms.",
+      patientTermsRequired: "You must accept the Patient Terms to continue.",
     },
     chat: {
       title: "Messages",

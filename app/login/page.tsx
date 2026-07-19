@@ -13,6 +13,7 @@ import {
   Shield,
   Stethoscope,
 } from "lucide-react";
+import PatientTerms from "../../components/PatientTerms";
 import { signInPatientClient } from "../../lib/auth/browser";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import styles from "../auth.module.css";
@@ -162,6 +163,8 @@ function LoginForm() {
               />
             </div>
           </div>
+
+          <PatientTerms />
 
           {error && (
             <div className={`${styles.alert} ${styles.alertError}`}>{error}</div>

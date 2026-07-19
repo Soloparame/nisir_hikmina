@@ -47,6 +47,7 @@ export default function DoctorPicker({
     null
   );
   const [subcategorySearch, setSubcategorySearch] = useState("");
+  const [doctorSearch, setDoctorSearch] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -121,19 +122,36 @@ export default function DoctorPicker({
   }, [selectedCategory, subcategorySearch]);
 
   const filteredDoctors = useMemo(() => {
+    const term = doctorSearch.trim().toLowerCase();
     const list = doctors.filter((d) => {
       const sub = d.specialization_en ?? d.specialization;
       const cat = d.category ?? findCategoryLabelBySubcategory(sub);
 
       if (selectedCategory !== "All" && cat !== selectedCategory) return false;
       if (selectedSubcategory && sub !== selectedSubcategory) return false;
+
+      if (term) {
+        const haystack = [
+          d.name,
+          d.name_en,
+          d.specialization,
+          d.specialization_en,
+          d.category,
+        ]
+          .filter(Boolean)
+          .map((value) => String(value).toLowerCase());
+        if (!haystack.some((value) => value.includes(term))) return false;
+      }
+
       return true;
     });
     return sortDoctorsByTier(list);
-  }, [doctors, selectedCategory, selectedSubcategory]);
+  }, [doctors, selectedCategory, selectedSubcategory, doctorSearch]);
 
   const hasActiveFilter =
-    selectedCategory !== "All" || selectedSubcategory !== null;
+    selectedCategory !== "All" ||
+    selectedSubcategory !== null ||
+    doctorSearch.trim().length > 0;
 
   if (loading) {
     return (
@@ -244,6 +262,7 @@ export default function DoctorPicker({
             setSelectedCategory("All");
             setSelectedSubcategory(null);
             setSubcategorySearch("");
+            setDoctorSearch("");
           }}
         >
           {t.book.clearFilters}
@@ -273,6 +292,18 @@ export default function DoctorPicker({
         </div>
 
         <div className={styles.main}>
+          <div className={styles.searchWrap}>
+            <Search size={18} className={styles.searchIcon} aria-hidden />
+            <input
+              className={styles.searchInput}
+              type="search"
+              value={doctorSearch}
+              placeholder={t.book.doctorSearchPlaceholder}
+              onChange={(e) => setDoctorSearch(e.target.value)}
+              aria-label={t.book.doctorSearchPlaceholder}
+            />
+          </div>
+
           <p className={styles.resultsCount}>
             {filteredDoctors.length} {t.nav.doctors.toLowerCase()}
           </p>
