@@ -12,7 +12,10 @@ import {
   User,
 } from "lucide-react";
 import PatientTerms from "../../components/PatientTerms";
-import { signUpPatientClient } from "../../lib/auth/browser";
+import {
+  signInPatientWithGoogleClient,
+  signUpPatientClient,
+} from "../../lib/auth/browser";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import styles from "../auth.module.css";
 
@@ -31,6 +34,7 @@ function SignupForm() {
 
   const redirect = searchParams.get("redirect") || "/book";
   const doctorId = searchParams.get("doctor");
+  const authError = searchParams.get("error");
   const loginHref = doctorId
     ? `/login?redirect=${encodeURIComponent(redirect)}&doctor=${doctorId}`
     : `/login?redirect=${encodeURIComponent(redirect)}`;
@@ -73,6 +77,21 @@ function SignupForm() {
     })();
     router.push(dest);
     router.refresh();
+  }
+
+  async function handleGoogleSignUp() {
+    if (!acceptedTerms) {
+      setError(t.auth.patientTermsRequired);
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    const result = await signInPatientWithGoogleClient(redirect);
+    if (!result.ok) {
+      setError(result.error ?? "Google sign-in failed.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -206,9 +225,11 @@ function SignupForm() {
             onAcceptedChange={setAcceptedTerms}
           />
 
-          {error && (
-            <div className={`${styles.alert} ${styles.alertError}`}>{error}</div>
-          )}
+          {error || authError ? (
+            <div className={`${styles.alert} ${styles.alertError}`}>
+              {error || authError}
+            </div>
+          ) : null}
           {success && (
             <div className={`${styles.alert} ${styles.alertSuccess}`}>
               {success}
@@ -221,6 +242,15 @@ function SignupForm() {
             disabled={loading || !acceptedTerms}
           >
             {loading ? t.auth.signingUp : t.auth.signupBtn}
+          </button>
+
+          <button
+            className={styles.secondaryBtn}
+            type="button"
+            disabled={loading || !acceptedTerms}
+            onClick={handleGoogleSignUp}
+          >
+            Continue with Google
           </button>
 
           <div className={styles.divider}>{t.auth.or}</div>

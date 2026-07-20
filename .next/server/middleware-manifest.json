@@ -1,6 +1,64 @@
 {
   "version": 3,
-  "middleware": {},
+  "middleware": {
+    "/": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/middleware.js"
+      ],
+      "name": "middleware",
+      "page": "/",
+      "matchers": [
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/admin/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/dashboard(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/dashboard"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/dashboard(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/dashboard/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/chat(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/chat"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/chat(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/doctor/:code/chat/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/chat(.json)?[\\/#\\?]?$",
+          "originalSource": "/chat"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/chat(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/chat/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/profile(.json)?[\\/#\\?]?$",
+          "originalSource": "/profile"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/profile(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/profile/:path*"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "gpUeAOvJlCy4lUHhyDHNO",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "ybtljlKO9XYu/IXkhqn5Hy5oG8J3KfZ9Dfmo+2P40jc=",
+        "__NEXT_PREVIEW_MODE_ID": "db4727ce4168dfee07da469dd7a122d9",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "fe43c05b95512a8129f466b36e7893e0e5c43ff4109c53abf2f6dad4e012baef",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "2cc8e0abead061a24e185c9bd2f735cf6f0e64b40fcf6f86bb11d19acc9ca1e6"
+      }
+    }
+  },
   "functions": {},
-  "sortedMiddleware": []
+  "sortedMiddleware": [
+    "/"
+  ]
 }

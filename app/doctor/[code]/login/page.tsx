@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Bell,
@@ -14,14 +14,18 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { getDoctorByLoginCode, validateDoctorLogin } from "../../../../lib/actions/auth";
-import { loginDoctorClient } from "../../../../lib/auth/browser";
+import {
+  loginDoctorClient,
+  signInDoctorWithGoogleClient,
+} from "../../../../lib/auth/browser";
 import { useLanguage } from "../../../../lib/i18n/LanguageContext";
 import styles from "../../../auth.module.css";
 
-export default function DoctorLoginPage() {
+function DoctorLoginForm() {
   const params = useParams();
   const urlCode = String(params.code ?? "").toUpperCase();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useLanguage();
 
   const [doctorId, setDoctorId] = useState(urlCode);
@@ -32,6 +36,7 @@ export default function DoctorLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingDoctor, setLoadingDoctor] = useState(true);
+  const authError = searchParams.get("error");
 
   useEffect(() => {
     setDoctorId(urlCode);
@@ -107,6 +112,28 @@ export default function DoctorLoginPage() {
     router.refresh();
   }
 
+  async function handleGoogleSignIn() {
+    setLoading(true);
+    setError("");
+
+    const code = doctorId.trim().toUpperCase();
+    const validation = await validateDoctorLogin(code, email);
+    if (!validation.ok) {
+      setError(validation.error ?? t.doctorAuth.loginFailed);
+      setLoading(false);
+      return;
+    }
+
+    const result = await signInDoctorWithGoogleClient({
+      login_code: code,
+    });
+
+    if (!result.ok) {
+      setError(result.error ?? "Google sign-in failed.");
+      setLoading(false);
+    }
+  }
+
   return (
     <div className={styles.page}>
       <aside className={`${styles.panelBrand} ${styles.panelBrandDoctor}`}>
@@ -124,7 +151,9 @@ export default function DoctorLoginPage() {
           </div>
 
           <h2 className={styles.brandHeadline}>
-            {doctorName ? `${t.doctorAuth.welcomeDr} ${doctorName}` : t.doctorAuth.welcome}
+            {doctorName
+              ? `${t.doctorAuth.welcomeDr} ${doctorName}`
+              : t.doctorAuth.welcome}
           </h2>
           <p className={styles.brandDesc}>{t.doctorAuth.registeredSub}</p>
 
@@ -255,9 +284,22 @@ export default function DoctorLoginPage() {
             </p>
           </div>
 
-          {error && (
-            <div className={`${styles.alert} ${styles.alertError}`}>{error}</div>
-          )}
+          {!isFirstLogin ? (
+            <div className={styles.forgotRow}>
+              <Link
+                href={`/doctor/${doctorId.trim().toUpperCase() || urlCode}/reset-password`}
+                className={styles.forgotLink}
+              >
+                Forgot password?
+              </Link>
+            </div>
+          ) : null}
+
+          {error || authError ? (
+            <div className={`${styles.alert} ${styles.alertError}`}>
+              {error || authError}
+            </div>
+          ) : null}
 
           <button className={styles.btn} type="submit" disabled={loading}>
             {loading
@@ -266,8 +308,25 @@ export default function DoctorLoginPage() {
                 ? t.doctorAuth.activateBtn
                 : t.doctorAuth.signInBtn}
           </button>
+
+          <button
+            className={styles.secondaryBtn}
+            type="button"
+            disabled={loading}
+            onClick={handleGoogleSignIn}
+          >
+            Continue with Google
+          </button>
         </form>
       </div>
     </div>
+  );
+}
+
+export default function DoctorLoginPage() {
+  return (
+    <Suspense>
+      <DoctorLoginForm />
+    </Suspense>
   );
 }

@@ -132,7 +132,7 @@ function featuredDoctorSortIndex(doctor: {
   });
 }
 
-export async function getExperiencedDoctors(minYears = 4) {
+export async function getExperiencedDoctors(minYears = 4): Promise<Doctor[]> {
   const supabase = await createClient();
   if (!supabase) return [];
 
@@ -145,11 +145,11 @@ export async function getExperiencedDoctors(minYears = 4) {
       .order("sort_order", { ascending: true });
   }
 
-  let rows: Record<string, unknown>[] = [];
+  let rows: Doctor[] = [];
   const primary = await selectDoctors(PUBLIC_DOCTOR_COLUMNS_WITH_TIER);
 
   if (!primary.error) {
-    rows = (primary.data as Record<string, unknown>[] | null) ?? [];
+    rows = (primary.data as unknown as Doctor[] | null) ?? [];
   } else if (
     primary.error.message?.includes("pricing_tier") ||
     primary.error.message?.includes("morning_days")
@@ -159,7 +159,7 @@ export async function getExperiencedDoctors(minYears = 4) {
       console.error("getExperiencedDoctors:", fallback.error.message);
       return [];
     }
-    rows = (fallback.data as Record<string, unknown>[] | null) ?? [];
+    rows = (fallback.data as unknown as Doctor[] | null) ?? [];
   } else {
     console.error("getExperiencedDoctors:", primary.error.message);
     return [];
@@ -168,32 +168,31 @@ export async function getExperiencedDoctors(minYears = 4) {
   const featured = rows
     .filter((d) =>
       isHomepageFeaturedDoctor({
-        name: d.name as string | null,
-        name_en: d.name_en as string | null,
+        name: d.name,
+        name_en: d.name_en,
       })
     )
     .sort(
       (a, b) =>
         featuredDoctorSortIndex({
-          name: a.name as string | null,
-          name_en: a.name_en as string | null,
+          name: a.name,
+          name_en: a.name_en,
         }) -
         featuredDoctorSortIndex({
-          name: b.name as string | null,
-          name_en: b.name_en as string | null,
+          name: b.name,
+          name_en: b.name_en,
         })
     );
 
-  const featuredIds = new Set(featured.map((d) => d.id as string));
+  const featuredIds = new Set(featured.map((d) => d.id));
 
   const experienced = rows.filter(
     (d) =>
-      !featuredIds.has(d.id as string) &&
-      Number(d.experience_years ?? 0) >= minYears
+      !featuredIds.has(d.id) && Number(d.experience_years ?? 0) >= minYears
   );
 
   // Featured trio first (exceptionally), then other experienced doctors.
-  return [...featured, ...experienced].slice(0, 8);
+  return sortDoctorsByTier([...featured, ...experienced].slice(0, 8));
 }
 
 export async function getAllDoctorsAdmin() {

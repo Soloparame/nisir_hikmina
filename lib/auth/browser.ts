@@ -41,6 +41,16 @@ function friendlyAuthError(message: string): string {
   return message;
 }
 
+function getBrowserOrigin() {
+  return typeof window !== "undefined" ? window.location.origin : undefined;
+}
+
+function buildCallbackUrl(nextPath: string) {
+  const origin = getBrowserOrigin();
+  if (!origin) return undefined;
+  return `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
+}
+
 export async function ensureProfileForUser(user: User) {
   const supabase = createClient();
   if (!supabase) return;
@@ -146,6 +156,66 @@ export async function signInPatientClient(
   return completeSignIn(email, password);
 }
 
+export async function signInPatientWithGoogleClient(
+  redirectPath = "/book"
+): Promise<AuthResult> {
+  const supabase = createClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured on this site." };
+  }
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: buildCallbackUrl(redirectPath),
+      queryParams: {
+        prompt: "select_account",
+      },
+    },
+  });
+
+  if (error) {
+    return { ok: false, error: friendlyAuthError(error.message) };
+  }
+
+  return { ok: true };
+}
+
+export async function sendPatientPasswordResetClient(
+  email: string
+): Promise<AuthResult> {
+  const supabase = createClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured on this site." };
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo: buildCallbackUrl("/reset-password/update"),
+  });
+
+  if (error) {
+    return { ok: false, error: friendlyAuthError(error.message) };
+  }
+
+  return { ok: true };
+}
+
+export async function updateCurrentUserPasswordClient(
+  password: string
+): Promise<AuthResult> {
+  const supabase = createClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured on this site." };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    return { ok: false, error: friendlyAuthError(error.message) };
+  }
+
+  return { ok: true };
+}
+
 /**
  * Doctor login — no separate signup. Admin registers the doctor; they sign in
  * with Doctor ID + registered email + password (password set on first login).
@@ -245,6 +315,58 @@ export async function loginDoctorClient(data: {
   await ensureProfileForUser(authData.user);
   const link = await linkDoctorAccountClient(code);
   if (!link.ok) return link;
+  return { ok: true };
+}
+
+export async function signInDoctorWithGoogleClient(data: {
+  login_code: string;
+  nextPath?: string;
+}): Promise<AuthResult> {
+  const supabase = createClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured on this site." };
+  }
+
+  const code = data.login_code.trim().toUpperCase();
+  const nextPath = data.nextPath ?? `/doctor/${code}/oauth-complete`;
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: buildCallbackUrl(nextPath),
+      queryParams: {
+        prompt: "select_account",
+      },
+    },
+  });
+
+  if (error) {
+    return { ok: false, error: friendlyAuthError(error.message) };
+  }
+
+  return { ok: true };
+}
+
+export async function sendDoctorPasswordResetClient(data: {
+  login_code: string;
+  email: string;
+}): Promise<AuthResult> {
+  const supabase = createClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured on this site." };
+  }
+
+  const code = data.login_code.trim().toUpperCase();
+  const email = data.email.trim();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: buildCallbackUrl(`/doctor/${code}/reset-password/update`),
+  });
+
+  if (error) {
+    return { ok: false, error: friendlyAuthError(error.message) };
+  }
+
   return { ok: true };
 }
 

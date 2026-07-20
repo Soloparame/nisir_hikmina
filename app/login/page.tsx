@@ -14,7 +14,10 @@ import {
   Stethoscope,
 } from "lucide-react";
 import PatientTerms from "../../components/PatientTerms";
-import { signInPatientClient } from "../../lib/auth/browser";
+import {
+  signInPatientClient,
+  signInPatientWithGoogleClient,
+} from "../../lib/auth/browser";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import styles from "../auth.module.css";
 
@@ -29,9 +32,11 @@ function LoginForm() {
 
   const redirect = searchParams.get("redirect") || "/book";
   const doctorId = searchParams.get("doctor");
+  const authError = searchParams.get("error");
   const signupHref = doctorId
     ? `/signup?redirect=${encodeURIComponent(redirect)}&doctor=${doctorId}`
     : `/signup?redirect=${encodeURIComponent(redirect)}`;
+  const forgotHref = `/reset-password${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ""}`;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,6 +57,16 @@ function LoginForm() {
     })();
     router.push(dest);
     router.refresh();
+  }
+
+  async function handleGoogleSignIn() {
+    setLoading(true);
+    setError("");
+    const result = await signInPatientWithGoogleClient(redirect);
+    if (!result.ok) {
+      setError(result.error ?? "Google sign-in failed.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -168,12 +183,29 @@ function LoginForm() {
 
           <PatientTerms />
 
-          {error && (
-            <div className={`${styles.alert} ${styles.alertError}`}>{error}</div>
-          )}
+          <div className={styles.forgotRow}>
+            <Link href={forgotHref} className={styles.forgotLink}>
+              Forgot password?
+            </Link>
+          </div>
+
+          {error || authError ? (
+            <div className={`${styles.alert} ${styles.alertError}`}>
+              {error || authError}
+            </div>
+          ) : null}
 
           <button className={styles.btn} type="submit" disabled={loading}>
             {loading ? t.auth.loggingIn : t.auth.loginBtn}
+          </button>
+
+          <button
+            className={styles.secondaryBtn}
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+          >
+            Continue with Google
           </button>
 
           <div className={styles.divider}>{t.auth.or}</div>
