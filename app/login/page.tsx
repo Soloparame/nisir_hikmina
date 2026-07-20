@@ -14,6 +14,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import PatientTerms from "../../components/PatientTerms";
+import GoogleSignInButton from "../../components/GoogleSignInButton";
 import {
   signInPatientClient,
   signInPatientWithGoogleClient,
@@ -199,14 +200,11 @@ function LoginForm() {
             {loading ? t.auth.loggingIn : t.auth.loginBtn}
           </button>
 
-          <button
+          <GoogleSignInButton
             className={styles.secondaryBtn}
-            type="button"
-            onClick={handleGoogleSignIn}
             disabled={loading}
-          >
-            Continue with Google
-          </button>
+            onClick={handleGoogleSignIn}
+          />
 
           <div className={styles.divider}>{t.auth.or}</div>
 

@@ -19,6 +19,7 @@ import {
   signInDoctorWithGoogleClient,
 } from "../../../../lib/auth/browser";
 import { useLanguage } from "../../../../lib/i18n/LanguageContext";
+import GoogleSignInButton from "../../../../components/GoogleSignInButton";
 import styles from "../../../auth.module.css";
 
 function DoctorLoginForm() {
@@ -309,14 +310,11 @@ function DoctorLoginForm() {
                 : t.doctorAuth.signInBtn}
           </button>
 
-          <button
+          <GoogleSignInButton
             className={styles.secondaryBtn}
-            type="button"
             disabled={loading}
             onClick={handleGoogleSignIn}
-          >
-            Continue with Google
-          </button>
+          />
         </form>
       </div>
     </div>

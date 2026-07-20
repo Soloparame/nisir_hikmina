@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
-import { sendPatientPasswordResetClient } from "../../lib/auth/browser";
+import { requestPatientPasswordReset } from "../../lib/actions/password-reset";
 import styles from "../auth.module.css";
 
 export default function ResetPasswordPage() {
@@ -18,14 +18,16 @@ export default function ResetPasswordPage() {
     setError("");
     setSuccess("");
 
-    const result = await sendPatientPasswordResetClient(email);
+    const result = await requestPatientPasswordReset(email);
     if (!result.ok) {
       setError(result.error ?? "Could not send reset email.");
       setLoading(false);
       return;
     }
 
-    setSuccess("Password reset link sent. Check your email and open the link to create a new password.");
+    setSuccess(
+      "Password reset link sent. Check your email and open the newest link to create a new password. The link works on any phone or computer."
+    );
     setLoading(false);
   }
 

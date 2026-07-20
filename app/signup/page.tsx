@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import PatientTerms from "../../components/PatientTerms";
+import GoogleSignInButton from "../../components/GoogleSignInButton";
 import {
   signInPatientWithGoogleClient,
   signUpPatientClient,
@@ -244,14 +245,11 @@ function SignupForm() {
             {loading ? t.auth.signingUp : t.auth.signupBtn}
           </button>
 
-          <button
+          <GoogleSignInButton
             className={styles.secondaryBtn}
-            type="button"
             disabled={loading || !acceptedTerms}
             onClick={handleGoogleSignUp}
-          >
-            Continue with Google
-          </button>
+          />
 
           <div className={styles.divider}>{t.auth.or}</div>
 

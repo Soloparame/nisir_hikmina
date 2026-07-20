@@ -68,7 +68,10 @@ export async function GET(request: NextRequest) {
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
-      return errorRedirect(request, nextPath, error.message);
+      const message = /pkce|code verifier/i.test(error.message)
+        ? "This reset link is outdated. Go back and request a new password reset email, then open the newest link."
+        : error.message;
+      return errorRedirect(request, nextPath, message);
     }
     return response;
   }

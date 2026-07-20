@@ -4,8 +4,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Hash, Mail } from "lucide-react";
-import { validateDoctorLogin } from "../../../../lib/actions/auth";
-import { sendDoctorPasswordResetClient } from "../../../../lib/auth/browser";
+import { requestDoctorPasswordReset } from "../../../../lib/actions/password-reset";
 import styles from "../../../auth.module.css";
 
 export default function DoctorResetPasswordPage() {
@@ -22,24 +21,16 @@ export default function DoctorResetPasswordPage() {
     setError("");
     setSuccess("");
 
-    const validation = await validateDoctorLogin(code, email);
-    if (!validation.ok) {
-      setError(validation.error ?? "Could not verify your doctor account.");
-      setLoading(false);
-      return;
-    }
-
-    const result = await sendDoctorPasswordResetClient({
-      login_code: code,
-      email,
-    });
+    const result = await requestDoctorPasswordReset(code, email);
     if (!result.ok) {
       setError(result.error ?? "Could not send reset email.");
       setLoading(false);
       return;
     }
 
-    setSuccess("Password reset link sent. Check your registered email and open the link to create a new password.");
+    setSuccess(
+      "Password reset link sent. Check your registered email and open the newest link. The link works on any phone or computer."
+    );
     setLoading(false);
   }
 
