@@ -13,7 +13,6 @@ import {
   Shield,
   Stethoscope,
 } from "lucide-react";
-import PatientTerms from "../../components/PatientTerms";
 import GoogleSignInButton from "../../components/GoogleSignInButton";
 import {
   signInPatientClient,
@@ -181,8 +180,6 @@ function LoginForm() {
               />
             </div>
           </div>
-
-          <PatientTerms />
 
           <div className={styles.forgotRow}>
             <Link href={forgotHref} className={styles.forgotLink}>
