@@ -75,8 +75,15 @@ export async function ensureConversationForBooking(
   patientId: string,
   appointmentId: string
 ): Promise<{ ok: boolean; conversationId?: string; error?: string }> {
-  const supabase = createServiceClient() ?? (await createClient());
+  const service = createServiceClient();
+  const supabase = service ?? (await createClient());
   if (!supabase) return { ok: false, error: "Not configured" };
+
+  if (!service) {
+    console.warn(
+      "[chat] SUPABASE_SERVICE_ROLE_KEY missing — conversation create may fail under RLS"
+    );
+  }
 
   return ensureConversation(supabase, doctorId, patientId, appointmentId);
 }

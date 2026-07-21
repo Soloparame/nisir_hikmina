@@ -219,6 +219,7 @@ export async function updateCurrentUserPasswordClient(
 /**
  * Doctor login — no separate signup. Admin registers the doctor; they sign in
  * with Doctor ID + registered email + password (password set on first login).
+ * Google OAuth remains available separately.
  */
 export async function loginDoctorClient(data: {
   login_code: string;
@@ -235,35 +236,61 @@ export async function loginDoctorClient(data: {
   const email = data.email.trim();
   const code = data.login_code.trim().toUpperCase();
   const fullName = data.doctorName?.trim() || "Doctor";
+  const isFirstLogin = Boolean(data.isFirstLogin);
 
-  const signIn = await supabase.auth.signInWithPassword({
-    email,
-    password: data.password,
-  });
-
-  if (!signIn.error && signIn.data.session) {
+  async function finishWithSession(): Promise<AuthResult> {
     const link = await linkDoctorAccountClient(code);
     if (!link.ok) return link;
     return { ok: true };
   }
 
-  const signInMsg = signIn.error?.message?.toLowerCase() ?? "";
-  const canActivate =
-    signInMsg.includes("invalid login") ||
-    signInMsg.includes("invalid credentials") ||
-    signInMsg.includes("email not confirmed");
-
-  if (!data.isFirstLogin) {
-    return {
-      ok: false,
-      error: friendlyAuthError(
-        signIn.error?.message ?? "Invalid email or password."
-      ),
-    };
+  // --- Returning doctor: password sign-in only ---
+  if (!isFirstLogin) {
+    const signIn = await supabase.auth.signInWithPassword({
+      email,
+      password: data.password,
+    });
+    if (signIn.error || !signIn.data.session) {
+      return {
+        ok: false,
+        error: friendlyAuthError(
+          signIn.error?.message ?? "Invalid email or password."
+        ),
+      };
+    }
+    return finishWithSession();
   }
 
-  if (!canActivate && signIn.error) {
-    return { ok: false, error: friendlyAuthError(signIn.error.message) };
+  // --- First login: activate Auth user (server), then sign in ---
+  const { activateDoctorFirstLogin } = await import("../actions/doctor-auth");
+  const activated = await activateDoctorFirstLogin({
+    login_code: code,
+    email,
+    password: data.password,
+  });
+
+  if (!activated.ok) {
+    return { ok: false, error: activated.error ?? "Could not activate account." };
+  }
+
+  if (activated.readyForSignIn) {
+    const signIn = await supabase.auth.signInWithPassword({
+      email,
+      password: data.password,
+    });
+    if (!signIn.error && signIn.data.session) {
+      return finishWithSession();
+    }
+    // Fall through to client signUp if sign-in still fails
+  }
+
+  // Fallback when service role is missing: classic client signUp path
+  const existingSignIn = await supabase.auth.signInWithPassword({
+    email,
+    password: data.password,
+  });
+  if (!existingSignIn.error && existingSignIn.data.session) {
+    return finishWithSession();
   }
 
   const { data: authData, error: signUpError } = await supabase.auth.signUp({
@@ -283,25 +310,31 @@ export async function loginDoctorClient(data: {
   });
 
   if (signUpError) {
-    if (
-      signUpError.message.toLowerCase().includes("already") ||
-      signUpError.message.toLowerCase().includes("registered")
-    ) {
+    const msg = signUpError.message.toLowerCase();
+    if (msg.includes("already") || msg.includes("registered")) {
       const retry = await completeSignIn(email, data.password);
-      if (!retry.ok) return retry;
-      const link = await linkDoctorAccountClient(code);
-      if (!link.ok) return link;
-      return { ok: true };
+      if (!retry.ok) {
+        return {
+          ok: false,
+          error:
+            "This email already has an account. Use Continue with Google, or ask admin to reset Auth for this doctor email.",
+        };
+      }
+      return finishWithSession();
     }
     return { ok: false, error: friendlyAuthError(signUpError.message) };
   }
 
   if (emailAlreadyRegistered(authData.user?.identities)) {
     const retry = await completeSignIn(email, data.password);
-    if (!retry.ok) return retry;
-    const link = await linkDoctorAccountClient(code);
-    if (!link.ok) return link;
-    return { ok: true };
+    if (!retry.ok) {
+      return {
+        ok: false,
+        error:
+          "This email already has an account. Use Continue with Google, or ask admin to reset Auth for this doctor email.",
+      };
+    }
+    return finishWithSession();
   }
 
   if (!authData.user) {
@@ -309,13 +342,16 @@ export async function loginDoctorClient(data: {
   }
 
   if (!authData.session) {
-    return { ok: true, needsEmailConfirmation: true };
+    // Email confirmation required and no service role to auto-confirm
+    return {
+      ok: false,
+      error:
+        "Account created but email confirmation is required. Ask admin to confirm the user in Supabase Auth, or set SUPABASE_SERVICE_ROLE_KEY so first login can auto-activate.",
+    };
   }
 
   await ensureProfileForUser(authData.user);
-  const link = await linkDoctorAccountClient(code);
-  if (!link.ok) return link;
-  return { ok: true };
+  return finishWithSession();
 }
 
 export async function signInDoctorWithGoogleClient(data: {

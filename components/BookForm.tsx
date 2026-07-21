@@ -252,12 +252,26 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
       return { ok: false, error: t.book.errors.uploadNotConfigured };
     }
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return { ok: false, error: "Please sign in again before submitting payment." };
+    }
+
     const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const path = `${userId ?? "guest"}/${appointmentKey}.${ext}`;
+    const safeExt = ["jpg", "jpeg", "png", "webp", "gif", "heic"].includes(ext)
+      ? ext
+      : "jpg";
+    // Unique path — do not upsert (storage has insert policy only)
+    const path = `${user.id}/${appointmentKey}-${Date.now()}.${safeExt}`;
 
     const { error } = await supabase.storage
       .from("payment-screenshots")
-      .upload(path, file, { upsert: true, contentType: file.type });
+      .upload(path, file, {
+        upsert: false,
+        contentType: file.type || `image/${safeExt === "jpg" ? "jpeg" : safeExt}`,
+      });
 
     if (error) {
       return { ok: false, error: error.message };
@@ -267,6 +281,10 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
       .from("payment-screenshots")
       .getPublicUrl(path);
 
+    if (!data?.publicUrl) {
+      return { ok: false, error: t.book.errors.uploadFailed };
+    }
+
     return { ok: true, url: data.publicUrl };
   }
 
@@ -275,90 +293,117 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
     if (selectedPrice == null) return;
 
     setSubmitting(true);
+    setErrors({});
 
-    const label = consultLabel(consult);
-    const doctorLabel = getDoctorName(doctor, locale);
-    const periodLabel = selectedSlot
-      ? t.availability[selectedSlot.labelKey]
-      : undefined;
-    const scheduledTime = selectedTime?.time ?? "09:00";
+    try {
+      const supabase = createClient();
+      if (!supabase) {
+        setErrors({ general: t.book.errors.uploadNotConfigured });
+        return;
+      }
 
-    const latestBooked = await getBookedTimesForDoctor(
-      doctor.id,
-      appointmentDate
-    );
-    if (latestBooked.includes(scheduledTime)) {
-      setBookedTimes(latestBooked);
-      setErrors({ general: t.book.errors.slotTaken });
-      setSubmitting(false);
-      return;
-    }
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
 
-    const availabilityTime = selectedSlot
-      ? formatScheduledDateTime(
-          appointmentDate,
-          scheduledTime,
-          `${periodLabel}: ${formatAvailabilitySlot(selectedSlot)}`
-        )
-      : formatScheduledDateTime(appointmentDate, scheduledTime);
+      if (!authUser) {
+        setErrors({
+          general: "Please sign in again, then submit your booking.",
+        });
+        router.push(
+          `/login?redirect=${encodeURIComponent(`/book?doctor=${doctor.id}`)}&doctor=${doctor.id}`
+        );
+        return;
+      }
 
-    const uploadKey = `${doctor.id}-${Date.now()}`;
-    const upload = await uploadPaymentScreenshot(screenshotFile, uploadKey);
-    if (!upload.ok || !upload.url) {
-      setErrors({
-        general: upload.error ?? t.book.errors.uploadFailed,
+      setUserId(authUser.id);
+
+      const label = consultLabel(consult);
+      const doctorLabel = getDoctorName(doctor, locale);
+      const periodLabel = selectedSlot
+        ? t.availability[selectedSlot.labelKey]
+        : undefined;
+      const scheduledTime = selectedTime?.time ?? "09:00";
+
+      const latestBooked = await getBookedTimesForDoctor(
+        doctor.id,
+        appointmentDate
+      );
+      if (latestBooked.includes(scheduledTime)) {
+        setBookedTimes(latestBooked);
+        setErrors({ general: t.book.errors.slotTaken });
+        return;
+      }
+
+      const availabilityTime = selectedSlot
+        ? formatScheduledDateTime(
+            appointmentDate,
+            scheduledTime,
+            `${periodLabel}: ${formatAvailabilitySlot(selectedSlot)}`
+          )
+        : formatScheduledDateTime(appointmentDate, scheduledTime);
+
+      const uploadKey = `${doctor.id}-${appointmentDate}-${scheduledTime.replace(":", "")}`;
+      const upload = await uploadPaymentScreenshot(screenshotFile, uploadKey);
+      if (!upload.ok || !upload.url) {
+        setErrors({
+          general: upload.error ?? t.book.errors.uploadFailed,
+        });
+        return;
+      }
+
+      const result = await createBookingWithPayment({
+        doctor_id: doctor.id,
+        patient_name: name.trim(),
+        phone: phone.trim(),
+        disease: disease.trim(),
+        country: countryName,
+        city: city.trim(),
+        consult_type: label,
+        consult_type_key: consult,
+        user_id: authUser.id,
+        availability_period: selectedSlot?.period,
+        availability_time: availabilityTime,
+        scheduled_date: appointmentDate,
+        scheduled_time: scheduledTime,
+        amount_etb: selectedPrice,
+        payment_method: paymentMethod,
+        screenshot_url: upload.url,
       });
-      setSubmitting(false);
-      return;
-    }
 
-    const supabase = createClient();
-    const {
-      data: { user: authUser },
-    } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
-    const resolvedUserId = authUser?.id ?? userId ?? undefined;
+      if (!result.ok) {
+        setErrors({
+          general: result.error ?? t.book.errors.generic,
+        });
+        return;
+      }
 
-    const result = await createBookingWithPayment({
-      doctor_id: doctor.id,
-      patient_name: name.trim(),
-      phone: phone.trim(),
-      disease: disease.trim(),
-      country: countryName,
-      city: city.trim(),
-      consult_type: label,
-      consult_type_key: consult,
-      user_id: resolvedUserId,
-      availability_period: selectedSlot?.period,
-      availability_time: availabilityTime,
-      scheduled_date: appointmentDate,
-      scheduled_time: scheduledTime,
-      amount_etb: selectedPrice,
-      payment_method: paymentMethod,
-      screenshot_url: upload.url,
-    });
-
-    if (!result.ok) {
-      setErrors({
-        general: result.error ?? t.book.errors.generic,
+      const params = new URLSearchParams({
+        pending: "1",
+        name: name.trim(),
+        phone: phone.trim(),
+        disease: disease.trim(),
+        country: countryName,
+        city: city.trim(),
+        consult: label,
+        doctor: doctorLabel,
+        amount: String(selectedPrice),
+        schedule: availabilityTime,
       });
+
+      // Hard navigation so success page always loads after payment submit
+      window.location.assign(`/success?${params.toString()}`);
+    } catch (err) {
+      console.error("BookForm submit:", err);
+      setErrors({
+        general:
+          err instanceof Error
+            ? err.message
+            : t.book.errors.generic,
+      });
+    } finally {
       setSubmitting(false);
-      return;
     }
-
-    const params = new URLSearchParams({
-      pending: "1",
-      name: name.trim(),
-      phone: phone.trim(),
-      disease: disease.trim(),
-      country: countryName,
-      city: city.trim(),
-      consult: label,
-      doctor: doctorLabel,
-      amount: String(selectedPrice),
-      schedule: availabilityTime,
-    });
-
-    router.push(`/success?${params.toString()}`);
   }
 
   const consultOptions: {

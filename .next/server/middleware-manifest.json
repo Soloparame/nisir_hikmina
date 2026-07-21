@@ -10,50 +10,15 @@
       "page": "/",
       "matchers": [
         {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
-          "originalSource": "/admin/:path*"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/dashboard(.json)?[\\/#\\?]?$",
-          "originalSource": "/doctor/:code/dashboard"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/dashboard(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
-          "originalSource": "/doctor/:code/dashboard/:path*"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/chat(.json)?[\\/#\\?]?$",
-          "originalSource": "/doctor/:code/chat"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/doctor(?:\\/([^\\/#\\?]+?))\\/chat(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
-          "originalSource": "/doctor/:code/chat/:path*"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/chat(.json)?[\\/#\\?]?$",
-          "originalSource": "/chat"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/chat(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
-          "originalSource": "/chat/:path*"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/profile(.json)?[\\/#\\?]?$",
-          "originalSource": "/profile"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/profile(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
-          "originalSource": "/profile/:path*"
+          "regexp": "^/.*$",
+          "originalSource": "/:path*"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "_GYpl_Ue2YtK66HTLgP0x",
-        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "pL9OLT5U8LtV16mFoPFx54XlyXv4h+SPN1vwNmgYizc=",
-        "__NEXT_PREVIEW_MODE_ID": "a16913ec35280b4e336817dad838d95e",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "245006230c771cb1f11a795b6fe49701bdc66abd56c6ba1cad96cf60b6e2e83d",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "51892dcb3b306da2e7b272e65f5fe8164a706f42f4c7a4cfbeacf9ad723f610c"
+        "__NEXT_BUILD_ID": "development",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "0YzFg4tpbApyTsYGcxJcjz+dQYQJ2Jog/pMMmXrRhQk="
       }
     }
   },

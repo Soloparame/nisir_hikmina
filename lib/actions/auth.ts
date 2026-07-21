@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { createServiceClient } from "../supabase/admin";
 import { createClient } from "../supabase/server";
 import type { Profile } from "../types/profile";
 
@@ -102,7 +103,7 @@ export async function validateDoctorLogin(
   doctorName?: string;
   isFirstLogin?: boolean;
 }> {
-  const supabase = await createClient();
+  const supabase = createServiceClient() ?? (await createClient());
   if (!supabase) {
     return { ok: false, error: "Supabase is not configured" };
   }

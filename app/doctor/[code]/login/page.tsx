@@ -81,36 +81,44 @@ function DoctorLoginForm() {
     setLoading(true);
     setError("");
 
-    const code = doctorId.trim().toUpperCase();
-    const validation = await validateDoctorLogin(code, email);
-    if (!validation.ok) {
-      setError(validation.error ?? t.doctorAuth.loginFailed);
+    try {
+      const code = doctorId.trim().toUpperCase();
+      const validation = await validateDoctorLogin(code, email);
+      if (!validation.ok) {
+        setError(validation.error ?? t.doctorAuth.loginFailed);
+        return;
+      }
+
+      const firstLogin = validation.isFirstLogin ?? isFirstLogin;
+      setIsFirstLogin(firstLogin);
+
+      const result = await loginDoctorClient({
+        login_code: code,
+        email,
+        password,
+        doctorName: validation.doctorName ?? doctorName,
+        isFirstLogin: firstLogin,
+      });
+
+      if (!result.ok) {
+        setError(result.error ?? t.doctorAuth.loginFailed);
+        return;
+      }
+
+      if (result.needsEmailConfirmation) {
+        setError(t.doctorAuth.confirmThenSignIn);
+        return;
+      }
+
+      router.push(`/doctor/${code}/dashboard`);
+      router.refresh();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : t.doctorAuth.loginFailed
+      );
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const result = await loginDoctorClient({
-      login_code: code,
-      email,
-      password,
-      doctorName: validation.doctorName ?? doctorName,
-      isFirstLogin: validation.isFirstLogin ?? isFirstLogin,
-    });
-
-    if (!result.ok) {
-      setError(result.error ?? t.doctorAuth.loginFailed);
-      setLoading(false);
-      return;
-    }
-
-    if (result.needsEmailConfirmation) {
-      setError(t.doctorAuth.confirmThenSignIn);
-      setLoading(false);
-      return;
-    }
-
-    router.push(`/doctor/${code}/dashboard`);
-    router.refresh();
   }
 
   async function handleGoogleSignIn() {

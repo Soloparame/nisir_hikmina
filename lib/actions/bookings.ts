@@ -64,7 +64,8 @@ export async function getBookedTimesForDoctor(
 }
 
 async function isSlotAlreadyBooked(
-  supabase: NonNullable<Awaited<ReturnType<typeof createClient>>>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: { from: (table: string) => any },
   doctorId: string,
   scheduledDate: string,
   scheduledTime: string
@@ -97,11 +98,22 @@ export async function createBookingWithPayment(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const patientUserId = data.user_id ?? user?.id ?? null;
+
+  // Prefer server session — booking must be linked to a signed-in patient for chat
+  const patientUserId = user?.id ?? data.user_id ?? null;
+  if (!patientUserId) {
+    return {
+      ok: false,
+      error: "Please sign in before submitting your booking and payment.",
+    };
+  }
+
   const scheduledTimeDb = normalizeScheduledTime(data.scheduled_time);
+  // Use service role when available so insert is not blocked by RLS edge cases
+  const writeDb = createServiceClient() ?? supabase;
 
   const slotTaken = await isSlotAlreadyBooked(
-    supabase,
+    writeDb,
     data.doctor_id,
     data.scheduled_date,
     data.scheduled_time
@@ -137,7 +149,7 @@ export async function createBookingWithPayment(
   let inserted: { id: string } | null = null;
   let appointmentError: { message: string; code?: string } | null = null;
 
-  const primary = await supabase
+  const primary = await writeDb
     .from("appointments")
     .insert(appointmentPayload)
     .select("id")
@@ -152,7 +164,7 @@ export async function createBookingWithPayment(
   ) {
     const { payment_screenshot_url: _s, payment_method: _m, ...legacyPayload } =
       appointmentPayload;
-    const fallback = await supabase
+    const fallback = await writeDb
       .from("appointments")
       .insert(legacyPayload)
       .select("id")
@@ -178,8 +190,7 @@ export async function createBookingWithPayment(
     };
   }
 
-  const paymentDb = createServiceClient() ?? supabase;
-  const { error: paymentError } = await paymentDb
+  const { error: paymentError } = await writeDb
     .from("appointment_payments")
     .insert({
       appointment_id: inserted.id,
@@ -195,7 +206,7 @@ export async function createBookingWithPayment(
   }
 
   let doctorName = "Unknown doctor";
-  const { data: doctorRow } = await supabase
+  const { data: doctorRow } = await writeDb
     .from("doctors")
     .select("name, name_en")
     .eq("id", data.doctor_id)
@@ -224,6 +235,7 @@ export async function createBookingWithPayment(
   }
 
   revalidatePath("/admin/bookings");
+  revalidatePath("/admin");
   return { ok: true, appointmentId: inserted.id };
 }
 
@@ -297,7 +309,16 @@ export async function approveBookingPayment(
     }
 
     if (appointment.status === "confirmed") {
-      return { ok: true, chatEnabled: Boolean(appointment.user_id) };
+      let chatEnabled = Boolean(appointment.user_id);
+      if (appointment.user_id && appointment.doctor_id) {
+        const convo = await ensureConversationForBooking(
+          appointment.doctor_id,
+          appointment.user_id,
+          appointmentId
+        );
+        chatEnabled = Boolean(convo.ok);
+      }
+      return { ok: true, chatEnabled };
     }
 
     const now = new Date().toISOString();
@@ -358,8 +379,20 @@ export async function approveBookingPayment(
 
     try {
       revalidatePath("/admin/bookings");
+      revalidatePath("/admin");
       revalidatePath("/book");
       revalidatePath("/chat");
+      if (appointment.doctor_id) {
+        const { data: doctor } = await supabase
+          .from("doctors")
+          .select("login_code")
+          .eq("id", appointment.doctor_id)
+          .maybeSingle();
+        if (doctor?.login_code) {
+          revalidatePath(`/doctor/${doctor.login_code}/dashboard`);
+          revalidatePath(`/doctor/${doctor.login_code}/chat`);
+        }
+      }
     } catch (revalidateErr) {
       console.error("approveBookingPayment revalidate:", revalidateErr);
     }
