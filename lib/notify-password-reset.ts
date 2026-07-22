@@ -59,17 +59,20 @@ export async function sendPasswordResetEmail(
   }
 
   const siteUrl = getSiteUrl();
+  // Link straight to the update page with token_hash. Verification runs in the
+  // browser only — so email security scanners that prefetch the URL cannot
+  // consume the one-time recovery token before the user opens it.
   const resetUrl =
-    `${siteUrl}/auth/callback` +
+    `${siteUrl}${nextPath}` +
     `?token_hash=${encodeURIComponent(data.properties.hashed_token)}` +
-    `&type=recovery` +
-    `&next=${encodeURIComponent(nextPath)}`;
+    `&type=recovery`;
 
   const html = `
     <div style="font-family: system-ui, sans-serif; line-height: 1.6; color: #0f172a; max-width: 560px;">
       <h2 style="color: #004d4d; margin-bottom: 0.35rem;">Reset your password</h2>
       <p>We received a request to reset the password for <strong>${email}</strong>.</p>
       <p>Click the button below to choose a new password. This link works on any device.</p>
+      <p style="font-size: 0.9rem; color: #64748b;">Tip: open the link in your phone or computer browser (not an in-app preview).</p>
       <p style="margin: 1.5rem 0;">
         <a href="${resetUrl}"
            style="display:inline-block;background:#009966;color:#fff;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:700;">

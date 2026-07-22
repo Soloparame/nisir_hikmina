@@ -35,10 +35,17 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Supabase recovery / magic links can arrive as:
-  // 1) ?code=... (PKCE)
-  // 2) ?token_hash=...&type=recovery
-  if (!code && !(tokenHash && type)) {
+  // Recovery links with token_hash: do NOT verify here.
+  // Email scanners often GET this URL and would burn the one-time token.
+  // Forward to the app page so verifyOtp runs only in the browser.
+  if (tokenHash && type) {
+    const dest = new URL(nextPath, request.url);
+    dest.searchParams.set("token_hash", tokenHash);
+    dest.searchParams.set("type", type);
+    return NextResponse.redirect(dest);
+  }
+
+  if (!code) {
     return errorRedirect(
       request,
       nextPath,
@@ -65,24 +72,12 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) {
-      const message = /pkce|code verifier/i.test(error.message)
-        ? "This reset link is outdated. Go back and request a new password reset email, then open the newest link."
-        : error.message;
-      return errorRedirect(request, nextPath, message);
-    }
-    return response;
-  }
-
-  const { error } = await supabase.auth.verifyOtp({
-    type: type!,
-    token_hash: tokenHash!,
-  });
-
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
-    return errorRedirect(request, nextPath, error.message);
+    const message = /pkce|code verifier/i.test(error.message)
+      ? "This reset link is outdated. Go back and request a new password reset email, then open the newest link."
+      : error.message;
+    return errorRedirect(request, nextPath, message);
   }
 
   return response;
