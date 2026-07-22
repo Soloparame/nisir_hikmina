@@ -78,11 +78,8 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isAdminRoute) {
-    if (!user) {
+    if (!user || !isAdminRole(user.user_metadata as Record<string, unknown>)) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
-    if (!isAdminRole(user.user_metadata as Record<string, unknown>)) {
-      return NextResponse.redirect(new URL("/login", request.url));
     }
     return response;
   }
@@ -128,6 +125,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin",
     "/admin/:path*",
     "/doctor/:code/dashboard",
     "/doctor/:code/dashboard/:path*",

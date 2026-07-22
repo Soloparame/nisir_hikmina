@@ -219,7 +219,6 @@ export async function updateCurrentUserPasswordClient(
 /**
  * Doctor login — no separate signup. Admin registers the doctor; they sign in
  * with Doctor ID + registered email + password (password set on first login).
- * Google OAuth remains available separately.
  */
 export async function loginDoctorClient(data: {
   login_code: string;
@@ -317,7 +316,7 @@ export async function loginDoctorClient(data: {
         return {
           ok: false,
           error:
-            "This email already has an account. Use Continue with Google, or ask admin to reset Auth for this doctor email.",
+            "This email already has an account. Sign in with your password, or ask admin to reset Auth for this doctor email.",
         };
       }
       return finishWithSession();
@@ -331,7 +330,7 @@ export async function loginDoctorClient(data: {
       return {
         ok: false,
         error:
-          "This email already has an account. Use Continue with Google, or ask admin to reset Auth for this doctor email.",
+          "This email already has an account. Sign in with your password, or ask admin to reset Auth for this doctor email.",
       };
     }
     return finishWithSession();
@@ -352,35 +351,6 @@ export async function loginDoctorClient(data: {
 
   await ensureProfileForUser(authData.user);
   return finishWithSession();
-}
-
-export async function signInDoctorWithGoogleClient(data: {
-  login_code: string;
-  nextPath?: string;
-}): Promise<AuthResult> {
-  const supabase = createClient();
-  if (!supabase) {
-    return { ok: false, error: "Supabase is not configured on this site." };
-  }
-
-  const code = data.login_code.trim().toUpperCase();
-  const nextPath = data.nextPath ?? `/doctor/${code}/oauth-complete`;
-
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: buildCallbackUrl(nextPath),
-      queryParams: {
-        prompt: "select_account",
-      },
-    },
-  });
-
-  if (error) {
-    return { ok: false, error: friendlyAuthError(error.message) };
-  }
-
-  return { ok: true };
 }
 
 export async function sendDoctorPasswordResetClient(data: {

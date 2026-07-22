@@ -14,12 +14,8 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { getDoctorByLoginCode, validateDoctorLogin } from "../../../../lib/actions/auth";
-import {
-  loginDoctorClient,
-  signInDoctorWithGoogleClient,
-} from "../../../../lib/auth/browser";
+import { loginDoctorClient } from "../../../../lib/auth/browser";
 import { useLanguage } from "../../../../lib/i18n/LanguageContext";
-import GoogleSignInButton from "../../../../components/GoogleSignInButton";
 import styles from "../../../auth.module.css";
 
 function DoctorLoginForm() {
@@ -117,28 +113,6 @@ function DoctorLoginForm() {
         err instanceof Error ? err.message : t.doctorAuth.loginFailed
       );
     } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleGoogleSignIn() {
-    setLoading(true);
-    setError("");
-
-    const code = doctorId.trim().toUpperCase();
-    const validation = await validateDoctorLogin(code, email);
-    if (!validation.ok) {
-      setError(validation.error ?? t.doctorAuth.loginFailed);
-      setLoading(false);
-      return;
-    }
-
-    const result = await signInDoctorWithGoogleClient({
-      login_code: code,
-    });
-
-    if (!result.ok) {
-      setError(result.error ?? "Google sign-in failed.");
       setLoading(false);
     }
   }
@@ -317,12 +291,6 @@ function DoctorLoginForm() {
                 ? t.doctorAuth.activateBtn
                 : t.doctorAuth.signInBtn}
           </button>
-
-          <GoogleSignInButton
-            className={styles.secondaryBtn}
-            disabled={loading}
-            onClick={handleGoogleSignIn}
-          />
         </form>
       </div>
     </div>

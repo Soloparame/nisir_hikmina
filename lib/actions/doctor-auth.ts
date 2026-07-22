@@ -54,7 +54,7 @@ async function findAuthUserIdByEmail(
 /**
  * First-time doctor password activation.
  * Creates / confirms the Auth user with the password they choose so
- * email-confirmation settings cannot block login. Google OAuth remains separate.
+ * email-confirmation settings cannot block login.
  */
 export async function activateDoctorFirstLogin(data: {
   login_code: string;
@@ -121,7 +121,7 @@ export async function activateDoctorFirstLogin(data: {
     return {
       ok: false,
       error:
-        "This email already has an account, but it could not be activated automatically. Use Continue with Google, or ask admin to clear the Auth user and try again.",
+        "This email already has an account, but it could not be activated automatically. Ask admin to clear the Auth user and try again.",
     };
   }
 
