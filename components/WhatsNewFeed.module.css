@@ -43,38 +43,65 @@
   border-radius: 24px;
   border: 1px solid rgba(0, 77, 77, 0.06);
   overflow: hidden;
+  isolation: isolate;
+  /* Promote a stable layer — avoids GPU banding on some mobile browsers */
+  transform: translateZ(0);
   box-shadow:
     0 1px 2px rgba(0, 77, 77, 0.04),
-    0 16px 48px rgba(0, 77, 77, 0.08);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+    0 12px 32px rgba(0, 77, 77, 0.07);
+  transition: box-shadow 0.25s ease;
 }
 
-.card:hover {
-  box-shadow:
-    0 4px 8px rgba(0, 77, 77, 0.06),
-    0 24px 56px rgba(0, 153, 102, 0.14);
-  transform: translateY(-3px);
+@media (hover: hover) and (pointer: fine) {
+  .card {
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .card:hover {
+    box-shadow:
+      0 4px 8px rgba(0, 77, 77, 0.06),
+      0 24px 56px rgba(0, 153, 102, 0.14);
+    transform: translateY(-3px);
+  }
+
+  .card:hover .image {
+    transform: scale(1.04);
+  }
 }
 
 .cardLayout {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  /* Stack when the card is narrow; never force a 300px side column on phones */
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+@media (min-width: 720px) {
+  .cardLayout {
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  }
 }
 
 .media {
   position: relative;
-  min-height: 240px;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 16 / 10;
   background: linear-gradient(135deg, #e6f5f4, #d1fae5);
   overflow: hidden;
+}
+
+@media (min-width: 720px) {
+  .media {
+    aspect-ratio: auto;
+    min-height: 240px;
+    height: 100%;
+  }
 }
 
 .image {
   object-fit: cover;
   transition: transform 0.45s ease;
-}
-
-.card:hover .image {
-  transform: scale(1.04);
 }
 
 .imageOverlay {
@@ -85,11 +112,12 @@
     transparent 40%,
     rgba(0, 77, 77, 0.12) 100%
   );
+  pointer-events: none;
 }
 
 .imagePlaceholder {
-  height: 100%;
-  min-height: 240px;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,8 +137,7 @@
   gap: 5px;
   padding: 6px 11px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
+  background: #fff;
   color: #047857;
   font-size: 0.68rem;
   font-weight: 800;
@@ -370,16 +397,51 @@
   font-weight: 700;
 }
 
-@media (max-width: 768px) {
-  .cardLayout {
-    grid-template-columns: 1fr;
+@media (max-width: 719px) {
+  .feed {
+    gap: 1.25rem;
   }
 
-  .media {
-    min-height: 200px;
+  .card {
+    border-radius: 18px;
+    box-shadow:
+      0 1px 2px rgba(0, 77, 77, 0.04),
+      0 8px 24px rgba(0, 77, 77, 0.06);
   }
 
-  .imagePlaceholder {
-    min-height: 200px;
+  .body {
+    padding: 1.15rem 1.15rem 1.25rem;
+  }
+
+  .body h2 {
+    font-size: 1.15rem;
+  }
+
+  .content {
+    font-size: 0.92rem;
+  }
+
+  .reactions {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    gap: 6px;
+  }
+
+  .reactBtn,
+  .commentToggle {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .commentsPanel {
+    padding: 1rem 1.15rem 1.2rem;
+  }
+
+  .commentForm {
+    flex-direction: column;
+  }
+
+  .commentForm button {
+    width: 100%;
   }
 }

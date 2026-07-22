@@ -123,4 +123,9 @@
   .section {
     padding: 3.5rem 0;
   }
+
+  .orb1,
+  .orb2 {
+    display: none;
+  }
 }

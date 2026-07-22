@@ -35,7 +35,8 @@ body {
   line-height: 1.6;
   background: var(--bg-main);
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
+  /* hidden (not clip) — clip + sticky backdrop-filter causes GPU banding on some Android phones */
+  overflow-x: hidden;
 }
 
 /* Compact desktop density without CSS zoom (zoom interferes with sticky UI). */
