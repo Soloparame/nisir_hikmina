@@ -25,15 +25,23 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (stored === "am" || stored === "en") {
-      setLocaleState(stored);
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
+      if (stored === "am" || stored === "en") {
+        setLocaleState(stored);
+      }
+    } catch {
+      /* ignore private mode / blocked storage */
     }
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    localStorage.setItem(STORAGE_KEY, locale);
+    try {
+      localStorage.setItem(STORAGE_KEY, locale);
+    } catch {
+      /* ignore */
+    }
   }, [locale]);
 
   const setLocale = useCallback((next: Locale) => {
