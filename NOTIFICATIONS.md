@@ -10,20 +10,17 @@ When an admin **adds a doctor** (or assigns a login ID for the first time) and s
 
 Requires:
 
-- `RESEND_API_KEY` (same as appointment alerts)
+- `BREVO_API_KEY`
+- `BREVO_FROM_EMAIL` (verified sender in Brevo)
 - `NEXT_PUBLIC_SITE_URL=https://eaglemedicalcare.com` in Netlify / `.env.local` (no trailing slash)
 
-Uses `RESEND_FROM_EMAIL` if set; otherwise Resend’s test sender.
-
-**Important:** The email address domain must **exactly match** a **Verified** domain in Resend. If you verified `updates.eaglemedicalcare.com`, use e.g. `noreply@updates.eaglemedicalcare.com` — **not** `noreply@eaglemedicalcare.com` (root is a separate domain in Resend).
-
-**Note:** On Resend’s free tier, you can only send to **verified** recipient emails until your domain is verified.
+To **send the welcome email again**, use the **Email** button on the doctor row in Admin → Doctors.
 
 ---
 
 ## Admin notifications (new appointments)
 
-When a patient completes the booking form, the server saves the row in Supabase, then tries to notify you by **email** (Resend), **Telegram** (optional bot), and **WhatsApp** (optional CallMeBot).
+When a patient completes the booking form, the server saves the row in Supabase, then tries to notify you by **email** (Brevo), **Telegram** (optional bot), and **WhatsApp** (optional CallMeBot).
 
 Default recipients (built into the app; override with env vars if needed):
 
@@ -38,58 +35,59 @@ Default recipients (built into the app; override with env vars if needed):
 | Environment | What to do |
 |-------------|------------|
 | **Local** (`npm run dev`) | Create or edit **`.env.local`** in the project root (same folder as `package.json`). Never commit this file. |
-| **Production** (e.g. **Vercel**) | Project → **Settings** → **Environment Variables** → add each name/value → choose **Production** (and **Preview** if you want previews to notify too) → **Save** → trigger a **new deployment** (Redeploy) so the server picks up the new values. |
+| **Production** (e.g. **Netlify**) | Site → **Environment variables** → add each name/value → **Save** → **Redeploy**. |
 
 Format (no spaces around `=`):
 
 ```bash
-RESEND_API_KEY=re_xxxxxxxx
+BREVO_API_KEY=xkeysib-xxxxxxxx
+BREVO_FROM_EMAIL=noreply@eaglemedicalcare.com
 ```
 
 Restart `npm run dev` after changing `.env.local`.
 
 ---
 
-## 1) Email — `RESEND_API_KEY` (recommended)
+## 1) Email — Brevo (`BREVO_API_KEY` + `BREVO_FROM_EMAIL`)
 
 ### Why you need this
 
-The app sends email through [Resend](https://resend.com). Without `RESEND_API_KEY`, **no email is sent** (you’ll see a warning in server logs).
+The app sends all transactional mail through [Brevo](https://www.brevo.com) (doctor welcome, password reset, appointment alerts). Without these keys, **no email is sent**.
 
-### Step-by-step (Resend)
+### Step-by-step (Brevo)
 
-1. Go to [https://resend.com](https://resend.com) and **sign up** (GitHub or email).
-2. Confirm your email if Resend asks you to.
-3. In the Resend dashboard, open **API Keys** (sometimes under **Settings**).
-4. Click **Create API Key**, give it a name (e.g. `eagle-medical`), choose permission **Sending access** (or full if that’s the only option).
-5. Copy the key — it starts with **`re_`**. You only see the full key once; if you lose it, create a new key.
-6. Add to **`.env.local`** (and to your host’s env vars for production):
-
-   ```bash
-   RESEND_API_KEY=re_paste_your_key_here
-   ```
-
-7. **Sender address (optional)**  
-   For quick tests, the app defaults to Resend’s test sender:  
-   `Eagle Medical <onboarding@resend.dev>`  
-   Resend may restrict who you can send **to** on the free tier (often your own inbox until you add a domain). If mail doesn’t arrive, open Resend → **Logs** / **Emails** to see bounces or errors.
-
-8. **Custom domain (later, optional)**  
-   After you verify a domain in Resend, you can set:
+1. Go to [https://www.brevo.com](https://www.brevo.com) and **sign up**.
+2. Confirm your account email if Brevo asks.
+3. Open **SMTP & API** → **API keys** (or **Settings** → **SMTP & API**).
+4. Click **Generate a new API key**, name it e.g. `eagle-medical`, copy it (starts with **`xkeysib-`**). Store it safely — you may only see it once.
+5. Open **Senders, Domains & Dedicated IPs** → **Senders**:
+   - Add your sender email (e.g. `noreply@eaglemedicalcare.com` or your personal email for testing).
+   - Complete Brevo’s verification (confirm the email link, or verify the whole domain with DNS).
+6. Add to **`.env.local`** and **Netlify**:
 
    ```bash
-   RESEND_FROM_EMAIL=Eagle Medical <appointments@yourdomain.com>
+   BREVO_API_KEY=xkeysib-paste_your_key_here
+   BREVO_FROM_EMAIL=noreply@eaglemedicalcare.com
+   # Optional display name (defaults to "Eagle Medical")
+   # BREVO_FROM_NAME=Eagle Medical
    ```
 
-9. **Override recipient email (optional)**  
-   Default inbox is already `fisihaguade2127@gmail.com`. To change it:
+7. **Remove old Resend vars** if present (`RESEND_API_KEY`, `RESEND_FROM_EMAIL`) — they are no longer used.
+
+8. **Override admin alert recipient (optional)**  
+   Default inbox is `fisihaguade2127@gmail.com`. To change it:
 
    ```bash
    ADMIN_NOTIFY_EMAIL=you@example.com
    ```
 
-10. **Test**  
-    Run the app, submit a booking on `/book`, then check the inbox and Resend dashboard logs.
+9. **Test**
+   - Save a doctor with email → doctor receives welcome mail.
+   - Or click **Email** on an existing doctor row.
+   - Submit a booking on `/book` → admin receives appointment alert.
+   - Check Brevo → **Transactional** → **Emails** / **Logs** if nothing arrives.
+
+**Important:** `BREVO_FROM_EMAIL` must be a **verified sender** (or on a verified domain) in the **same Brevo account** as the API key.
 
 ---
 
@@ -99,82 +97,41 @@ The app sends email through [Resend](https://resend.com). Without `RESEND_API_KE
 
 Telegram’s API does **not** let a server send a private message using only `@NisirAd`. You create a **bot**, you **start** a chat with it, then you use your numeric **`chat_id`** so the bot can message **you**.
 
-### Step-by-step (Telegram)
+### Step-by-step
 
-1. In Telegram, open **[@BotFather](https://t.me/BotFather)**.
-2. Send: **`/newbot`**
-3. Follow prompts: choose a **display name** (e.g. `Eagle Medical Appointments Bot`) and a **username** ending in `bot` (e.g. `eagle_medical_bot`).
-4. BotFather replies with a **HTTP API token** — a long string like `7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxx`. **Copy it.** That is `TELEGRAM_BOT_TOKEN`.
+1. Open Telegram, search **`@BotFather`**, start a chat.
+2. Send `/newbot`, follow prompts, copy the **HTTP API token**.
+3. Open your new bot and send **`/start`** (required once).
+4. In a browser open (replace `TOKEN`):
 
-   ```bash
-   TELEGRAM_BOT_TOKEN=7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   ```text
+   https://api.telegram.org/botTOKEN/getUpdates
    ```
 
-5. Open your new bot in Telegram (tap the link BotFather gives you) and send **`/start`** (or any message). This creates a chat between **you** and the bot.
-
-6. In a **desktop browser**, open this URL (replace `TOKEN` with your real token, **no spaces**):
-
-   `https://api.telegram.org/botTOKEN/getUpdates`
-
-   Example (fake token):
-
-   `https://api.telegram.org/bot7123456789:AAHxxxx/getUpdates`
-
-7. You should see JSON. Search for **`"chat"`** then **`"id"`** under the object that represents **your** user (not the bot). Typical private chat id looks like:
-
-   ```json
-   "chat":{"id":123456789,"first_name":"YourName", ...
-   ```
-
-   That number **`123456789`** is `TELEGRAM_CHAT_ID` (sometimes negative for groups; for a private DM to the bot it’s usually positive).
+5. Find `"chat":{"id": 123456789}` — that number is `TELEGRAM_CHAT_ID`.
+6. Set:
 
    ```bash
+   TELEGRAM_BOT_TOKEN=123456:ABC...
    TELEGRAM_CHAT_ID=123456789
    ```
 
-8. If `getUpdates` is empty, send **`/start`** to the bot again, wait a second, refresh the URL.
-
-9. Add both variables to **`.env.local`** and production, restart dev / redeploy, then submit a test booking. You should get a Telegram message with the appointment text.
-
 ---
 
-## 3) WhatsApp — `CALLMEBOT_API_KEY` (optional)
+## 3) WhatsApp — CallMeBot (optional)
 
-There is no official free “send WhatsApp from my Next.js app” API without a provider. This project can use **[CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/)** so your **own WhatsApp number** receives a text when someone books.
-
-### Step-by-step (CallMeBot — high level)
-
-Exact screens can change; always follow CallMeBot’s current instructions on their site.
-
-1. Open CallMeBot’s WhatsApp API guide:  
-   [https://www.callmebot.com/blog/free-api-whatsapp-messages/](https://www.callmebot.com/blog/free-api-whatsapp-messages/)
-
-2. They usually ask you to **send a specific WhatsApp message** from the phone number that should **receive** alerts (e.g. your `+251947018285` line) to their control number. That **links** your WhatsApp to their service.
-
-3. After linking, they give you an **API key** (a number or string). Put it in env:
-
-   ```bash
-   CALLMEBOT_API_KEY=paste_key_from_callmebot
-   ```
-
-4. The app sends to the default **`251947018285`** (no `+` in env). To use a different number:
-
-   ```bash
-   ADMIN_NOTIFY_WHATSAPP_E164=2519XXXXXXXX
-   ```
-
-   Use **country code + number**, digits only (Ethiopia is `251`).
-
-5. Redeploy / restart, then test a booking. If nothing arrives, check CallMeBot’s FAQ and that the phone completed their activation message.
+See CallMeBot docs. Set `CALLMEBOT_API_KEY` and optionally `ADMIN_NOTIFY_WHATSAPP_E164`.
 
 ---
 
 ## Quick checklist
 
-- [ ] `RESEND_API_KEY` in `.env.local` + production host  
-- [ ] Restart dev server / redeploy after any env change  
-- [ ] (Optional) `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`  
-- [ ] (Optional) `CALLMEBOT_API_KEY` (+ `ADMIN_NOTIFY_WHATSAPP_E164` if not default)  
-- [ ] Submit a test appointment on `/book` and verify email / Telegram / WhatsApp  
+- [ ] `BREVO_API_KEY` in `.env.local` + Netlify  
+- [ ] `BREVO_FROM_EMAIL` verified in Brevo Senders  
+- [ ] `NEXT_PUBLIC_SITE_URL` set (doctor login links)  
+- [ ] Remove unused `RESEND_*` env vars  
+- [ ] Restart / redeploy after env changes  
+- [ ] (Optional) Telegram + CallMeBot  
+- [ ] Test: save doctor, booking, password reset  
 
-If something still fails, check **host logs** (Vercel → Deployment → **Functions** / **Logs**) for lines starting with `[notify-admin]`.
+If something fails, check host logs for `[notify-doctor-welcome]`, `[notify-admin]`, or `[password-reset]`.

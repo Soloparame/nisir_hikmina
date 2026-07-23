@@ -1,12 +1,8 @@
-import {
-  enrichResendError,
-  getResendApiKey,
-  getResendFromAddress,
-} from "./resend-config";
+import { sendTransactionalEmail } from "./send-email";
 /**
  * Sends admin alerts when a patient books an appointment.
  *
- * Email: set RESEND_API_KEY (https://resend.com) — free tier works with onboarding@resend.dev
+ * Email: set BREVO_API_KEY + BREVO_FROM_EMAIL (https://www.brevo.com)
  * Telegram: set TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (admin must /start the bot once; get chat_id from getUpdates)
  * WhatsApp: optional CALLMEBOT_API_KEY — https://www.callmebot.com/blog/free-api-whatsapp-messages/
  */
@@ -62,42 +58,15 @@ export function formatAppointmentMessage(p: AppointmentNotifyPayload) {
   return lines.join("\n");
 }
 
-async function sendResendEmail(subject: string, text: string, html: string) {
-  const key = getResendApiKey();
-  if (!key) {
-    console.warn(
-      "[notify-admin] RESEND_API_KEY is not set — email notifications disabled. Add it in .env.local / hosting env."
-    );
-    return false;
-  }
-
-  const from = getResendFromAddress();
-
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [getAdminEmail()],
-      subject,
-      text,
-      html,
-    }),
+async function sendAdminEmail(subject: string, text: string, html: string) {
+  const result = await sendTransactionalEmail({
+    to: getAdminEmail(),
+    subject,
+    text,
+    html,
   });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    let logged = errText;
-    try {
-      const body = JSON.parse(errText) as { message?: string };
-      if (body.message) logged = enrichResendError(body.message);
-    } catch {
-      /* use raw */
-    }
-    console.error("[notify-admin] Resend error:", res.status, logged);
+  if (!result.ok) {
+    console.warn("[notify-admin]", result.error);
     return false;
   }
   return true;
@@ -174,7 +143,7 @@ export async function notifyAdminNewAppointment(p: AppointmentNotifyPayload) {
   `;
 
   await Promise.allSettled([
-    sendResendEmail(subject, text, html),
+    sendAdminEmail(subject, text, html),
     sendTelegramBot(text),
     sendCallMeBotWhatsApp(text),
   ]);

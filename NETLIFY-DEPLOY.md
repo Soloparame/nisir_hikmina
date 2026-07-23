@@ -11,7 +11,8 @@ In **Netlify** → your site → **Site configuration** → **Environment variab
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxx.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` **or** `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | From Supabase → **Project Settings** → **API** |
 | `NEXT_PUBLIC_SITE_URL` | `https://eaglemedicalcare.com` (doctor welcome emails) |
-| `RESEND_API_KEY` | For appointment alerts **and** doctor welcome emails |
+| `BREVO_API_KEY` | Brevo API key (doctor welcome, password reset, appointment alerts) |
+| `BREVO_FROM_EMAIL` | Verified sender email in Brevo (e.g. `noreply@eaglemedicalcare.com`) |
 
 **Important**
 

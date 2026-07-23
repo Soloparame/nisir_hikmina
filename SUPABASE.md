@@ -42,7 +42,7 @@ Patients book at `/book` — they pick a doctor first, then fill the form.
 
 ## 7. Admin email / Telegram / WhatsApp when someone books
 
-See **`NOTIFICATIONS.md`**. You need at least **`RESEND_API_KEY`** for email alerts; Telegram and WhatsApp are optional (see that file for setup).
+See **`NOTIFICATIONS.md`**. You need at least **`BREVO_API_KEY`** and **`BREVO_FROM_EMAIL`** for email alerts; Telegram and WhatsApp are optional (see that file for setup).
 
 ## 8. Netlify production
 

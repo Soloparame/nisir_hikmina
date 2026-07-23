@@ -167,7 +167,7 @@ export default function AdminDoctorsPanel({
       } else if (result.welcome_email_error) {
         msg += ` Welcome email failed: ${result.welcome_email_error}`;
       } else {
-        msg += " Welcome email was not sent (no new login ID). Use Resend email on the doctor list.";
+        msg += " Welcome email was not sent (no new login ID). Use Email on the doctor list.";
       }
     } else {
       msg += " Add an email to send the doctor their login link.";

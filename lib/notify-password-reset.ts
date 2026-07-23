@@ -1,5 +1,5 @@
-import { enrichResendError, getResendApiKey, getResendFromAddress } from "./resend-config";
 import { getSiteUrl } from "./site-url";
+import { sendTransactionalEmail } from "./send-email";
 import { createServiceClient } from "./supabase/admin";
 
 export type PasswordResetRequest = {
@@ -11,7 +11,7 @@ export type PasswordResetRequest = {
 /**
  * Cross-device safe password reset:
  * Uses service-role generateLink + token_hash (no PKCE cookie needed),
- * then emails the link via Resend.
+ * then emails the link via Brevo.
  */
 export async function sendPasswordResetEmail(
   payload: PasswordResetRequest
@@ -32,15 +32,6 @@ export async function sendPasswordResetEmail(
       ok: false,
       error:
         "Password reset is not configured (missing SUPABASE_SERVICE_ROLE_KEY). Add it in Netlify env and redeploy.",
-    };
-  }
-
-  const key = getResendApiKey();
-  if (!key) {
-    return {
-      ok: false,
-      error:
-        "Password reset email is not configured (missing RESEND_API_KEY). Add it in Netlify env and redeploy.",
     };
   }
 
@@ -99,32 +90,16 @@ export async function sendPasswordResetEmail(
     "— Eagle Medical",
   ].join("\n");
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: getResendFromAddress(),
-      to: [email],
-      subject: "Reset your Eagle Medical password",
-      text,
-      html,
-    }),
+  const result = await sendTransactionalEmail({
+    to: email,
+    subject: "Reset your Eagle Medical password",
+    text,
+    html,
   });
 
-  const raw = await res.text();
-  if (!res.ok) {
-    let errMsg = `Email could not be sent (HTTP ${res.status}).`;
-    try {
-      const body = JSON.parse(raw) as { message?: string };
-      if (body.message) errMsg = enrichResendError(body.message);
-    } catch {
-      if (raw) errMsg = raw.slice(0, 280);
-    }
-    console.error("[password-reset] Resend error:", errMsg);
-    return { ok: false, error: errMsg };
+  if (!result.ok) {
+    console.error("[password-reset] Brevo error:", result.error);
+    return { ok: false, error: result.error };
   }
 
   return { ok: true };

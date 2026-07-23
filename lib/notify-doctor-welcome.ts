@@ -1,9 +1,5 @@
 import { getDoctorLoginUrl } from "./site-url";
-import {
-  enrichResendError,
-  getResendApiKey,
-  getResendFromAddress,
-} from "./resend-config";
+import { sendTransactionalEmail } from "./send-email";
 
 export type DoctorWelcomePayload = {
   doctor_name: string;
@@ -107,20 +103,10 @@ export function formatDoctorWelcomeMessage(p: DoctorWelcomePayload) {
 export async function notifyDoctorWelcome(
   p: DoctorWelcomePayload
 ): Promise<{ sent: boolean; error?: string }> {
-  const key = getResendApiKey();
-  if (!key) {
-    const msg =
-      "RESEND_API_KEY is not set — welcome email not sent. Add it in .env.local / Netlify env.";
-    console.warn("[notify-doctor-welcome]", msg);
-    return { sent: false, error: msg };
-  }
-
   const to = p.doctor_email.trim();
   if (!to) {
     return { sent: false, error: "Doctor email is missing." };
   }
-
-  const from = getResendFromAddress();
 
   const { text, loginUrl } = formatDoctorWelcomeMessage(p);
   const subject = "Your Eagle Medical doctor portal login";
@@ -149,33 +135,16 @@ export async function notifyDoctorWelcome(
     </div>
   `;
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject,
-      text,
-      html,
-    }),
+  const result = await sendTransactionalEmail({
+    to,
+    subject,
+    text,
+    html,
   });
 
-  const raw = await res.text();
-
-  if (!res.ok) {
-    let errMsg = `Email could not be sent (HTTP ${res.status}).`;
-    try {
-      const body = JSON.parse(raw) as { message?: string };
-      if (body.message) errMsg = enrichResendError(body.message);
-    } catch {
-      if (raw) errMsg = raw.slice(0, 280);
-    }
-    console.error("[notify-doctor-welcome] Resend error:", errMsg);
-    return { sent: false, error: errMsg };
+  if (!result.ok) {
+    console.error("[notify-doctor-welcome] Brevo error:", result.error);
+    return { sent: false, error: result.error };
   }
 
   return { sent: true };
