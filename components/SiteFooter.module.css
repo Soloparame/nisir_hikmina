@@ -101,8 +101,38 @@
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding-top: 1.5rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.copy {
   font-size: 0.88rem;
   opacity: 0.75;
+  margin: 0;
+}
+
+.credit {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.creditLink {
+  color: #6ee7b7;
+  font-weight: 800;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(110, 231, 183, 0.55);
+  padding-bottom: 1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.creditLink:hover {
+  color: #a7f3d0;
+  border-bottom-color: #a7f3d0;
 }
 
 @media (max-width: 900px) {

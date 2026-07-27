@@ -1,4 +1,4 @@
-/** 7×3 sprite grid — order matches DOCTOR_CATEGORIES */
+/** Sprite helper (legacy). Home services use Lucide icons via SERVICE_CATEGORY_ICONS. */
 export const SERVICE_CATEGORY_SPRITE = {
   src: "/images/service-categories-sprite.png",
   alt: "Medical specialty categories",

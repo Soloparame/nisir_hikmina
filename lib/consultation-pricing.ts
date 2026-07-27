@@ -52,7 +52,14 @@ export function getDoctorPricingTier(doctor: Doctor): PricingTier {
   if (text.includes("resident")) {
     return "resident";
   }
-  if (text.includes("specialist")) {
+  if (
+    text.includes("specialist") ||
+    text.includes("oncologist") ||
+    text.includes("neurologist") ||
+    text.includes("internist") ||
+    text.includes("pediatrician") ||
+    text.includes("surgeon")
+  ) {
     return "specialist";
   }
   if (

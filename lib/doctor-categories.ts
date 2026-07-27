@@ -263,6 +263,11 @@ export const DOCTOR_CATEGORIES: DoctorCategory[] = [
       "Swallowing Disorders Specialist",
     ],
   },
+  {
+    key: "oncology",
+    label: "Oncology",
+    subcategories: ["Clinical Oncologist"],
+  },
 ];
 
 export function getCategoryByKey(key: string) {

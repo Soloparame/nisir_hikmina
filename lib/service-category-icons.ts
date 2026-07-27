@@ -16,6 +16,7 @@ import {
   Leaf,
   MessagesSquare,
   Microscope,
+  Ribbon,
   Scan,
   Scissors,
   Siren,
@@ -158,5 +159,11 @@ export const SERVICE_CATEGORY_ICONS: Record<string, ServiceCategoryIconConfig> =
       alt: "Speech therapy icon",
       bg: "#e9d5ff",
       color: "#3b82f6",
+    },
+    oncology: {
+      Icon: Ribbon,
+      alt: "Oncology icon",
+      bg: "#fce7f3",
+      color: "#be185d",
     },
   };

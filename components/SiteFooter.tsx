@@ -48,8 +48,19 @@ export default function SiteFooter() {
         </div>
 
         <div className={styles.footerBottom}>
-          <p>
+          <p className={styles.copy}>
             © {new Date().getFullYear()} {t.brand.name}. {t.footer.rights}
+          </p>
+          <p className={styles.credit}>
+            Done by{" "}
+            <a
+              href="https://www.helloworldeth.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.creditLink}
+            >
+              Hello World Digitals
+            </a>
           </p>
         </div>
       </div>

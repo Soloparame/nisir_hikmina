@@ -147,7 +147,7 @@ const translationsSource = {
       contact: "ያግኙን",
       services: "አገልግሎቶች",
       servicesSummary:
-        "ከዋና እንክብካቤ እስከ ስፔሻሊስት ምክክር — በጽሑፍ፣ በድምጽ እና በቪዲዮ በ20+ የሕክምና መስኮች ውስጥ ቴሌሕክምና።",
+        "ከዋና እንክብካቤ እስከ ስፔሻሊስት ምክክር — በጽሑፍ፣ በድምጽ እና በቪዲዮ በ22+ የሕክምና መስኮች ውስጥ ቴሌሕክምና።",
       browseDoctors: "ሁሉንም ስፔሻሊቲዎች ይመልከቱ →",
       serviceCategories: [
         {
@@ -180,7 +180,7 @@ const translationsSource = {
         { title: "10. ኢንዶክሪኖሎጂ (የስኳር እና ሆርሞን)", items: [] },
         { title: "11. ምግብ እና ዲያቴቲክስ", items: [] },
         { title: "12. ሩሜቶሎጂ", items: [] },
-        { title: "13. ኦንኮሎጂ", items: [] },
+        { title: "13. ኦንኮሎጂ", items: ["ክሊኒካል ኦንኮሎጂስት"] },
         { title: "14. ኦፍታልሞሎጂ", items: [] },
         { title: "15. ENT (ጆሮ፣ አፍንጫ እና ጉሮሮ)", items: [] },
         { title: "16. የጥርስ እና የአፍ ጤና", items: [] },
@@ -195,6 +195,10 @@ const translationsSource = {
         },
         { title: "20. ፓሊያቲቭ እንክብካቤ", items: [] },
         { title: "21. ፊዚዮቴራፒ እና ማሻሻያ", items: [] },
+        {
+          title: "22. ኦንኮሎጂ",
+          items: ["ክሊኒካል ኦንኮሎጂስት"],
+        },
       ],
       legal: "ሕጋዊ",
       privacy: "ግላዊነት እና ፖሊሲ",
@@ -689,7 +693,7 @@ const translationsSource = {
       contact: "Contact",
       services: "Services",
       servicesSummary:
-        "Telehealth across 20+ specialties — from primary care and mental health to pediatrics, surgery, and more. Text, audio, and video consultations.",
+        "Telehealth across 22+ specialties — from primary care and mental health to pediatrics, surgery, oncology, and more. Text, audio, and video consultations.",
       browseDoctors: "Browse all specialties →",
       serviceCategories: [
         {
@@ -724,7 +728,7 @@ const translationsSource = {
         { title: "10. Endocrinology (Diabetes & Hormones)", items: [] },
         { title: "11. Nutrition & Dietetics", items: [] },
         { title: "12. Rheumatology (Joint & Autoimmune)", items: [] },
-        { title: "13. Oncology (Cancer Care)", items: [] },
+        { title: "13. Oncology (Cancer Care)", items: ["Clinical Oncologist"] },
         { title: "14. Ophthalmology (Eye Care)", items: [] },
         { title: "15. ENT (Ear, Nose & Throat)", items: [] },
         { title: "16. Dentistry & Oral Health", items: [] },
@@ -743,6 +747,10 @@ const translationsSource = {
           title:
             "21. Physical Medicine & Rehabilitation (physiotherapy)",
           items: [],
+        },
+        {
+          title: "22. Oncology",
+          items: ["Clinical Oncologist"],
         },
       ],
       legal: "Legal",
