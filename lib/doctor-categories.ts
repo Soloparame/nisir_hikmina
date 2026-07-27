@@ -7,11 +7,32 @@ export type DoctorCategory = {
 /** Top-level categories + subspecialties — stored as-is in Supabase for admin & filtering */
 export const DOCTOR_CATEGORIES: DoctorCategory[] = [
   {
-    key: "gp_residents",
-    label: "General Practitioners & Residents",
+    key: "general_practitioner",
+    label: "General Practitioner",
+    subcategories: ["General Practitioner"],
+  },
+  {
+    key: "resident_physicians",
+    label: "Resident Physicians",
     subcategories: [
-      "General Practitioner (GP)",
-      "Resident Physician",
+      "General Surgery Residents",
+      "Internal Medicine Residents",
+      "Ophthalmology Residents",
+      "Dermatology Residents",
+      "Gynecology & Obstetrics Residents",
+      "Radiology Residents",
+      "Psychiatry Residents",
+      "Emergency and Critical Care Residents",
+      "Anesthesiology & Critical Care Residents",
+      "Neurosurgery Residents",
+      "Oncology Residents",
+      "Neurology Residents",
+      "Pediatrics & Child Health Residents",
+      "Otolaryngology & HNS (ENT) Residents",
+      "Family Medicine Residents",
+      "Plastic Surgery Residents",
+      "Urological Surgery Residents",
+      "Neurological Surgery Residents",
     ],
   },
   {

@@ -40,6 +40,18 @@ export const SERVICE_CATEGORY_ICONS: Record<string, ServiceCategoryIconConfig> =
       bg: "#dbeafe",
       color: "#004d4d",
     },
+    general_practitioner: {
+      Icon: Stethoscope,
+      alt: "General practitioner icon",
+      bg: "#dbeafe",
+      color: "#004d4d",
+    },
+    resident_physicians: {
+      Icon: HeartPlus,
+      alt: "Resident physicians icon",
+      bg: "#e0f2fe",
+      color: "#0369a1",
+    },
     mind_mental_health: {
       Icon: Brain,
       alt: "Brain icon",

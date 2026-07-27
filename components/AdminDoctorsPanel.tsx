@@ -31,11 +31,11 @@ type Props = {
 const emptyForm: DoctorFormData = {
   name: "",
   name_en: "",
-  category: DOCTOR_CATEGORIES[0]?.label ?? "General Practitioners & Residents",
+  category: DOCTOR_CATEGORIES[0]?.label ?? "General Practitioner",
   specialization:
-    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Practitioner (GP)",
+    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Practitioner",
   specialization_en:
-    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Practitioner (GP)",
+    DOCTOR_CATEGORIES[0]?.subcategories[0] ?? "General Practitioner",
   bio: "",
   bio_en: "",
   image_url: "",
