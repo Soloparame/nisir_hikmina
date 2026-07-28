@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { isAdminRole } from "../auth-roles";
 import { notifyAdminNewAppointment } from "../notify-admin-appointment";
+import { notifyBookingConfirmed } from "../notify-booking-confirmed";
 import { resolveBookingPayment } from "../booking-payment-display";
 import { createServiceClient } from "../supabase/admin";
 import { createClient } from "../supabase/server";
@@ -300,7 +301,9 @@ export async function approveBookingPayment(
 
     const { data: appointment, error: fetchError } = await supabase
       .from("appointments")
-      .select("id, doctor_id, user_id, status")
+      .select(
+        "id, doctor_id, user_id, status, patient_name, consult_type, scheduled_date, scheduled_time"
+      )
       .eq("id", appointmentId)
       .maybeSingle();
 
@@ -375,6 +378,54 @@ export async function approveBookingPayment(
       } catch (chatErr) {
         console.error("approveBookingPayment chat:", chatErr);
       }
+    }
+
+    try {
+      if (appointment.user_id && appointment.doctor_id) {
+        const [{ data: doctor }, patientAuth] = await Promise.all([
+          supabase
+            .from("doctors")
+            .select("name, name_en, email, login_code, specialization, specialization_en")
+            .eq("id", appointment.doctor_id)
+            .maybeSingle(),
+          "auth" in supabase && "admin" in supabase.auth
+            ? supabase.auth.admin.getUserById(appointment.user_id)
+            : Promise.resolve({ data: { user: null } }),
+        ]);
+
+        const patientEmail = patientAuth.data.user?.email?.trim() || "";
+        const doctorEmail = doctor?.email?.trim() || "";
+
+        if (patientEmail && doctorEmail) {
+          const doctorName =
+            doctor?.name_en?.trim() || doctor?.name?.trim() || "Doctor";
+          const doctorSpecialization =
+            doctor?.specialization_en?.trim() ||
+            doctor?.specialization?.trim() ||
+            null;
+
+          const emailResult = await notifyBookingConfirmed({
+            patientName: appointment.patient_name,
+            patientEmail,
+            doctorName,
+            doctorEmail,
+            doctorLoginCode: doctor?.login_code ?? null,
+            doctorSpecialization,
+            consultType: appointment.consult_type,
+            scheduledDate: appointment.scheduled_date ?? null,
+            scheduledTime: appointment.scheduled_time ?? null,
+          });
+
+          if (!emailResult.ok) {
+            console.error(
+              "approveBookingPayment confirmation emails:",
+              emailResult.error
+            );
+          }
+        }
+      }
+    } catch (emailErr) {
+      console.error("approveBookingPayment confirmation emails:", emailErr);
     }
 
     try {
