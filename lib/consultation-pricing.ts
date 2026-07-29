@@ -10,10 +10,10 @@ export const CONSULT_DURATIONS: Record<ConsultTypeKey, number> = {
 };
 
 const BASE_PRICES: Record<PricingTier, Record<ConsultTypeKey, number>> = {
-  gp: { text: 300, audio: 600, video: 800 },
-  resident: { text: 400, audio: 700, video: 900 },
-  specialist: { text: 500, audio: 1000, video: 1500 },
-  senior: { text: 800, audio: 1500, video: 2500 },
+  gp: { text: 200, audio: 300, video: 500 },
+  resident: { text: 250, audio: 350, video: 600 },
+  specialist: { text: 400, audio: 600, video: 850 },
+  senior: { text: 600, audio: 900, video: 1200 },
 };
 
 export const ADDITIONAL_MINUTE_RATES: Record<ConsultTypeKey, number> = {
