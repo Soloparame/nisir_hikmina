@@ -86,7 +86,7 @@ export async function getActiveDoctors() {
 /** Featured on homepage even if below experience threshold. */
 const HOMEPAGE_FEATURED_DOCTOR_NAMES = [
   "Bemulu Fasika",
-  "Tadesse Fenat",
+  "Tadesse Fenta Gela",
   "Temesgen Adugnaw",
 ];
 
