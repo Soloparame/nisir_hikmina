@@ -1,3 +1,5 @@
 {
+  "/admin/bookings/page": "app/admin/bookings/page.js",
+  "/admin/doctors/page": "app/admin/doctors/page.js",
   "/page": "app/page.js"
 }

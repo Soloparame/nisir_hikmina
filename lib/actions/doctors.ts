@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { isAdminRole } from "../auth-roles";
+import { isAdminUser } from "../auth-roles";
 import { generateLoginCode } from "../doctor-availability";
 import {
   duplicateDoctorMessage,
@@ -38,7 +38,7 @@ async function getAuthedClient() {
     throw new Error("Unauthorized");
   }
 
-  if (!isAdminRole(user.user_metadata as Record<string, unknown>)) {
+  if (!isAdminUser(user)) {
     throw new Error("Admin access required");
   }
 
@@ -613,10 +613,7 @@ export async function signInAdmin(email: string, password: string) {
     });
     if (error) return { ok: false, error: error.message };
 
-    if (
-      data.user &&
-      !isAdminRole(data.user.user_metadata as Record<string, unknown>)
-    ) {
+    if (data.user && !isAdminUser(data.user)) {
       await supabase.auth.signOut();
       return {
         ok: false,

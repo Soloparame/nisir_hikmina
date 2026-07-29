@@ -2,82 +2,122 @@
   "node": {
     "22c21d95130a6ea5fda278d0ef898e356fffaa86": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "29b2fd2709c70d8279164cb077c8b3668c734876": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "2e3fed75969c874957df17e8de6bc34921f2be80": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "3555a9a8a766dc16b5d1be132a539ef01c9599c5": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "7c67ebb4cfdda19b35872c6f33eaaff8637d14a3": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "9d68424ab68d4be933eb0f4aebd8e033d23515d3": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "bf819b323ab4b43630bf6c66361aecb38285e886": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "c37bde69b5cbf631ab5f6ca449a858c14d1de618": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "d2f2780ab198e3884b123b02f0d7897a9d1d58fd": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "f5db626f7335fc2f7f121666f58ead68361287b2": {
       "workers": {
-        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!"
+        "app/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cupdates.ts%22%2C%5B%22toggleUpdateReaction%22%2C%22getPublishedUpdates%22%2C%22getAllUpdatesAdminWithMeta%22%2C%22saveUpdate%22%2C%22getUpdateEngagementAdmin%22%2C%22incrementUpdateView%22%2C%22addUpdateComment%22%2C%22markUpdateRead%22%2C%22deleteUpdate%22%2C%22getUpdateComments%22%2C%22getAllUpdatesAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/doctors/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=!",
+        "app/admin/bookings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cdoctors.ts%22%2C%5B%22deleteDoctor%22%2C%22signInAdmin%22%2C%22updateDoctorOwnProfile%22%2C%22createAppointment%22%2C%22getExperiencedDoctors%22%2C%22resendDoctorWelcomeEmail%22%2C%22getActiveDoctors%22%2C%22saveDoctor%22%2C%22signOutAdmin%22%2C%22getAllDoctorsAdmin%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "rsc"
+        "app/page": "rsc",
+        "app/admin/doctors/page": "rsc",
+        "app/admin/bookings/page": "action-browser"
       }
     },
     "0a6397f186ac43f20433130cd81ac320f5b195d9": {
@@ -167,8 +207,104 @@
       "layer": {
         "app/page": "rsc"
       }
+    },
+    "081cdaa6f0f24f7bfcee29890ed4c04b667af392": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "50c332aeeb1bbf73b3843f2ae76858830d57a31d": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "cf291cbbe4422fdca77808731c5886c7bddc52ea": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "d8039635c6278f0df8710647f44d919505d64923": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "e801bc5611b3a8cb7bc4037843c6b168ca936e79": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "130da3b98089cde9dffa22584794f78df75fd6f6": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "1b5df78313354c1dfa854b8dcddc018e9bf73de8": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "7cced06b8dbe76d4eeec4179a3813070cb85ca68": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "89393bacdd6eaf2c849faa4ed09303fe0ee21b3e": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "9bbc4568cd6b35bec910e4e2a5aaba6386fc73f3": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "c8ecf99b0f9b273844c16c51389318bcdd6f56ed": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
+    },
+    "d40e1c9f311ba6f71d9e8135b6812770077eadb6": {
+      "workers": {
+        "app/admin/bookings/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cbookings.ts%22%2C%5B%22rejectBookingPayment%22%2C%22getAdminBookings%22%2C%22createBookingWithPayment%22%2C%22getBookedTimesForDoctor%22%2C%22approveBookingPayment%22%5D%5D%2C%5B%22C%3A%5C%5CUsers%5C%5Chaile%5C%5CDownloads%5C%5Cnisir-health%5C%5Clib%5C%5Cactions%5C%5Cchat.ts%22%2C%5B%22getDoctorAppointments%22%2C%22getMessages%22%2C%22getPatientConversations%22%2C%22getDoctorConversations%22%2C%22sendMessage%22%2C%22getOrCreateConversation%22%2C%22ensureConversationForBooking%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/admin/bookings/page": "rsc"
+      }
     }
   },
   "edge": {},
-  "encryptionKey": "Dbp2DVm7wRDCz9W3SUUzzwLZ1kswvzAmD5vvYLTyZuA="
+  "encryptionKey": "ZxPoR3fvvNqGigJnonkS1oxJYvUZMlV+cK+RZCrahWo="
 }

@@ -1,8 +1,10 @@
+import type { User } from "@supabase/supabase-js";
+
 export type UserRole = "patient" | "doctor" | "admin";
 
-export function getRoleFromMetadata(
-  metadata: Record<string, unknown> | undefined
-): UserRole | null {
+type Meta = Record<string, unknown> | undefined;
+
+export function getRoleFromMetadata(metadata: Meta): UserRole | null {
   const role = metadata?.role;
   if (role === "patient" || role === "doctor" || role === "admin") {
     return role;
@@ -10,11 +12,18 @@ export function getRoleFromMetadata(
   return null;
 }
 
-export function isAdminRole(
-  metadata: Record<string, unknown> | undefined
+/**
+ * Admin check — ONLY app_metadata.role === "admin".
+ * app_metadata can only be set with the service role / SQL, not by the client.
+ * Never trust user_metadata for admin.
+ */
+export function isAdminUser(
+  user: Pick<User, "app_metadata"> | null | undefined
 ): boolean {
-  const role = getRoleFromMetadata(metadata);
-  if (role === "admin") return true;
-  if (role === "patient" || role === "doctor") return false;
-  return true;
+  return user?.app_metadata?.role === "admin";
+}
+
+/** @deprecated Prefer isAdminUser(user). Kept for metadata-shaped checks of app_metadata only. */
+export function isAdminRole(metadata: Meta): boolean {
+  return metadata?.role === "admin";
 }

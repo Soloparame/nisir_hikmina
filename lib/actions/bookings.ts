@@ -1,10 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { isAdminRole } from "../auth-roles";
+import { isAdminUser } from "../auth-roles";
 import { notifyAdminNewAppointment } from "../notify-admin-appointment";
 import { notifyBookingConfirmed } from "../notify-booking-confirmed";
 import { resolveBookingPayment } from "../booking-payment-display";
+import { createPaymentScreenshotSignedUrl } from "../payment-screenshot-storage";
 import { createServiceClient } from "../supabase/admin";
 import { createClient } from "../supabase/server";
 import type { BookingPaymentInsert, BookingWithPayment } from "../types/payment";
@@ -20,7 +21,7 @@ async function getAuthedAdminClient() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || !isAdminRole(user.user_metadata as Record<string, unknown>)) {
+  if (!user || !isAdminUser(user)) {
     throw new Error("Admin access required");
   }
 
@@ -275,7 +276,7 @@ export async function getAdminBookings(): Promise<BookingWithPayment[]> {
     }
   }
 
-  return rows.map((row) => {
+  const bookings = rows.map((row) => {
     const doctor = row.doctors as
       | { name?: string; name_en?: string | null }
       | null
@@ -291,6 +292,36 @@ export async function getAdminBookings(): Promise<BookingWithPayment[]> {
       payment: resolveBookingPayment(merged),
     };
   });
+
+  return withSignedPaymentScreenshots(bookings, supabase);
+}
+
+async function withSignedPaymentScreenshots(
+  bookings: BookingWithPayment[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  signer: { storage: any }
+): Promise<BookingWithPayment[]> {
+  return Promise.all(
+    bookings.map(async (booking) => {
+      const payment = resolveBookingPayment(booking);
+      if (!payment?.screenshot_url) return booking;
+
+      const signedUrl = await createPaymentScreenshotSignedUrl(
+        signer,
+        payment.screenshot_url
+      );
+      if (!signedUrl) return booking;
+
+      return {
+        ...booking,
+        payment_screenshot_url: signedUrl,
+        payment: {
+          ...payment,
+          screenshot_url: signedUrl,
+        },
+      };
+    })
+  );
 }
 
 export async function approveBookingPayment(

@@ -277,15 +277,8 @@ export default function BookForm({ doctor, onChangeDoctor }: Props) {
       return { ok: false, error: error.message };
     }
 
-    const { data } = supabase.storage
-      .from("payment-screenshots")
-      .getPublicUrl(path);
-
-    if (!data?.publicUrl) {
-      return { ok: false, error: t.book.errors.uploadFailed };
-    }
-
-    return { ok: true, url: data.publicUrl };
+    // Store storage path only — bucket is private; admins get signed URLs later
+    return { ok: true, url: path };
   }
 
   async function handleSubmit() {

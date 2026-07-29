@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { isAdminRole } from "../auth-roles";
+import { isAdminUser } from "../auth-roles";
 import { createClient } from "../supabase/server";
 import type {
   AdminUpdateEngagement,
@@ -21,7 +21,7 @@ async function getAuthedAdminClient() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
-  if (!isAdminRole(user.user_metadata as Record<string, unknown>)) {
+  if (!isAdminUser(user)) {
     throw new Error("Admin access required");
   }
   return supabase;

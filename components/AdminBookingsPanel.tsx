@@ -74,6 +74,19 @@ function canConfirm(b: BookingWithPayment) {
 }
 
 function PaymentScreenshot({ url }: { url: string }) {
+  // Paths (private bucket) are not viewable; only signed https URLs work.
+  if (!url.startsWith("http")) {
+    return (
+      <div className={styles.screenshotBlock}>
+        <p className={styles.screenshotLabel}>Payment screenshot</p>
+        <p className={styles.screenshotHint}>
+          Screenshot stored privately. Refresh the page after deploying the
+          private-bucket update, or open again so a signed link can be created.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.screenshotBlock}>
       <p className={styles.screenshotLabel}>Payment screenshot</p>

@@ -10,6 +10,7 @@ import {
 import { ImagePlus, Phone, Send, Video } from "lucide-react";
 import { getMessagesClient, sendMessageClient } from "../lib/chat/messaging";
 import { createClient } from "../lib/supabase/client";
+import { createChatImageSignedUrl } from "../lib/chat-image-storage";
 import { useLanguage } from "../lib/i18n/LanguageContext";
 import type { Message, MessageType } from "../lib/types/chat";
 import CallModal from "./CallModal";
@@ -38,6 +39,7 @@ export default function ChatPanel({
   const [uploading, setUploading] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [callMode, setCallMode] = useState<"audio" | "video" | null>(null);
+  const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
   const [viewerUserId, setViewerUserId] = useState<string | undefined>(
     viewerUserIdProp
   );
@@ -75,6 +77,35 @@ export default function ChatPanel({
     const data = await getMessagesClient(conversationId);
     setMessages(data);
     setLoading(false);
+
+    const imageMessages = data.filter(
+      (m) => m.message_type === "image" && m.attachment_url
+    );
+    if (imageMessages.length === 0) return;
+
+    setSignedUrls((prev) => {
+      const needsSigning = imageMessages.filter(
+        (m) => !prev[m.attachment_url!]
+      );
+      if (needsSigning.length === 0) return prev;
+
+      Promise.all(
+        needsSigning.map(async (m) => {
+          const url = await createChatImageSignedUrl(m.attachment_url);
+          return [m.attachment_url!, url] as const;
+        })
+      ).then((results) => {
+        setSignedUrls((curr) => {
+          const next = { ...curr };
+          for (const [key, url] of results) {
+            if (url) next[key] = url;
+          }
+          return next;
+        });
+      });
+
+      return prev;
+    });
   }, [conversationId]);
 
   useEffect(() => {
@@ -152,12 +183,11 @@ export default function ChatPanel({
       return;
     }
 
-    const { data } = supabase.storage.from("chat-images").getPublicUrl(path);
     const sent = await sendMessageClient(
       conversationId,
       t.chat.photoSent,
       "image",
-      data.publicUrl
+      path
     );
 
     if (!sent.ok) {
@@ -204,17 +234,23 @@ export default function ChatPanel({
     let inner: ReactNode;
 
     if (msg.message_type === "image" && msg.attachment_url) {
+      const imgSrc = signedUrls[msg.attachment_url] ?? msg.attachment_url;
+      const isResolved = imgSrc.startsWith("http");
       inner = (
         <>
-          <a href={msg.attachment_url} target="_blank" rel="noopener noreferrer">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={msg.attachment_url}
-              alt="Shared"
-              className={styles.chatImage}
-              loading="lazy"
-            />
-          </a>
+          {isResolved ? (
+            <a href={imgSrc} target="_blank" rel="noopener noreferrer">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imgSrc}
+                alt="Shared"
+                className={styles.chatImage}
+                loading="lazy"
+              />
+            </a>
+          ) : (
+            <span className={styles.chatImageLoading}>Loading image…</span>
+          )}
           <time>{time}</time>
         </>
       );

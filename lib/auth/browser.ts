@@ -57,7 +57,8 @@ export async function ensureProfileForUser(user: User) {
 
   const meta = user.user_metadata ?? {};
   let role = (meta.role as string) || "patient";
-  if (role !== "patient" && role !== "doctor" && role !== "admin") {
+  // Never trust a client-claimed admin role in user_metadata
+  if (role === "admin" || (role !== "patient" && role !== "doctor")) {
     role = "patient";
   }
 

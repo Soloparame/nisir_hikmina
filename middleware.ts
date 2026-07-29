@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
-import { isAdminRole } from "./lib/auth-roles";
+import { isAdminUser } from "./lib/auth-roles";
 import { isPatientUser } from "./lib/auth/session";
 import { getSupabaseKey, getSupabaseUrl } from "./lib/supabase/config";
 
@@ -78,7 +78,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isAdminRoute) {
-    if (!user || !isAdminRole(user.user_metadata as Record<string, unknown>)) {
+    if (!user || !isAdminUser(user)) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
     return response;
