@@ -13,6 +13,18 @@ In **Netlify** → your site → **Site configuration** → **Environment variab
 | `NEXT_PUBLIC_SITE_URL` | `https://eaglemedicalcare.com` (doctor welcome emails) |
 | `BREVO_API_KEY` | Brevo API key (doctor welcome, password reset, appointment alerts) |
 | `BREVO_FROM_EMAIL` | Verified sender email in Brevo (e.g. `noreply@eaglemedicalcare.com`) |
+| `MAINTENANCE_MODE` | Optional. Set to `true` to show an “Under Maintenance” page for the whole site |
+
+### Temporary maintenance mode
+
+When Supabase is restricted (or you need to take the site down briefly):
+
+1. Netlify → **Site configuration** → **Environment variables**
+2. Add `MAINTENANCE_MODE` = `true`
+3. **Deploys** → **Trigger deploy** → **Deploy site**
+4. Visitors are redirected to `/maintenance`
+
+To turn the site back on: set `MAINTENANCE_MODE` to `false` (or delete it) and redeploy.
 
 **Important**
 

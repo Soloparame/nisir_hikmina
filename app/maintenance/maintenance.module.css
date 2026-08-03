@@ -1,0 +1,53 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0, 153, 102, 0.12), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 90% 80%, rgba(0, 77, 77, 0.14), transparent 50%),
+    linear-gradient(160deg, #f8fafc 0%, #e6f5f4 45%, #f1f5f9 100%);
+}
+
+.panel {
+  width: min(36rem, 100%);
+  text-align: center;
+}
+
+.brand {
+  font-family: var(--ff-display);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  margin-bottom: 0.85rem;
+}
+
+.body {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+}
+
+.bodyAm {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+.note {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--secondary);
+}

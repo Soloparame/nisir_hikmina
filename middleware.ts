@@ -5,9 +5,23 @@ import { isAdminUser } from "./lib/auth-roles";
 import { isPatientUser } from "./lib/auth/session";
 import { getSupabaseKey, getSupabaseUrl } from "./lib/supabase/config";
 
+function isMaintenanceEnabled(): boolean {
+  const value = (process.env.MAINTENANCE_MODE ?? "").trim().toLowerCase();
+  return value === "1" || value === "true" || value === "yes" || value === "on";
+}
+
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   let response = NextResponse.next({ request });
+
+  // Site-wide maintenance banner (set MAINTENANCE_MODE=true in Netlify)
+  if (isMaintenanceEnabled() && pathname !== "/maintenance") {
+    return NextResponse.redirect(new URL("/maintenance", request.url));
+  }
+
+  if (pathname === "/maintenance") {
+    return response;
+  }
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isDoctorDashboard =
@@ -125,15 +139,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin",
-    "/admin/:path*",
-    "/doctor/:code/dashboard",
-    "/doctor/:code/dashboard/:path*",
-    "/doctor/:code/chat",
-    "/doctor/:code/chat/:path*",
-    "/chat",
-    "/chat/:path*",
-    "/profile",
-    "/profile/:path*",
+    /*
+     * Match all paths except Next.js internals and static assets,
+     * so maintenance mode can cover the whole public site.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
